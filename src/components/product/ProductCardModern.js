@@ -619,7 +619,18 @@ const ProductCardModern = ({
           } ${!pricingInfo.isPromotional && availableUnits.length <= 1 ? 'mb-0.5' : ''}`}>
           {/* Titles (EN + AR) */}
           <div onClick={() => setModalOpen(true)} className="cursor-pointer">
-            {titleEn && (
+            {/* Show only the appropriate language title based on current locale */}
+            {lang === 'ar' && titleAr && (
+              <h3
+                className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
+                  pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
+                }`}
+                dir="rtl"
+              >
+                {titleAr}
+              </h3>
+            )}
+            {lang === 'en' && titleEn && (
               <h3
                 className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
                   pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
@@ -628,7 +639,17 @@ const ProductCardModern = ({
                 {titleEn}
               </h3>
             )}
-            {titleAr && (
+            {/* Fallback: if current language title is not available, show the other language */}
+            {lang === 'ar' && !titleAr && titleEn && (
+              <h3
+                className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
+                  pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
+                }`}
+              >
+                {titleEn}
+              </h3>
+            )}
+            {lang === 'en' && !titleEn && titleAr && (
               <h3
                 className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
                   pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
