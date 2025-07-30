@@ -295,7 +295,7 @@ const Navbar = () => {
               </button>
 
               {/* Notification Bell - Always visible on mobile */}
-              <div className="relative" ref={notificationRef}>
+              <div className="relative flex items-center block" ref={notificationRef}>
                 <button 
                   onClick={handleNotificationToggle}
                   className="relative p-0.5 sm:p-1.5 text-gray-600 hover:text-purple-600 transition-colors rounded-xl hover:bg-gray-50 group touch-target flex items-center justify-center"
