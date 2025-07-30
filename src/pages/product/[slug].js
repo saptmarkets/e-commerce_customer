@@ -317,10 +317,6 @@ const ProductScreen = () => {
   return (
     <>
       <Layout>
-        {/* 🧪 TEST BANNER - REMOVE AFTER TESTING */}
-        <div className="bg-red-500 text-white text-center py-4 font-bold text-lg">
-          🧪 TESTING: Fixed Price Promotion Logic - {new Date().toLocaleTimeString()}
-          </div>
 
           {/* Main Product Section */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -480,42 +476,14 @@ const ProductScreen = () => {
                     </div>
                   </div>
                 */}
-                {/* TEST: Fixed Price Promotion Logic */}
-                <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6">
-                  <div className="text-center mb-4">
-                    <h3 className="text-lg font-bold text-yellow-800">🧪 TESTING FIXED PRICE PROMOTION LOGIC</h3>
-                    <p className="text-sm text-yellow-700">This is a test implementation to verify the logic</p>
-                  </div>
-                  {/* Test Data Display */}
-                  <div className="space-y-3 text-sm">
-                    <div className="bg-white p-3 rounded border">
-                      <strong>Active Promotion:</strong> {activePromotion ? 'YES' : 'NO'}
-                      {activePromotion && (
-                        <div className="mt-2 space-y-1 text-xs">
-                          <div>Type: {activePromotion.type}</div>
-                          <div>Min Qty: {activePromotion.minQty || 'N/A'}</div>
-                          <div>Fixed Price: {activePromotion.fixedPrice || 'N/A'}</div>
-                          <div>Value: {activePromotion.value || 'N/A'}</div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="bg-white p-3 rounded border">
-                      <strong>Current Pricing:</strong>
-                      <div className="mt-2 space-y-1 text-xs">
-                        <div>Base Price: {currency}{currentPricing.basePrice.toFixed(2)}</div>
-                        <div>Final Price: {currency}{currentPricing.finalPrice.toFixed(2)}</div>
-                        <div>Is Promotional: {currentPricing.isPromotional ? 'YES' : 'NO'}</div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* NEW LOGIC: Fixed Price Promotion Display */}
-                  <div className="mt-4 bg-white p-4 rounded border">
-                    <h4 className="font-bold text-gray-800 mb-3">🎯 NEW FIXED PRICE DISPLAY LOGIC:</h4>
+                {/* Price Display */}
+                <div className="bg-white border border-gray-200 rounded-xl p-6">
+                  <div className="space-y-4">
                     {activePromotion && activePromotion.type === 'fixed_price' && activePromotion.fixedPrice ? (
                       <div className="space-y-2">
                         {/* Main Price Display - Shows minimum total price */}
                         <div className="flex items-center space-x-3">
-                          <span className="text-2xl font-bold text-red-600">
+                          <span className="text-3xl font-bold text-red-600">
                             {currency}{(activePromotion.fixedPrice * (activePromotion.minQty || 1)).toFixed(2)}
                           </span>
                           <span className="text-sm text-gray-500">for {activePromotion.minQty || 1} units</span>
@@ -537,14 +505,14 @@ const ProductScreen = () => {
                       <div className="space-y-2">
                         {/* Regular price display */}
                         <div className="flex items-center space-x-3">
-                          <span className="text-2xl font-bold text-emerald-600">
+                          <span className="text-3xl font-bold text-emerald-600">
                             {currency}{currentPricing.finalPrice.toFixed(2)}
                           </span>
                           <span className="text-sm text-gray-500">per unit</span>
                         </div>
                         {activePromotion && (
                           <div className="text-sm text-blue-600">
-                            ⚠️ Promotion exists but not fixed_price type: {activePromotion.type}
+                            Special promotion available
                           </div>
                         )}
                       </div>
