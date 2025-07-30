@@ -7,8 +7,8 @@ import {
   DatabaseIcon,
   RefreshIcon,
   GlobeAltIcon,
-  BellAlertIcon,
 } from "@heroicons/react/solid";
+import { BellAlertIcon } from "@heroicons/react/24/solid";
 
 import Layout from "@layout/Layout";
 import useGetSetting from "@hooks/useGetSetting";
