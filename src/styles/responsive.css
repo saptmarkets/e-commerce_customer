@@ -712,6 +712,69 @@
   .product-card {
     padding: 0.5rem;
   }
+  
+  /* Ensure products page grid works properly on mobile */
+  .grid.grid-cols-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.5rem !important;
+  }
+  
+  /* Force product cards to be visible on mobile */
+  .product-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: auto !important;
+    transform: none !important;
+  }
+  
+  /* Ensure product card content is visible */
+  .product-card > * {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Fix any potential overflow issues */
+  .product-card {
+    overflow: visible !important;
+    position: relative !important;
+  }
+  
+  /* Ensure images load properly */
+  .product-card img {
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Products page specific styles */
+  .products-page-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.5rem !important;
+  }
+  
+  .products-page-grid .product-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: auto !important;
+    transform: none !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  /* Ensure no carousel styles interfere with products page */
+  .products-page-grid .product-card {
+    width: 100% !important;
+    max-width: none !important;
+    flex: none !important;
+    margin: 0 !important;
+  }
 }
 
 /* Skeleton responsive */
