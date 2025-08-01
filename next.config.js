@@ -40,7 +40,7 @@ module.exports = {
     locales: ["en", "ar"],
     // This is the default locale you want to be used when visiting
     // a non-locale prefixed path e.g. `/hello`
-    defaultLocale: "en",
+    defaultLocale: "ar",
     // Disable automatic locale detection to prevent browser language override
     localeDetection: false,
     // This is a list of locale domains and the default locale they

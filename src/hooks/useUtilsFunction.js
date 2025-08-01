@@ -7,10 +7,10 @@ const useUtilsFunction = () => {
   
   // Force only English or Arabic - ignore browser locale completely
   if (!lang || !['en', 'ar'].includes(lang)) {
-    lang = 'en';
+    lang = 'ar';
     // Set the correct cookie and clear any other language cookies
-    Cookies.set('_lang', 'en', { expires: 365 });
-    Cookies.set('NEXT_LOCALE', 'en', { expires: 365 });
+    Cookies.set('_lang', 'ar', { expires: 365 });
+    Cookies.set('NEXT_LOCALE', 'ar', { expires: 365 });
     
     // Clear any other language-related cookies
     const allCookies = Cookies.get();
