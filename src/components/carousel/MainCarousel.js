@@ -180,12 +180,14 @@ const MainCarousel = ({ animationType = 'fade' }) => {
       <div className="absolute inset-0 bg-black bg-opacity-30">
         <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
           <div className="max-w-lg mx-auto text-center">
-            <h1 className="text-responsive-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
-              {item.title}
-            </h1>
-            <p className="text-white text-responsive-2xl mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
-              {item.info}
-            </p>
+            <div className="bg-[#74308c] bg-opacity-70 p-4 md:p-6 rounded-lg backdrop-blur-sm">
+              <h1 className="text-responsive-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+                {item.title}
+              </h1>
+              <p className="text-white text-responsive-2xl mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
+                {item.info}
+              </p>
+            </div>
             {item.url && item.buttonName && (
               <Link
                 href={item.url}
@@ -254,12 +256,14 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className={currentAnimation.overlay}>
           <div className="flex flex-col justify-center h-full responsive-padding">
             <div className={currentAnimation.content}>
-              <h1 className="text-responsive-5xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
-                {item.title}
-              </h1>
-              <p className="text-white text-responsive-xl mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor">
-                {item.info}
-              </p>
+              <div className="bg-[#74308c] bg-opacity-70 p-4 md:p-6 rounded-lg backdrop-blur-sm">
+                <h1 className="text-responsive-5xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+                  {item.title}
+                </h1>
+                <p className="text-white text-responsive-xl mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor">
+                  {item.info}
+                </p>
+              </div>
               {item.url && item.buttonName && (
                 <Link
                   href={item.url}
