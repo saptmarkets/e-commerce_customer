@@ -179,7 +179,7 @@ const MainCarousel = ({ animationType = 'fade' }) => {
       />
       <div className="absolute inset-0 bg-black bg-opacity-30">
         <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
-          <div className={`max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'}`}>
+          <div className="max-w-lg mx-auto text-center">
             <h1 className="text-responsive-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
               {item.title}
             </h1>
@@ -210,31 +210,31 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         container: "relative w-full h-full",
         image: "object-cover transition-all duration-1000 ease-out",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-slide-up`
+        content: "max-w-lg mx-auto text-center animate-slide-up"
       },
       zoom: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover transition-transform duration-2000 ease-out hover:scale-110",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-slide-up-delayed`
+        content: "max-w-lg mx-auto text-center animate-slide-up-delayed"
       },
       slide: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-slide-in-right`
+        content: "max-w-lg mx-auto text-center animate-slide-in-right"
       },
       modern: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover transition-all duration-1500 ease-out",
         overlay: "absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-transparent",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-modern-slide-up`
+        content: "max-w-lg mx-auto text-center animate-modern-slide-up"
       },
       parallax: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover transition-transform duration-3000 ease-out",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-parallax-slide-up`
+        content: "max-w-lg mx-auto text-center animate-parallax-slide-up"
       }
     };
 
