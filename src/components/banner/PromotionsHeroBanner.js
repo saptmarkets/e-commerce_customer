@@ -107,7 +107,10 @@ const PromotionsHeroBanner = () => {
           
           {/* Content */}
           <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div className="text-white px-8 max-w-2xl text-center">
+            <div 
+              className="text-white px-8 max-w-2xl"
+              style={{ textAlign: 'center' }}
+            >
               <h2 className="text-xl md:text-2xl font-bold mb-2">{banner.title}</h2>
               {banner.info && (
                 <p className="text-sm md:text-base mb-4">{banner.info}</p>
@@ -182,7 +185,10 @@ const PromotionsHeroBanner = () => {
                 
                 {/* Content */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="text-white px-8 max-w-2xl text-center">
+                  <div 
+                    className="text-white px-8 max-w-2xl"
+                    style={{ textAlign: 'center' }}
+                  >
                     <h2 className="text-xl md:text-2xl font-bold mb-2">{item.title}</h2>
                     {item.info && (
                       <p className="text-sm md:text-base mb-4">{item.info}</p>

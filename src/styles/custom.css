@@ -350,24 +350,28 @@ html[lang="ar"] .slogan-arabic {
   text-align: left !important;
 }
 
-/* Allow dynamic text alignment for banner content */
-.hero-banner .text-center,
-.banner-section .text-center,
-.products-hero-banner .text-center,
-.promotions-hero-banner .text-center {
+/* Force banner text alignment to respect inline styles */
+.banner-section .relative.z-10,
+.products-hero-banner .relative.z-10,
+.promotions-hero-banner .relative.z-10 {
   direction: ltr !important;
 }
 
-/* Override any language-specific text alignment for banner content */
-[dir="rtl"] .hero-banner .text-center,
-[dir="rtl"] .banner-section .text-center,
-[dir="rtl"] .products-hero-banner .text-center,
-[dir="rtl"] .promotions-hero-banner .text-center,
-[dir="ltr"] .hero-banner .text-center,
-[dir="ltr"] .banner-section .text-center,
-[dir="ltr"] .products-hero-banner .text-center,
-[dir="ltr"] .promotions-hero-banner .text-center {
+/* Override any RTL/LTR language-specific text alignment for banner content */
+[dir="rtl"] .banner-section .relative.z-10,
+[dir="rtl"] .products-hero-banner .relative.z-10,
+[dir="rtl"] .promotions-hero-banner .relative.z-10,
+[dir="ltr"] .banner-section .relative.z-10,
+[dir="ltr"] .products-hero-banner .relative.z-10,
+[dir="ltr"] .promotions-hero-banner .relative.z-10 {
   direction: ltr !important;
+}
+
+/* Ensure banner text content respects inline text-align styles */
+.banner-section .relative.z-10 *,
+.products-hero-banner .relative.z-10 *,
+.promotions-hero-banner .relative.z-10 * {
+  text-align: inherit !important;
 }
 
 /* Exclude main layout containers from RTL to prevent structural issues */
