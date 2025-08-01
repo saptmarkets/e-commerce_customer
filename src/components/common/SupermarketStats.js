@@ -18,10 +18,10 @@ const SupermarketStats = () => {
           <div>
             <div className="mb-8">
               <h2 className="font-bold mb-2 font-noor">
-                <span className="text-5xl md:text-6xl lg:text-7xl" style={{ color: "#76bd44" }}>Why Choose</span><br />
-                <span className="text-5xl md:text-6xl lg:text-7xl brand-name-arabic" style={{ color: "#74338c" }}>SAPT Markets?</span>
+                <span className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl" style={{ color: "#76bd44" }}>Why Choose</span><br />
+                <span className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl brand-name-arabic" style={{ color: "#74338c" }}>SAPT Markets?</span>
               </h2>
-              <h3 className="text-3xl md:text-4xl text-gray-800 font-semibold mt-6 font-noor" style={{ color: "#76bd44" }}>Saudi Arabia's Leading Online Supermarket</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl text-gray-800 font-semibold mt-6 font-noor" style={{ color: "#76bd44" }}>Saudi Arabia's Leading Online Supermarket</h3>
               <p className="text-gray-600 mt-8 mb-10 max-w-lg text-xl font-noor leading-relaxed">
                 Discover thousands of premium products across all categories — from fresh produce to household essentials — all at competitive prices with unmatched convenience.
               </p>
