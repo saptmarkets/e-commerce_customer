@@ -329,7 +329,7 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
             {loading ? (
               <CMSkeleton count={24} height={200} />
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 products-page-grid">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
                 {currentProducts && currentProducts.length > 0 ? (
                   currentProducts.map((product) => (
                     <ProductCardModern

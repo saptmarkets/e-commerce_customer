@@ -350,30 +350,6 @@ html[lang="ar"] .slogan-arabic {
   text-align: left !important;
 }
 
-/* Force banner text alignment to respect inline styles */
-.banner-section .relative.z-10,
-.products-hero-banner .relative.z-10,
-.promotions-hero-banner .relative.z-10 {
-  direction: ltr !important;
-}
-
-/* Override any RTL/LTR language-specific text alignment for banner content */
-[dir="rtl"] .banner-section .relative.z-10,
-[dir="rtl"] .products-hero-banner .relative.z-10,
-[dir="rtl"] .promotions-hero-banner .relative.z-10,
-[dir="ltr"] .banner-section .relative.z-10,
-[dir="ltr"] .products-hero-banner .relative.z-10,
-[dir="ltr"] .promotions-hero-banner .relative.z-10 {
-  direction: ltr !important;
-}
-
-/* Ensure banner text content respects inline text-align styles */
-.banner-section .relative.z-10 *,
-.products-hero-banner .relative.z-10 *,
-.promotions-hero-banner .relative.z-10 * {
-  text-align: inherit !important;
-}
-
 /* Exclude main layout containers from RTL to prevent structural issues */
 [dir="rtl"] .hero-section,
 [dir="rtl"] .hero-banner,

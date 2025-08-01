@@ -58,21 +58,6 @@ const Checkout = () => {
   };
   const userInfo = getUserSession();
   
-  // Debug userInfo on component mount
-  useEffect(() => {
-    console.log('🔍 Checkout page - userInfo loaded:', userInfo);
-    if (userInfo) {
-      console.log('📍 User coordinates check:', {
-        latitude: userInfo.latitude,
-        longitude: userInfo.longitude,
-        lat: userInfo.lat,
-        lng: userInfo.lng,
-        coords: userInfo.coords,
-        address: userInfo.address
-      });
-    }
-  }, [userInfo]);
-  
   // Location hook for getting user coordinates
   const { 
     location: hookLocation, 
@@ -333,60 +318,22 @@ const Checkout = () => {
     // Check which location method is selected and get coordinates
     switch (selectedLocationOption) {
       case 'profile':
-        // Check multiple possible coordinate fields in user profile with better debugging
-        console.log('🔍 Checking profile coordinates:', {
-          userInfo,
-          latitude: userInfo?.latitude,
-          longitude: userInfo?.longitude,
-          lat: userInfo?.lat,
-          lng: userInfo?.lng,
-          coords: userInfo?.coords,
-          address: userInfo?.address
-        });
+        // Check multiple possible coordinate fields in user profile
+        const profileLat = userInfo?.latitude || userInfo?.lat || userInfo?.coords?.latitude;
+        const profileLng = userInfo?.longitude || userInfo?.lng || userInfo?.coords?.longitude;
         
-        let profileLat = userInfo?.latitude || userInfo?.lat || userInfo?.coords?.latitude;
-        let profileLng = userInfo?.longitude || userInfo?.lng || userInfo?.coords?.longitude;
-        
-        // If no separate coordinates found, try to parse from address field
-        if (!profileLat || !profileLng) {
-          console.log('🔍 No separate coordinates found, checking address field for coordinates...');
-          if (userInfo?.address) {
-            // Try to parse coordinates from address string (e.g., "26.417822, 43.900033")
-            const coordMatch = userInfo.address.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
-            if (coordMatch) {
-              profileLat = coordMatch[1];
-              profileLng = coordMatch[2];
-              console.log('✅ Found coordinates in address field:', { profileLat, profileLng });
-            } else {
-              console.log('❌ No coordinate pattern found in address:', userInfo.address);
-            }
-          }
-        }
-        
-        // Check if coordinates exist and are valid numbers
-        if (profileLat && profileLng && !isNaN(parseFloat(profileLat)) && !isNaN(parseFloat(profileLng))) {
-          const lat = parseFloat(profileLat);
-          const lng = parseFloat(profileLng);
-          
-          // Validate coordinate ranges
-          if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-            locationToUse = {
-              latitude: lat,
-              longitude: lng,
-              accuracy: 100
-            };
-            locationSource = 'Saved Address';
-            console.log('✅ Profile coordinates found and valid:', { lat, lng });
-          } else {
-            console.log('❌ Profile coordinates out of valid range:', { lat, lng });
-            setIsCalculatingShipping(false);
-            setCalculationStatus('❌ Saved coordinates are invalid. Please update your profile with valid location details or use GPS/Manual entry.');
-            return;
-          }
+        if (profileLat && profileLng) {
+          locationToUse = {
+            latitude: parseFloat(profileLat),
+            longitude: parseFloat(profileLng),
+            accuracy: 100
+          };
+          locationSource = 'Saved Address';
+
         } else {
-          console.log('❌ No valid coordinates found in profile:', { profileLat, profileLng });
           setIsCalculatingShipping(false);
           setCalculationStatus('❌ No coordinates found in saved address. Please update your profile with location details or use GPS/Manual entry.');
+
           return;
         }
         break;
@@ -533,7 +480,6 @@ const Checkout = () => {
 
   // Handle using profile default location
   const handleUseProfileLocation = () => {
-    console.log('🏠 handleUseProfileLocation called with userInfo:', userInfo);
     
     if (!userInfo) {
       console.warn('No user info available for profile location');
@@ -549,7 +495,6 @@ const Checkout = () => {
     try {
       // Set form values from user profile
       if (userInfo.address) {
-        console.log('📍 Setting address from profile:', userInfo.address);
         setValue('address', userInfo.address, { 
           shouldValidate: true, 
           shouldDirty: true, 
@@ -557,7 +502,6 @@ const Checkout = () => {
         });
       }
       if (userInfo.city) {
-        console.log('🏙️ Setting city from profile:', userInfo.city);
         setValue('city', userInfo.city, { 
           shouldValidate: true, 
           shouldDirty: true, 
@@ -565,7 +509,6 @@ const Checkout = () => {
         });
       }
       if (userInfo.country) {
-        console.log('🌍 Setting country from profile:', userInfo.country);
         setValue('country', userInfo.country, { 
           shouldValidate: true, 
           shouldDirty: true, 
@@ -573,47 +516,11 @@ const Checkout = () => {
         });
       }
       
-      // Check for coordinates in multiple possible locations
-      let profileLat = userInfo.latitude || userInfo.lat || userInfo.coords?.latitude;
-      let profileLng = userInfo.longitude || userInfo.lng || userInfo.coords?.longitude;
-      
-      // If no separate coordinates found, try to parse from address field
-      if (!profileLat || !profileLng) {
-        console.log('🔍 No separate coordinates found, checking address field for coordinates...');
-        if (userInfo.address) {
-          // Try to parse coordinates from address string (e.g., "26.417822, 43.900033")
-          const coordMatch = userInfo.address.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
-          if (coordMatch) {
-            profileLat = coordMatch[1];
-            profileLng = coordMatch[2];
-            console.log('✅ Found coordinates in address field:', { profileLat, profileLng });
-          } else {
-            console.log('❌ No coordinate pattern found in address:', userInfo.address);
-          }
-        }
-      }
-      
-      console.log('🔍 Profile coordinates check:', {
-        latitude: userInfo.latitude,
-        longitude: userInfo.longitude,
-        lat: userInfo.lat,
-        lng: userInfo.lng,
-        coords: userInfo.coords,
-        address: userInfo.address,
-        profileLat,
-        profileLng
-      });
-      
       // If user has GPS coordinates saved, use them for shipping calculation
-      if (profileLat && profileLng && !isNaN(parseFloat(profileLat)) && !isNaN(parseFloat(profileLng))) {
-        const lat = parseFloat(profileLat);
-        const lng = parseFloat(profileLng);
-        
-        console.log('✅ Valid profile coordinates found:', { lat, lng });
-        
+      if (userInfo.latitude && userInfo.longitude) {
         const profileLocation = {
-          latitude: lat,
-          longitude: lng,
+          latitude: parseFloat(userInfo.latitude),
+          longitude: parseFloat(userInfo.longitude),
           accuracy: 100, // Assumed accuracy for saved profile location
           timestamp: Date.now()
         };
@@ -633,10 +540,6 @@ const Checkout = () => {
             country: userInfo.country || 'Saudi Arabia'
           }
         };
-        
-        console.log('✅ Profile location applied successfully:', window.userLocationCoords);
-      } else {
-        console.log('❌ No valid coordinates found in profile:', { profileLat, profileLng });
       }
     } catch (error) {
       console.error('Error applying profile location:', error);

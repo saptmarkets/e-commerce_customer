@@ -21,6 +21,10 @@ const CustomerServices = {
     return requests.post("/customer/verify-phone", body);
   },
 
+  verifyPhoneCode: async (body) => {
+    return requests.post("/customer/verify-phone-code", body);
+  },
+
   forgetPassword: async (body) => {
     return requests.post("/customer/forget-password", body);
   },

@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 const LanguageSelector = ({ iconOnly = false }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('ar');
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
   
   // Language configurations with native script names
   const languages = [
@@ -35,10 +35,10 @@ const LanguageSelector = ({ iconOnly = false }) => {
     });
 
     const storedLocale = Cookies.get('NEXT_LOCALE');
-    const currentLocale = router.locale || storedLocale || 'ar';
+    const currentLocale = router.locale || storedLocale || 'en';
     
     // Ensure only English or Arabic is used
-    const validLocale = ['en', 'ar'].includes(currentLocale) ? currentLocale : 'ar';
+    const validLocale = ['en', 'ar'].includes(currentLocale) ? currentLocale : 'en';
     
     // Set the correct cookies
     Cookies.set('NEXT_LOCALE', validLocale, { expires: 365 });

@@ -160,7 +160,7 @@ const Footer = () => {
               </li>
               <li className="flex items-baseline">
                 <Link
-                  href="/user/my-orders"
+                  href="/order/order-history"
                   className="text-gray-300 inline-block w-full hover:text-primary transition duration-200"
                 >
                   {tr('Order History','تاريخ الطلبات')}

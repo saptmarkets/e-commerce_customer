@@ -75,10 +75,9 @@ const BannerSection = () => {
   const displayButtonLink = banner.linkUrl;
   const displayBannerImage = banner.imageUrl; // Should be a Cloudinary URL
   const openInNewTab = banner.openInNewTab || false;
-  const textAlignment = banner.textAlignment || 'center';
 
   return (
-    <div className="bg-white py-8 md:py-16 banner-section">
+    <div className="bg-white py-8 md:py-16">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10">
         <div className="relative rounded-xl p-6 md:p-12 flex items-center justify-center overflow-hidden min-h-[280px] md:min-h-[320px]">
           {/* Background Image */}
@@ -91,17 +90,14 @@ const BannerSection = () => {
               priority
             />
           </div>
-          {/* Responsive Overlay - Centered gradient for all languages */}
-          <div className="absolute inset-0 bg-black bg-opacity-40 md:bg-gradient-to-r md:from-black/60 md:via-black/30 md:to-transparent z-[1]"></div>
-          {/* Content - Dynamic alignment based on banner settings */}
-          <div 
-            className="relative z-10 max-w-2xl mx-auto"
-            style={{ textAlign: textAlignment }}
-          >
+          {/* Responsive Overlay */}
+          <div className={`absolute inset-0 bg-black bg-opacity-40 md:bg-gradient-to-${lang === 'ar' ? 'l' : 'r'} md:from-black/60 md:via-black/30 md:to-transparent z-[1]`}></div>
+          {/* Content - Centered on mobile, direction-aware on desktop */}
+          <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
               {displayTitle}
             </h2>
-            <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto drop-shadow-md leading-relaxed">
+            <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
               {displayDescription}
             </p>
             {displayButtonLink && displayButtonText && (

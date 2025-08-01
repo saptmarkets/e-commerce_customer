@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { FiLock, FiMail, FiUser } from "react-icons/fi";
+import { FiLock, FiMail, FiUser, FiPhone } from "react-icons/fi";
 import useTranslation from "next-translate/useTranslation";
+import { useState } from "react";
 
 //internal import
 import Layout from "@layout/Layout";
@@ -13,6 +14,7 @@ const SignUp = () => {
   const { t } = useTranslation('common');
   const { handleSubmit, submitHandler, register, errors, loading } =
     useLoginSubmit();
+  const [verificationMethod, setVerificationMethod] = useState('email'); // 'email' or 'phone'
 
   // console.log("errors", errors);
 
@@ -25,9 +27,39 @@ const SignUp = () => {
               <div className="overflow-hidden mx-auto">
                 <div className="text-center mb-6">
                   <h2 className="text-3xl font-bold font-serif">{t('signingUp')}</h2>
-                  <p className="text-sm text-gray-500 mt-2 mb-8 sm:mb-10">
+                  <p className="text-sm text-gray-500 mt-2 mb-4">
                     {t('createAnAccount')}
                   </p>
+                  
+                  {/* Verification Method Toggle */}
+                  <div className="flex justify-center mb-6">
+                    <div className="bg-gray-100 rounded-lg p-1 flex">
+                      <button
+                        type="button"
+                        onClick={() => setVerificationMethod('email')}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                          verificationMethod === 'email'
+                            ? 'bg-white text-emerald-600 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <FiMail className="inline mr-2" />
+                        Email
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setVerificationMethod('phone')}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                          verificationMethod === 'phone'
+                            ? 'bg-white text-emerald-600 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <FiPhone className="inline mr-2" />
+                        Phone
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <form
                   onSubmit={handleSubmit(submitHandler)}
@@ -43,21 +75,34 @@ const SignUp = () => {
                         placeholder={t('fullName')}
                         Icon={FiUser}
                       />
-
                       <Error errorName={errors.name} />
                     </div>
 
-                    <div className="form-group">
-                      <InputArea
-                        register={register}
-                        label={t('email')}
-                        name="email"
-                        type="email"
-                        placeholder={t('email')}
-                        Icon={FiMail}
-                      />
-                      <Error errorName={errors.email} />
-                    </div>
+                    {verificationMethod === 'email' ? (
+                      <div className="form-group">
+                        <InputArea
+                          register={register}
+                          label={t('email')}
+                          name="email"
+                          type="email"
+                          placeholder={t('email')}
+                          Icon={FiMail}
+                        />
+                        <Error errorName={errors.email} />
+                      </div>
+                    ) : (
+                      <div className="form-group">
+                        <InputArea
+                          register={register}
+                          label="Phone Number"
+                          name="phone"
+                          type="tel"
+                          placeholder="966501234567"
+                          Icon={FiPhone}
+                        />
+                        <Error errorName={errors.phone} />
+                      </div>
+                    )}
                     <div className="form-group">
                       <InputArea
                         register={register}
@@ -82,12 +127,6 @@ const SignUp = () => {
 
                     <div className="flex items-center justify-between">
                       <div className="flex ms-auto">
-                        {/* <Link
-                          href="/auth/phone-signup"
-                          className="text-end text-sm text-heading ps-3 underline hover:no-underline focus:outline-none"
-                        >
-                          Sign Up with Number?
-                        </Link> */}
                         <Link
                           href="/auth/login"
                           className="text-end text-sm text-heading ps-3 underline hover:no-underline focus:outline-none"

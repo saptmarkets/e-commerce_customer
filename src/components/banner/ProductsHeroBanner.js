@@ -91,7 +91,7 @@ const ProductsHeroBanner = () => {
   if (sliderData.length === 1) {
     const banner = sliderData[0];
     return (
-      <div className="w-full mb-4 products-hero-banner">
+      <div className="w-full mb-4">
         <div className="relative w-full h-[150px] md:h-[200px] rounded-lg overflow-hidden">
           <Image 
             src={banner.image}
@@ -106,11 +106,8 @@ const ProductsHeroBanner = () => {
           <div className="absolute inset-0 bg-black bg-opacity-30 z-[1]"></div>
           
           {/* Content */}
-          <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div 
-              className="text-white px-8 max-w-2xl"
-              style={{ textAlign: 'center' }}
-            >
+          <div className="absolute inset-0 flex items-center z-10">
+            <div className="text-white px-8 max-w-2xl">
               <h2 className="text-lg md:text-xl font-bold mb-2">{banner.title}</h2>
               {banner.info && (
                 <p className="text-sm md:text-base mb-3">{banner.info}</p>
@@ -134,7 +131,7 @@ const ProductsHeroBanner = () => {
 
   // Multiple banners - show as carousel
   return (
-    <div className="w-full mb-4 products-hero-banner">
+    <div className="w-full mb-4">
       <div className="w-full rounded-lg overflow-hidden">
         <Swiper
           spaceBetween={0}
@@ -184,11 +181,8 @@ const ProductsHeroBanner = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-30 z-[1]"></div>
                 
                 {/* Content */}
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div 
-                    className="text-white px-8 max-w-2xl"
-                    style={{ textAlign: 'center' }}
-                  >
+                <div className="absolute inset-0 flex items-center z-10">
+                  <div className="text-white px-8 max-w-2xl">
                     <h2 className="text-lg md:text-xl font-bold mb-2">{item.title}</h2>
                     {item.info && (
                       <p className="text-sm md:text-base mb-3">{item.info}</p>

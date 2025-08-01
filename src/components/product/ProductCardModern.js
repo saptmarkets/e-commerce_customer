@@ -343,20 +343,20 @@ const ProductCardModern = ({
   const pricingInfo = useMemo(() => {
     if (!selectedUnit) {
       return { 
-      basePrice: 0, 
-      finalPrice: 0, 
-      savings: 0, 
-      isPromotional: false,
-      pricePerBaseUnit: 0,
-      minQtyTotal: 0,
-      minQty: 1,
-      perUnitPrice: 0,
-      promoUnits: 0,
-      normalUnits: 0,
-      promoUnitPrice: 0,
-      normalUnitPrice: 0,
-      breakdown: ''
-    };
+        basePrice: 0, 
+        finalPrice: 0, 
+        savings: 0, 
+        isPromotional: false,
+        pricePerBaseUnit: 0,
+        minQtyTotal: 0,
+        minQty: 1,
+        perUnitPrice: 0,
+        promoUnits: 0,
+        normalUnits: 0,
+        promoUnitPrice: 0,
+        normalUnitPrice: 0,
+        breakdown: ''
+      };
     }
 
     const basePrice = selectedUnit.price || 0;

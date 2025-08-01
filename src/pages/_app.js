@@ -103,7 +103,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Force only English or Arabic, ignore browser locale
-      const currentLocale = ['en', 'ar'].includes(router.locale) ? router.locale : 'ar';
+      const currentLocale = ['en', 'ar'].includes(router.locale) ? router.locale : 'en';
       document.documentElement.lang = currentLocale;
       document.documentElement.dir = currentLocale === 'ar' ? 'rtl' : 'ltr';
       

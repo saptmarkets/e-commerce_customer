@@ -84,16 +84,38 @@ const useLoginSubmit = () => {
         }
       } else if (router.pathname === "/auth/signup") {
         try {
-          // First verify email
-          await CustomerServices.verifyEmailAddress({
-            name,
-            email,
-            password,
-          });
-          
-          notifySuccess("Please check your email to complete registration!");
-          router.replace("/auth/login");
-          setLoading(false);
+          // Check if we have email or phone for verification
+          if (email) {
+            // Email verification flow
+            await CustomerServices.verifyEmailAddress({
+              name,
+              email,
+              password,
+            });
+            
+            notifySuccess("Please check your email to complete registration!");
+            router.replace("/auth/login");
+            setLoading(false);
+          } else if (phone) {
+            // Phone verification flow
+            await CustomerServices.verifyPhoneNumber({
+              phone,
+            });
+            
+            // Store registration data in session storage for the next step
+            sessionStorage.setItem('phoneRegistrationData', JSON.stringify({
+              name,
+              phone,
+              password
+            }));
+            
+            notifySuccess("Verification code sent to your phone!");
+            router.replace("/auth/phone-verification");
+            setLoading(false);
+          } else {
+            setLoading(false);
+            notifyError("Please provide either email or phone number!");
+          }
         } catch (error) {
           setLoading(false);
           notifyError(error?.response?.data?.message || "Registration failed!");
