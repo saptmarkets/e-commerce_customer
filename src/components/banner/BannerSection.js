@@ -92,8 +92,8 @@ const BannerSection = () => {
           </div>
           {/* Responsive Overlay */}
           <div className={`absolute inset-0 bg-black bg-opacity-40 md:bg-gradient-to-${lang === 'ar' ? 'l' : 'r'} md:from-black/60 md:via-black/30 md:to-transparent z-[1]`}></div>
-          {/* Content - Centered on mobile, direction-aware on desktop */}
-          <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full`}>
+          {/* Content - Centered for all screen sizes and languages */}
+          <div className="relative z-10 text-center max-w-2xl mx-auto">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
               {displayTitle}
             </h2>
