@@ -91,7 +91,7 @@ const ProductsHeroBanner = () => {
   if (sliderData.length === 1) {
     const banner = sliderData[0];
     return (
-      <div className="w-full mb-4">
+      <div className="w-full mb-4 products-hero-banner">
         <div className="relative w-full h-[150px] md:h-[200px] rounded-lg overflow-hidden">
           <Image 
             src={banner.image}
@@ -131,7 +131,7 @@ const ProductsHeroBanner = () => {
 
   // Multiple banners - show as carousel
   return (
-    <div className="w-full mb-4">
+    <div className="w-full mb-4 products-hero-banner">
       <div className="w-full rounded-lg overflow-hidden">
         <Swiper
           spaceBetween={0}
