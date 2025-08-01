@@ -75,6 +75,7 @@ const BannerSection = () => {
   const displayButtonLink = banner.linkUrl;
   const displayBannerImage = banner.imageUrl; // Should be a Cloudinary URL
   const openInNewTab = banner.openInNewTab || false;
+  const textAlignment = banner.textAlignment || 'center';
 
   return (
     <div className="bg-white py-8 md:py-16 banner-section">
@@ -92,8 +93,8 @@ const BannerSection = () => {
           </div>
           {/* Responsive Overlay - Centered gradient for all languages */}
           <div className="absolute inset-0 bg-black bg-opacity-40 md:bg-gradient-to-r md:from-black/60 md:via-black/30 md:to-transparent z-[1]"></div>
-          {/* Content - Centered for all screen sizes and languages */}
-          <div className="relative z-10 text-center max-w-2xl mx-auto">
+          {/* Content - Dynamic alignment based on banner settings */}
+          <div className={`relative z-10 max-w-2xl mx-auto text-${textAlignment}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
               {displayTitle}
             </h2>

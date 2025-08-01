@@ -350,12 +350,11 @@ html[lang="ar"] .slogan-arabic {
   text-align: left !important;
 }
 
-/* Force center alignment for hero banner text regardless of language */
+/* Allow dynamic text alignment for banner content */
 .hero-banner .text-center,
 .banner-section .text-center,
 .products-hero-banner .text-center,
 .promotions-hero-banner .text-center {
-  text-align: center !important;
   direction: ltr !important;
 }
 
@@ -368,7 +367,6 @@ html[lang="ar"] .slogan-arabic {
 [dir="ltr"] .banner-section .text-center,
 [dir="ltr"] .products-hero-banner .text-center,
 [dir="ltr"] .promotions-hero-banner .text-center {
-  text-align: center !important;
   direction: ltr !important;
 }
 
