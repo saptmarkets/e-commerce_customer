@@ -340,11 +340,28 @@ const Checkout = () => {
           longitude: userInfo?.longitude,
           lat: userInfo?.lat,
           lng: userInfo?.lng,
-          coords: userInfo?.coords
+          coords: userInfo?.coords,
+          address: userInfo?.address
         });
         
-        const profileLat = userInfo?.latitude || userInfo?.lat || userInfo?.coords?.latitude;
-        const profileLng = userInfo?.longitude || userInfo?.lng || userInfo?.coords?.longitude;
+        let profileLat = userInfo?.latitude || userInfo?.lat || userInfo?.coords?.latitude;
+        let profileLng = userInfo?.longitude || userInfo?.lng || userInfo?.coords?.longitude;
+        
+        // If no separate coordinates found, try to parse from address field
+        if (!profileLat || !profileLng) {
+          console.log('🔍 No separate coordinates found, checking address field for coordinates...');
+          if (userInfo?.address) {
+            // Try to parse coordinates from address string (e.g., "26.417822, 43.900033")
+            const coordMatch = userInfo.address.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
+            if (coordMatch) {
+              profileLat = coordMatch[1];
+              profileLng = coordMatch[2];
+              console.log('✅ Found coordinates in address field:', { profileLat, profileLng });
+            } else {
+              console.log('❌ No coordinate pattern found in address:', userInfo.address);
+            }
+          }
+        }
         
         // Check if coordinates exist and are valid numbers
         if (profileLat && profileLng && !isNaN(parseFloat(profileLat)) && !isNaN(parseFloat(profileLng))) {
@@ -557,8 +574,24 @@ const Checkout = () => {
       }
       
       // Check for coordinates in multiple possible locations
-      const profileLat = userInfo.latitude || userInfo.lat || userInfo.coords?.latitude;
-      const profileLng = userInfo.longitude || userInfo.lng || userInfo.coords?.longitude;
+      let profileLat = userInfo.latitude || userInfo.lat || userInfo.coords?.latitude;
+      let profileLng = userInfo.longitude || userInfo.lng || userInfo.coords?.longitude;
+      
+      // If no separate coordinates found, try to parse from address field
+      if (!profileLat || !profileLng) {
+        console.log('🔍 No separate coordinates found, checking address field for coordinates...');
+        if (userInfo.address) {
+          // Try to parse coordinates from address string (e.g., "26.417822, 43.900033")
+          const coordMatch = userInfo.address.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
+          if (coordMatch) {
+            profileLat = coordMatch[1];
+            profileLng = coordMatch[2];
+            console.log('✅ Found coordinates in address field:', { profileLat, profileLng });
+          } else {
+            console.log('❌ No coordinate pattern found in address:', userInfo.address);
+          }
+        }
+      }
       
       console.log('🔍 Profile coordinates check:', {
         latitude: userInfo.latitude,
@@ -566,6 +599,7 @@ const Checkout = () => {
         lat: userInfo.lat,
         lng: userInfo.lng,
         coords: userInfo.coords,
+        address: userInfo.address,
         profileLat,
         profileLng
       });
