@@ -98,14 +98,12 @@ const BannerSection = () => {
             className="relative z-10 max-w-2xl mx-auto"
             style={{ textAlign: textAlignment }}
           >
-            <div className="bg-[#74308c] bg-opacity-70 p-4 md:p-6 rounded-lg backdrop-blur-sm">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
-                {displayTitle}
-              </h2>
-              <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto drop-shadow-md leading-relaxed">
-                {displayDescription}
-              </p>
-            </div>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
+              {displayTitle}
+            </h2>
+            <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto drop-shadow-md leading-relaxed">
+              {displayDescription}
+            </p>
             {displayButtonLink && displayButtonText && (
               <Link 
                 href={displayButtonLink}

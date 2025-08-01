@@ -111,12 +111,10 @@ const ProductsHeroBanner = () => {
               className="text-white px-8 max-w-2xl"
               style={{ textAlign: 'center' }}
             >
-              <div className="bg-[#74308c] bg-opacity-70 p-4 md:p-6 rounded-lg backdrop-blur-sm">
-                <h2 className="text-lg md:text-xl font-bold mb-2">{banner.title}</h2>
-                {banner.info && (
-                  <p className="text-sm md:text-base mb-3">{banner.info}</p>
-                )}
-              </div>
+              <h2 className="text-lg md:text-xl font-bold mb-2">{banner.title}</h2>
+              {banner.info && (
+                <p className="text-sm md:text-base mb-3">{banner.info}</p>
+              )}
               {banner.url && banner.buttonName && (
                 <Link 
                   href={banner.url}
@@ -191,12 +189,10 @@ const ProductsHeroBanner = () => {
                     className="text-white px-8 max-w-2xl"
                     style={{ textAlign: 'center' }}
                   >
-                    <div className="bg-[#74308c] bg-opacity-70 p-4 md:p-6 rounded-lg backdrop-blur-sm">
-                      <h2 className="text-lg md:text-xl font-bold mb-2">{item.title}</h2>
-                      {item.info && (
-                        <p className="text-sm md:text-base mb-3">{item.info}</p>
-                      )}
-                    </div>
+                    <h2 className="text-lg md:text-xl font-bold mb-2">{item.title}</h2>
+                    {item.info && (
+                      <p className="text-sm md:text-base mb-3">{item.info}</p>
+                    )}
                     {item.url && item.buttonName && (
                       <Link 
                         href={item.url}
