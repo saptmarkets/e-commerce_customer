@@ -79,17 +79,17 @@ const SignUp = () => {
                     </div>
 
                     {verificationMethod === 'email' ? (
-                      <div className="form-group">
-                        <InputArea
-                          register={register}
-                          label={t('email')}
-                          name="email"
-                          type="email"
-                          placeholder={t('email')}
-                          Icon={FiMail}
-                        />
-                        <Error errorName={errors.email} />
-                      </div>
+                    <div className="form-group">
+                      <InputArea
+                        register={register}
+                        label={t('email')}
+                        name="email"
+                        type="email"
+                        placeholder={t('email')}
+                        Icon={FiMail}
+                      />
+                      <Error errorName={errors.email} />
+                    </div>
                     ) : (
                       <div className="form-group">
                         <InputArea

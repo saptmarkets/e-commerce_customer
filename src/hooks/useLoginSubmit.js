@@ -93,8 +93,15 @@ const useLoginSubmit = () => {
               password,
             });
             
-            notifySuccess("Please check your email to complete registration!");
-            router.replace("/auth/login");
+            // Store registration data in session storage for the next step
+            sessionStorage.setItem('emailRegistrationData', JSON.stringify({
+              name,
+              email,
+              password
+            }));
+            
+            notifySuccess("Verification code sent to your email!");
+            router.replace("/auth/email-verification");
             setLoading(false);
           } else if (phone) {
             // Phone verification flow

@@ -13,6 +13,10 @@ const CustomerServices = {
     return requests.post("/customer/verify-email", body);
   },
 
+  verifyEmailCode: async (body) => {
+    return requests.post("/customer/verify-email-code", body);
+  },
+
   verifyAndRegisterCustomer: async (token) => {
     return requests.post("/customer/verify-register", { token });
   },
