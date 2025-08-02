@@ -1,31 +1,40 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { FiLock, FiArrowLeft, FiMail } from "react-icons/fi";
-import useTranslation from "next-translate/useTranslation";
 
 //internal import
 import Layout from "@layout/Layout";
-import Error from "@components/form/Error";
 import InputArea from "@components/form/InputArea";
 import { notifyError, notifySuccess } from "@utils/toast";
 import CustomerServices from "@services/CustomerServices";
 
 const EmailVerification = () => {
-  const { t } = useTranslation('common');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [registrationData, setRegistrationData] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // Get registration data from session storage
-    const storedData = sessionStorage.getItem('emailRegistrationData');
-    if (storedData) {
-      const data = JSON.parse(storedData);
-      setRegistrationData(data);
-    } else {
-      // If no data, redirect back to signup
-      router.replace('/auth/signup');
+    try {
+      // Get registration data from session storage
+      const storedData = sessionStorage.getItem('emailRegistrationData');
+      if (storedData) {
+        const data = JSON.parse(storedData);
+        setRegistrationData(data);
+      } else {
+        // If no data, redirect back to signup
+        setError('No registration data found. Please sign up again.');
+        setTimeout(() => {
+          router.replace('/auth/signup');
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Error loading registration data:', err);
+      setError('Error loading registration data. Please sign up again.');
+      setTimeout(() => {
+        router.replace('/auth/signup');
+      }, 2000);
     }
   }, [router]);
 
@@ -57,6 +66,7 @@ const EmailVerification = () => {
       // Redirect to login
       router.replace('/auth/login');
     } catch (error) {
+      console.error('Verification error:', error);
       notifyError(error?.response?.data?.message || "Verification failed!");
     } finally {
       setLoading(false);
@@ -78,18 +88,56 @@ const EmailVerification = () => {
       });
       notifySuccess("Verification code resent to your email!");
     } catch (error) {
+      console.error('Resend error:', error);
       notifyError(error?.response?.data?.message || "Failed to resend code!");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleBackToSignup = () => {
+    router.push('/auth/signup');
+  };
+
+  // Show error state
+  if (error) {
+    return (
+      <Layout title="Email Verification" description="Verify your email address">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+          <div className="max-w-md w-full space-y-8 p-6">
+            <div className="text-center">
+              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-red-100">
+                <FiMail className="h-6 w-6 text-red-600" />
+              </div>
+              <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Error
+              </h2>
+              <p className="mt-2 text-center text-sm text-gray-600">
+                {error}
+              </p>
+              <div className="mt-4">
+                <button
+                  onClick={handleBackToSignup}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Back to Signup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Show loading state
   if (!registrationData) {
     return (
       <Layout title="Email Verification" description="Verify your email address">
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
           <div className="text-center">
-            <p>Loading...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         </div>
       </Layout>
@@ -159,7 +207,7 @@ const EmailVerification = () => {
             <div className="text-center">
               <button
                 type="button"
-                onClick={() => router.push('/auth/signup')}
+                onClick={handleBackToSignup}
                 className="flex items-center justify-center text-sm text-gray-600 hover:text-gray-500"
               >
                 <FiArrowLeft className="mr-1" />
