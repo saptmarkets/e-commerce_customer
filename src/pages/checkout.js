@@ -30,6 +30,24 @@ import { getUserSession } from "@lib/auth";
 import LocationService from "@components/location/LocationService";
 import useLocation from "@hooks/useLocation";
 import DistanceBasedShippingCalculator from "@components/shipping/DistanceBasedShippingCalculator";
+import DistanceService from "@services/DistanceService";
+
+// Helper to parse coordinates from strings like "26.417822, 43.900033" or text containing numbers
+const parseCoordinatesFromText = (text) => {
+  if (!text) return null;
+  try {
+    const matches = String(text).match(/-?\d+(?:\.\d+)?/g);
+    if (!matches || matches.length < 2) return null;
+    const latitude = parseFloat(matches[0]);
+    const longitude = parseFloat(matches[1]);
+    if (DistanceService.validateCoordinates(latitude, longitude)) {
+      return { latitude, longitude };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
 
 const Checkout = () => {
   const { t } = useTranslation();
@@ -317,22 +335,30 @@ const Checkout = () => {
     // Check which location method is selected and get coordinates
     switch (selectedLocationOption) {
       case 'profile':
-        // Check multiple possible coordinate fields in user profile
-        const profileLat = userInfo?.latitude || userInfo?.lat || userInfo?.coords?.latitude;
-        const profileLng = userInfo?.longitude || userInfo?.lng || userInfo?.coords?.longitude;
+        // Check multiple possible coordinate fields in user profile; fallback to parsing from address text
+        const profileLatRaw = userInfo?.latitude || userInfo?.lat || userInfo?.coords?.latitude;
+        const profileLngRaw = userInfo?.longitude || userInfo?.lng || userInfo?.coords?.longitude;
+        let finalProfileLat = profileLatRaw ? parseFloat(profileLatRaw) : null;
+        let finalProfileLng = profileLngRaw ? parseFloat(profileLngRaw) : null;
+
+        if ((!finalProfileLat || !finalProfileLng) && userInfo?.address) {
+          const parsed = parseCoordinatesFromText(userInfo.address);
+          if (parsed) {
+            finalProfileLat = parsed.latitude;
+            finalProfileLng = parsed.longitude;
+          }
+        }
         
-        if (profileLat && profileLng) {
+        if (finalProfileLat && finalProfileLng) {
           locationToUse = {
-            latitude: parseFloat(profileLat),
-            longitude: parseFloat(profileLng),
+            latitude: finalProfileLat,
+            longitude: finalProfileLng,
             accuracy: 100
           };
           locationSource = 'Saved Address';
-
         } else {
           setIsCalculatingShipping(false);
           setCalculationStatus('❌ No coordinates found in saved address. Please update your profile with location details or use GPS/Manual entry.');
-
           return;
         }
         break;
@@ -515,11 +541,17 @@ const Checkout = () => {
         });
       }
       
-      // If user has GPS coordinates saved, use them for shipping calculation
-      if (userInfo.latitude && userInfo.longitude) {
+      // Prefer explicit numeric fields; otherwise parse coordinates from address text
+      const explicitLat = userInfo.latitude || userInfo.lat || userInfo.coords?.latitude;
+      const explicitLng = userInfo.longitude || userInfo.lng || userInfo.coords?.longitude;
+      const parsedFromAddress = !explicitLat || !explicitLng ? parseCoordinatesFromText(userInfo.address) : null;
+      const finalLat = explicitLat ? parseFloat(explicitLat) : parsedFromAddress?.latitude;
+      const finalLng = explicitLng ? parseFloat(explicitLng) : parsedFromAddress?.longitude;
+
+      if (finalLat && finalLng) {
         const profileLocation = {
-          latitude: parseFloat(userInfo.latitude),
-          longitude: parseFloat(userInfo.longitude),
+          latitude: finalLat,
+          longitude: finalLng,
           accuracy: 100, // Assumed accuracy for saved profile location
           timestamp: Date.now()
         };
