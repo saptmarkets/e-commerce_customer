@@ -8,8 +8,17 @@ import ProductServices from "@services/ProductServices";
 import Link from "next/link";
 import Image from "next/image";
 
+const isValidName = (nameValue) => {
+  if (nameValue === null || nameValue === undefined) return false;
+  const asString = typeof nameValue === "string" ? nameValue : String(nameValue);
+  const trimmed = asString.trim();
+  if (!trimmed) return false;
+  if (trimmed.toLowerCase() === "false") return false;
+  return true;
+};
+
 const Category = () => {
-  const { categoryDrawerOpen, closeCategoryDrawer } = useContext(SidebarContext);
+  const { categoryDrawerOpen } = useContext(SidebarContext);
   const { showingTranslateValue } = useUtilsFunction();
   const { t } = useTranslation("common");
 
@@ -36,6 +45,7 @@ const Category = () => {
   const [expanded, setExpanded] = useState({});
   const [loadingByCategory, setLoadingByCategory] = useState({});
   const [childrenWithProducts, setChildrenWithProducts] = useState({});
+  const [hiddenMainIds, setHiddenMainIds] = useState(new Set());
 
   const toggleExpand = useCallback(
     async (category) => {
@@ -45,25 +55,34 @@ const Category = () => {
 
       if (
         willExpand &&
-        category?.children?.length > 0 &&
         childrenWithProducts[categoryId] === undefined &&
         !loadingByCategory[categoryId]
       ) {
         setLoadingByCategory((prev) => ({ ...prev, [categoryId]: true }));
         try {
-          const results = await Promise.all(
-            category.children.map(async (sub) => {
-              try {
-                const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
-                return { sub, hasProducts };
-              } catch (err) {
-                return { sub, hasProducts: false };
-              }
-            })
-          );
+          const [hasMainProducts, subResults] = await Promise.all([
+            ProductServices.checkCategoryHasProducts(categoryId).catch(() => false),
+            Promise.all(
+              (category.children || []).map(async (sub) => {
+                try {
+                  const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
+                  return { sub, hasProducts };
+                } catch (err) {
+                  return { sub, hasProducts: false };
+                }
+              })
+            ),
+          ]);
 
-          const filtered = results.filter((r) => r.hasProducts).map((r) => r.sub);
-          setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filtered }));
+          const filteredSubs = (subResults || [])
+            .filter((r) => r.hasProducts)
+            .map((r) => r.sub);
+
+          if (!hasMainProducts && filteredSubs.length === 0) {
+            setHiddenMainIds((prev) => new Set(prev).add(categoryId));
+          }
+
+          setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filteredSubs }));
         } finally {
           setLoadingByCategory((prev) => ({ ...prev, [categoryId]: false }));
         }
@@ -71,6 +90,14 @@ const Category = () => {
     },
     [expanded, childrenWithProducts, loadingByCategory]
   );
+
+  const displayedMainCategories = useMemo(() => {
+    return mainCategories.filter((cat) => {
+      if (hiddenMainIds.has(cat._id)) return false;
+      const displayName = showingTranslateValue(cat.name);
+      return isValidName(displayName);
+    });
+  }, [mainCategories, hiddenMainIds, showingTranslateValue]);
 
   return (
     <div className={`${categoryDrawerOpen ? "block" : "hidden"}`}>
@@ -83,13 +110,13 @@ const Category = () => {
         <div className="text-center py-4">
           <p className="text-red-600 text-sm">{error?.message || "Error loading categories"}</p>
         </div>
-      ) : mainCategories.length === 0 ? (
+      ) : displayedMainCategories.length === 0 ? (
         <div className="text-center py-4">
           <p className="text-gray-600 text-sm">No categories found</p>
         </div>
       ) : (
         <ul className="space-y-2 p-4">
-          {mainCategories.map((category) => (
+          {displayedMainCategories.map((category) => (
             <li key={category._id} className="group">
               <div className="flex items-center justify-between px-2 py-2 rounded hover:bg-gray-50 transition-colors">
                 <Link href={`/category/${category.slug || category._id}`} className="flex items-center flex-1 min-w-0">

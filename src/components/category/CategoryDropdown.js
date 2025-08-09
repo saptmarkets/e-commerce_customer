@@ -7,6 +7,15 @@ import CategoryServices from "@services/CategoryServices";
 import ProductServices from "@services/ProductServices";
 import { useCallback, useMemo, useState } from "react";
 
+const isValidName = (nameValue) => {
+  if (nameValue === null || nameValue === undefined) return false;
+  const asString = typeof nameValue === "string" ? nameValue : String(nameValue);
+  const trimmed = asString.trim();
+  if (!trimmed) return false;
+  if (trimmed.toLowerCase() === "false") return false;
+  return true;
+};
+
 const CategoryDropdown = () => {
   const { showingTranslateValue } = useUtilsFunction();
 
@@ -36,6 +45,7 @@ const CategoryDropdown = () => {
   const [expanded, setExpanded] = useState({}); // { [categoryId]: boolean }
   const [loadingByCategory, setLoadingByCategory] = useState({}); // { [categoryId]: boolean }
   const [childrenWithProducts, setChildrenWithProducts] = useState({}); // { [categoryId]: Subcategory[] }
+  const [hiddenMainIds, setHiddenMainIds] = useState(new Set()); // categories hidden after lazy check
 
   const toggleExpand = useCallback(
     async (category) => {
@@ -43,28 +53,40 @@ const CategoryDropdown = () => {
       const willExpand = !expanded[categoryId];
       setExpanded((prev) => ({ ...prev, [categoryId]: willExpand }));
 
-      // On first expand, lazily check subcategories for products
+      // On first expand, lazily check this category and its subcategories
       if (
         willExpand &&
-        category?.children?.length > 0 &&
         childrenWithProducts[categoryId] === undefined &&
         !loadingByCategory[categoryId]
       ) {
         setLoadingByCategory((prev) => ({ ...prev, [categoryId]: true }));
         try {
-          const results = await Promise.all(
-            category.children.map(async (sub) => {
-              try {
-                const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
-                return { sub, hasProducts };
-              } catch (err) {
-                return { sub, hasProducts: false };
-              }
-            })
-          );
+          const [hasMainProducts, subResults] = await Promise.all([
+            // Check main category has products
+            ProductServices.checkCategoryHasProducts(categoryId).catch(() => false),
+            // Check children
+            Promise.all(
+              (category.children || []).map(async (sub) => {
+                try {
+                  const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
+                  return { sub, hasProducts };
+                } catch (err) {
+                  return { sub, hasProducts: false };
+                }
+              })
+            ),
+          ]);
 
-          const filtered = results.filter((r) => r.hasProducts).map((r) => r.sub);
-          setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filtered }));
+          const filteredSubs = (subResults || [])
+            .filter((r) => r.hasProducts)
+            .map((r) => r.sub);
+
+          // If neither main nor any subs have products, hide this main category
+          if (!hasMainProducts && filteredSubs.length === 0) {
+            setHiddenMainIds((prev) => new Set(prev).add(categoryId));
+          }
+
+          setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filteredSubs }));
         } finally {
           setLoadingByCategory((prev) => ({ ...prev, [categoryId]: false }));
         }
@@ -72,6 +94,14 @@ const CategoryDropdown = () => {
     },
     [expanded, childrenWithProducts, loadingByCategory]
   );
+
+  const displayedMainCategories = useMemo(() => {
+    return mainCategories.filter((cat) => {
+      if (hiddenMainIds.has(cat._id)) return false;
+      const displayName = showingTranslateValue(cat.name);
+      return isValidName(displayName);
+    });
+  }, [mainCategories, hiddenMainIds, showingTranslateValue]);
 
   return (
     <div className="p-4">
@@ -90,7 +120,7 @@ const CategoryDropdown = () => {
           <p className="text-red-600 text-sm">{error?.message || "Error loading categories"}</p>
           <p className="text-gray-500 text-xs mt-1">Please try refreshing the page</p>
         </div>
-      ) : mainCategories.length === 0 ? (
+      ) : displayedMainCategories.length === 0 ? (
         <div className="text-center py-4">
           <div className="text-gray-400 mb-2">
             <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,7 +131,7 @@ const CategoryDropdown = () => {
         </div>
       ) : (
         <ul className="space-y-2">
-          {mainCategories.map((category) => (
+          {displayedMainCategories.map((category) => (
             <li key={category._id} className="group">
               <div className="flex items-center justify-between px-2 py-2 rounded hover:bg-gray-50 transition-colors">
                 <Link href={`/category/${category.slug || category._id}`} className="flex items-center flex-1 min-w-0">
