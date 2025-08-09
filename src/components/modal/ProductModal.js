@@ -461,13 +461,13 @@ const ProductModal = ({
                 </button>
 
                 {/* Main Image with Navigation */}
-                <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-3 group">
+                <div className="relative w-full h-72 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] bg-gray-100 rounded-xl overflow-hidden mb-3 group">
                   <Image
                     src={productImages[selectedImageIndex]}
                     alt={showingTranslateValue(product?.title)}
-                    width={500}
-                    height={500}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-contain transition-transform duration-300 hover:scale-105"
                     onError={(e) => {
                       if (!e.target.dataset.fallbackSet) {
                         e.target.dataset.fallbackSet = 'true';
@@ -509,7 +509,7 @@ const ProductModal = ({
                       <button
                         key={index}
                         onClick={() => selectImage(index)}
-                        className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all hover:border-blue-400 ${
+                        className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all hover:border-blue-400 ${
                           index === selectedImageIndex 
                             ? 'border-blue-500 ring-2 ring-blue-200' 
                             : 'border-gray-200'
@@ -518,9 +518,9 @@ const ProductModal = ({
                         <Image
                           src={image}
                           alt={`${showingTranslateValue(product?.title)} - Image ${index + 1}`}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="64px"
+                          className="object-cover"
                           onError={(e) => {
                             if (!e.target.dataset.fallbackSet) {
                               e.target.dataset.fallbackSet = 'true';
