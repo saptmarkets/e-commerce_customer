@@ -81,7 +81,8 @@ const Checkout = () => {
     address: detectedAddress, 
     loading: locationLoading, 
     getLocationWithAddress,
-    setLocation: setHookLocation
+    setLocation: setHookLocation,
+    reverseGeocode
   } = useLocation();
   
   // Local location state for shipping calculator
@@ -356,6 +357,22 @@ const Checkout = () => {
             accuracy: 100
           };
           locationSource = 'Saved Address';
+
+          // Populate global address info for UI consistency (street, links)
+          (async () => {
+            try {
+              const addr = await reverseGeocode(finalProfileLat, finalProfileLng);
+              window.userLocationCoords = {
+                latitude: finalProfileLat,
+                longitude: finalProfileLng,
+                accuracy: 100,
+                googleMapsLink: `https://www.google.com/maps?q=${finalProfileLat},${finalProfileLng}`,
+                googleMapsAddressLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr?.formattedAddress || userInfo?.address || '')}`,
+                address: addr?.formattedAddress || userInfo?.address || '',
+                addressComponents: addr?.components || {}
+              };
+            } catch {}
+          })();
         } else {
           setIsCalculatingShipping(false);
           setCalculationStatus('❌ No coordinates found in saved address. Please update your profile with location details or use GPS/Manual entry.');
@@ -558,19 +575,35 @@ const Checkout = () => {
         
         setUserLocation(profileLocation);
         
-        // Store coordinates globally for order submission
-        window.userLocationCoords = {
-          latitude: profileLocation.latitude,
-          longitude: profileLocation.longitude,
-          accuracy: profileLocation.accuracy,
-          googleMapsLink: `https://www.google.com/maps?q=${profileLocation.latitude},${profileLocation.longitude}`,
-          googleMapsAddressLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(userInfo.address)}`,
-          address: userInfo.address,
-          addressComponents: {
-            city: userInfo.city,
-            country: userInfo.country || 'Saudi Arabia'
+        // Reverse geocode to get street/area for display like GPS mode
+        (async () => {
+          try {
+            const addr = await reverseGeocode(profileLocation.latitude, profileLocation.longitude);
+            window.userLocationCoords = {
+              latitude: profileLocation.latitude,
+              longitude: profileLocation.longitude,
+              accuracy: profileLocation.accuracy,
+              googleMapsLink: `https://www.google.com/maps?q=${profileLocation.latitude},${profileLocation.longitude}`,
+              googleMapsAddressLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr?.formattedAddress || userInfo.address || '')}`,
+              address: addr?.formattedAddress || userInfo.address,
+              addressComponents: addr?.components || { city: userInfo.city, country: userInfo.country || 'Saudi Arabia' }
+            };
+            setLocationStatus('Saved profile coordinates resolved to address');
+          } catch {
+            window.userLocationCoords = {
+              latitude: profileLocation.latitude,
+              longitude: profileLocation.longitude,
+              accuracy: profileLocation.accuracy,
+              googleMapsLink: `https://www.google.com/maps?q=${profileLocation.latitude},${profileLocation.longitude}`,
+              googleMapsAddressLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(userInfo.address)}`,
+              address: userInfo.address,
+              addressComponents: {
+                city: userInfo.city,
+                country: userInfo.country || 'Saudi Arabia'
+              }
+            };
           }
-        };
+        })();;
       }
     } catch (error) {
       console.error('Error applying profile location:', error);
