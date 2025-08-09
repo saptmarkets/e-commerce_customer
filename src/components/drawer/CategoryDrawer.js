@@ -1,0 +1,23 @@
+import React, { useContext } from "react";
+import Drawer from "rc-drawer";
+
+import Category from "@components/category/Category";
+import { SidebarContext } from "@context/SidebarContext";
+
+const CategoryDrawer = () => {
+  const { categoryDrawerOpen, closeCategoryDrawer } =
+    useContext(SidebarContext);
+
+  return (
+    <Drawer
+      open={categoryDrawerOpen}
+      onClose={closeCategoryDrawer}
+      parent={null}
+      level={null}
+      placement={"left"}
+    >
+      <Category />
+    </Drawer>
+  );
+};
+export default CategoryDrawer;
