@@ -31,11 +31,10 @@ const Category = () => {
     const filterCategoriesWithProducts = async () => {
       setLoading(true);
       try {
-        const mainCategories = data?.filter(
-          (cat) => !cat.parentId || cat.parentId === "62c827b5a427b63741da9175"
-        ) || [];
+        const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
+        const mainCategories = data?.filter(isRoot) || [];
         const categoriesWithProducts = [];
-        for (const category of mainCategories) {
+        for (const category of mainCategories.map(c => ({ ...c }))) {
           const hasMainCategoryProducts = await ProductServices.checkCategoryHasProducts(category._id);
           let hasSubcategoryProducts = false;
           if (category.children && category.children.length > 0) {

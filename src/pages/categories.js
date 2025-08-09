@@ -22,10 +22,9 @@ const Categories = ({ categories }) => {
       setLoading(true);
       
       try {
-        // Filter main categories (those without parentId or with parentId as root)
-        const mainCategories = categories?.filter(cat => 
-          !cat.parentId || cat.parentId === "62c827b5a427b63741da9175"
-        ) || [];
+        // Generalized root detection: treat categories without a valid parentId as root
+        const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
+        const mainCategories = categories?.filter(isRoot) || [];
 
         const categoriesWithProducts = [];
 
