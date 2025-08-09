@@ -33,33 +33,79 @@ const Category = () => {
       try {
         const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
         const mainCategories = data?.filter(isRoot) || [];
+        
+        if (mainCategories.length === 0) {
+          setFilteredCategories([]);
+          setLoading(false);
+          return;
+        }
+
+        // Collect all category IDs that need to be checked (main categories + subcategories)
+        const allCategoryIds = [];
+        const categoryMap = new Map(); // To map category IDs back to category objects
+        
+        mainCategories.forEach(category => {
+          allCategoryIds.push(category._id);
+          categoryMap.set(category._id, { ...category });
+          
+          if (category.children && category.children.length > 0) {
+            category.children.forEach(subcategory => {
+              allCategoryIds.push(subcategory._id);
+              categoryMap.set(subcategory._id, { ...subcategory });
+            });
+          }
+        });
+
+        // Check all categories in parallel using Promise.all
+        const hasProductsResults = await Promise.all(
+          allCategoryIds.map(async (categoryId) => {
+            try {
+              const hasProducts = await ProductServices.checkCategoryHasProducts(categoryId);
+              return { categoryId, hasProducts };
+            } catch (error) {
+              console.error(`Error checking products for category ${categoryId}:`, error);
+              return { categoryId, hasProducts: false };
+            }
+          })
+        );
+
+        // Create a map of category ID to hasProducts result
+        const hasProductsMap = new Map();
+        hasProductsResults.forEach(result => {
+          hasProductsMap.set(result.categoryId, result.hasProducts);
+        });
+
+        // Filter categories based on the results
         const categoriesWithProducts = [];
-        for (const category of mainCategories.map(c => ({ ...c }))) {
-          const hasMainCategoryProducts = await ProductServices.checkCategoryHasProducts(category._id);
+        
+        for (const category of mainCategories) {
+          const hasMainCategoryProducts = hasProductsMap.get(category._id) || false;
+          
+          // Check if any subcategories have products
           let hasSubcategoryProducts = false;
           if (category.children && category.children.length > 0) {
             for (const subcategory of category.children) {
-              const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-              if (hasSubProducts) {
+              if (hasProductsMap.get(subcategory._id)) {
                 hasSubcategoryProducts = true;
                 break;
               }
             }
           }
+
+          // Only include category if it has products or its subcategories have products
           if (hasMainCategoryProducts || hasSubcategoryProducts) {
+            // Filter subcategories to only include those with products
             if (category.children && category.children.length > 0) {
-              const filteredSubcategories = [];
-              for (const subcategory of category.children) {
-                const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-                if (hasSubProducts) {
-                  filteredSubcategories.push(subcategory);
-                }
-              }
+              const filteredSubcategories = category.children.filter(subcategory => 
+                hasProductsMap.get(subcategory._id)
+              );
               category.children = filteredSubcategories;
             }
+            
             categoriesWithProducts.push(category);
           }
         }
+
         setFilteredCategories(categoriesWithProducts);
       } catch (error) {
         setFilteredCategories([]);
@@ -147,11 +193,24 @@ const Category = () => {
           </button>
           {categoriesOpen && (
             loading ? (
-              <Loading loading={loading} />
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <span className="ml-2 text-gray-600">Loading categories...</span>
+              </div>
             ) : error ? (
               <p className="flex justify-center align-middle items-center m-auto text-xl text-red-500">
                 {error?.response?.data?.message || error?.message}
               </p>
+            ) : filteredCategories?.length === 0 ? (
+              <div className="text-center py-4">
+                <div className="text-gray-400 mb-2">
+                  <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 text-sm">No categories found</p>
+                <p className="text-gray-500 text-xs mt-1">Categories with products will appear here</p>
+              </div>
             ) : (
               <div className="relative grid gap-2 p-6" id="category-list">
                 {filteredCategories?.map((category) => (

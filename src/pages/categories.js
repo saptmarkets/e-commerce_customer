@@ -26,18 +26,58 @@ const Categories = ({ categories }) => {
         const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
         const mainCategories = categories?.filter(isRoot) || [];
 
-        const categoriesWithProducts = [];
+        if (mainCategories.length === 0) {
+          setFilteredCategories([]);
+          setLoading(false);
+          return;
+        }
 
+        // Collect all category IDs that need to be checked (main categories + subcategories)
+        const allCategoryIds = [];
+        const categoryMap = new Map(); // To map category IDs back to category objects
+        
+        mainCategories.forEach(category => {
+          allCategoryIds.push(category._id);
+          categoryMap.set(category._id, { ...category });
+          
+          if (category.children && category.children.length > 0) {
+            category.children.forEach(subcategory => {
+              allCategoryIds.push(subcategory._id);
+              categoryMap.set(subcategory._id, { ...subcategory });
+            });
+          }
+        });
+
+        // Check all categories in parallel using Promise.all
+        const hasProductsResults = await Promise.all(
+          allCategoryIds.map(async (categoryId) => {
+            try {
+              const hasProducts = await ProductServices.checkCategoryHasProducts(categoryId);
+              return { categoryId, hasProducts };
+            } catch (error) {
+              console.error(`Error checking products for category ${categoryId}:`, error);
+              return { categoryId, hasProducts: false };
+            }
+          })
+        );
+
+        // Create a map of category ID to hasProducts result
+        const hasProductsMap = new Map();
+        hasProductsResults.forEach(result => {
+          hasProductsMap.set(result.categoryId, result.hasProducts);
+        });
+
+        // Filter categories based on the results
+        const categoriesWithProducts = [];
+        
         for (const category of mainCategories) {
-          // Check if main category has products
-          const hasMainCategoryProducts = await ProductServices.checkCategoryHasProducts(category._id);
+          const hasMainCategoryProducts = hasProductsMap.get(category._id) || false;
           
           // Check if any subcategories have products
           let hasSubcategoryProducts = false;
           if (category.children && category.children.length > 0) {
             for (const subcategory of category.children) {
-              const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-              if (hasSubProducts) {
+              if (hasProductsMap.get(subcategory._id)) {
                 hasSubcategoryProducts = true;
                 break;
               }
@@ -48,13 +88,9 @@ const Categories = ({ categories }) => {
           if (hasMainCategoryProducts || hasSubcategoryProducts) {
             // Filter subcategories to only include those with products
             if (category.children && category.children.length > 0) {
-              const filteredSubcategories = [];
-              for (const subcategory of category.children) {
-                const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-                if (hasSubProducts) {
-                  filteredSubcategories.push(subcategory);
-                }
-              }
+              const filteredSubcategories = category.children.filter(subcategory => 
+                hasProductsMap.get(subcategory._id)
+              );
               category.children = filteredSubcategories;
             }
             
