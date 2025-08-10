@@ -78,15 +78,6 @@ const OrderServices = {
     return requests.post("/customer-order/add", payload, { headers });
   },
 
-  // Razorpay
-  createRazorpayOrder: async (body) => {
-    return requests.post("/order/razorpay/create", body);
-  },
-
-  verifyRazorpayPayment: async (body) => {
-    return requests.post("/order/razorpay/verify", body);
-  },
-
   // New method for reverting order to checkout
   revertToCheckout: async (orderId, version) => {
     const headers = {
