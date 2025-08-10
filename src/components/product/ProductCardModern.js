@@ -684,40 +684,20 @@ const ProductCardModern = ({
           } ${!pricingInfo.isPromotional && availableUnits.length <= 1 ? 'mb-0.5' : ''}`}>
           {/* Titles (EN + AR) */}
           <div onClick={() => setModalOpen(true)} className="cursor-pointer">
-            {/* Show only the appropriate language title based on current locale */}
-            {lang === 'ar' && titleAr && (
+            {/* Always show both names when available, one line each to preserve layout */}
+            {titleEn && (
               <h3
-                className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
-                  pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
-                }`}
-                dir="rtl"
-              >
-                {titleAr}
-              </h3>
-            )}
-            {lang === 'en' && titleEn && (
-              <h3
-                className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
+                className={`font-semibold text-gray-900 line-clamp-1 hover:text-blue-600 transition-colors leading-tight ${
                   pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
                 }`}
               >
                 {titleEn}
               </h3>
             )}
-            {/* Fallback: if current language title is not available, show the other language */}
-            {lang === 'ar' && !titleAr && titleEn && (
+            {titleAr && (
               <h3
-                className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
-                  pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
-                }`}
-              >
-                {titleEn}
-              </h3>
-            )}
-            {lang === 'en' && !titleEn && titleAr && (
-              <h3
-                className={`font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors leading-tight ${
-                  pricingInfo.isPromotional ? 'text-responsive-xs' : 'text-responsive-sm'
+                className={`text-gray-800 line-clamp-1 leading-tight ${
+                  pricingInfo.isPromotional ? 'text-responsive-2xs' : 'text-responsive-xs'
                 }`}
                 dir="rtl"
               >
