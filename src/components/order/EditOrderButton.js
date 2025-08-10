@@ -13,8 +13,8 @@ const EditOrderButton = ({ order }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  // Feature flag check (can be controlled via environment or settings)
-  const isEditEnabled = process.env.NEXT_PUBLIC_REVERT_TO_CHECKOUT_ENABLED === 'true';
+  // Feature flag check (default enabled if env not set)
+  const isEditEnabled = ((process.env.NEXT_PUBLIC_REVERT_TO_CHECKOUT_ENABLED ?? 'true') === 'true');
 
   // Check if order can be edited
   const canEdit = order?.status === 'Received' && 
