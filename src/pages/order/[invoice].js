@@ -86,6 +86,9 @@ const Order = ({ params }) => {
                     data={data}
                     currency={currency}
                     globalSetting={globalSetting}
+                    getNumberTwo={getNumberTwo}
+                    showingTranslateValue={showingTranslateValue}
+                    lang={lang}
                   />
                 }
                 fileName={`Invoice-${data?.invoice}.pdf`}
