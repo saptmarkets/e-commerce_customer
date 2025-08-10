@@ -86,8 +86,7 @@ const Checkout = () => {
     reverseGeocode
   } = useLocation();
 
-  // Restore checkout data from session storage (for edit order flow)
-  useCheckoutRestore(setValue, setUserLocation, setManualLocationData, setGpsLocationData);
+  // Restore checkout data will be initialized after hooks are ready
   
   // Local location state for shipping calculator
   const [userLocation, setUserLocation] = useState(null);
@@ -159,6 +158,9 @@ const Checkout = () => {
     loyaltyDiscountAmount,
     setLoyaltyDiscountAmount,
   } = useCheckoutSubmit(storeSetting, loyaltySummary);
+
+  // Now restore checkout data (requires setValue and state setters to exist)
+  useCheckoutRestore(setValue, setUserLocation, setManualLocationData, setGpsLocationData);
 
   // Set loyalty points when data is available
   useEffect(() => {
