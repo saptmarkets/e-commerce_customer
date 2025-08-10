@@ -31,6 +31,7 @@ import LocationService from "@components/location/LocationService";
 import useLocation from "@hooks/useLocation";
 import DistanceBasedShippingCalculator from "@components/shipping/DistanceBasedShippingCalculator";
 import DistanceService from "@services/DistanceService";
+import useCheckoutRestore from "@hooks/useCheckoutRestore";
 
 // Helper to parse coordinates from strings like "26.417822, 43.900033" or text containing numbers
 const parseCoordinatesFromText = (text) => {
@@ -84,6 +85,9 @@ const Checkout = () => {
     setLocation: setHookLocation,
     reverseGeocode
   } = useLocation();
+
+  // Restore checkout data from session storage (for edit order flow)
+  useCheckoutRestore(setValue, setUserLocation, setManualLocationData, setGpsLocationData);
   
   // Local location state for shipping calculator
   const [userLocation, setUserLocation] = useState(null);

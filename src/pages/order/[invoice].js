@@ -14,6 +14,7 @@ import OrderServices from "@services/OrderServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import InvoiceForDownload from "@components/invoice/InvoiceForDownload";
 import CancelOrderButton from "@components/order/CancelOrderButton";
+import EditOrderButton from "@components/order/EditOrderButton";
 
 const Order = ({ params }) => {
   const printRef = useRef();
@@ -78,52 +79,43 @@ const Order = ({ params }) => {
             globalSetting={globalSetting}
           />
           <div className="bg-white p-8 rounded-b-xl">
-            <div className="flex lg:flex-row md:flex-row sm:flex-row flex-col justify-between invoice-btn">
+            <div className="flex lg:flex-row flex-col justify-between items-center">
               <PDFDownloadLink
                 document={
                   <InvoiceForDownload
                     data={data}
                     currency={currency}
                     globalSetting={globalSetting}
-                    getNumberTwo={getNumberTwo}
-                    showingTranslateValue={showingTranslateValue}
-                    lang={lang}
                   />
                 }
-                fileName={lang === 'ar' ? 'فاتورة.pdf' : 'Invoice.pdf'}
-                className="mb-3 sm:mb-0 md:mb-0 lg:mb-0 flex items-center justify-center bg-emerald-500  text-white transition-all font-serif text-sm font-semibold h-10 py-2 px-5 rounded-md"
+                fileName={`Invoice-${data?.invoice}.pdf`}
               >
-                {({ loading }) =>
-                  loading ? (
-                    'Loading...'
-                  ) : (
-                    <span className="flex items-center">
-                      {showingTranslateValue(storeCustomizationSetting?.dashboard?.download_button)}
-                      <span className="ml-2 text-base">
-                        <IoCloudDownloadOutline />
-                      </span>
-                    </span>
-                  )
-                }
-              </PDFDownloadLink>
-
-              <ReactToPrint
-                trigger={() => (
-                  <button className="mb-3 sm:mb-0 md:mb-0 lg:mb-0 flex items-center justify-center bg-emerald-500  text-white transition-all font-serif text-sm font-semibold h-10 py-2 px-5 rounded-md">
-                    {showingTranslateValue(
-                      storeCustomizationSetting?.dashboard?.print_button
-                    )}{" "}
-                    <span className="ml-2 text-base">
-                      <IoPrintOutline />
-                    </span>
+                {({ blob, url, loading, error }) => (
+                  <button className="mb-3 sm:mb-0 md:mb-0 lg:mb-0 flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
+                    <IoCloudDownloadOutline className="mr-2" />
+                    Download Invoice
                   </button>
                 )}
-                content={() => printRef.current}
-                documentTitle={data?.invoice}
-              />
+              </PDFDownloadLink>
 
-              {/* Cancel Order Button - only show if order can be cancelled */}
-              <CancelOrderButton order={data} />
+              <div className="flex items-center space-x-3">
+                {/* Edit Order Button - only show for Received orders */}
+                <EditOrderButton order={data} />
+
+                {/* Cancel Order Button - existing functionality */}
+                <CancelOrderButton order={data} />
+
+                <ReactToPrint
+                  trigger={() => (
+                    <button className="flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
+                      <IoPrintOutline className="mr-2" />
+                      Print Invoice
+                    </button>
+                  )}
+                  content={() => printRef.current}
+                  documentTitle={`Invoice-${data?.invoice}`}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -132,10 +124,10 @@ const Order = ({ params }) => {
   );
 };
 
+export default Order;
+
 export const getServerSideProps = ({ params }) => {
   return {
     props: { params },
   };
-};
-
-export default Order; 
+}; 

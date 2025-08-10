@@ -23,11 +23,11 @@ const OrderServices = {
   },
 
   getOrderCustomer: async ({ page = 1, limit = 8 }) => {
-    return requests.get(`/customer-order`, { params: { page, limit } });
+    return requests.get(`/customer-order?page=${page}&limit=${limit}`);
   },
 
   getOrderById: async (id) => {
-    return requests.get(`/order/${id}`);
+    return requests.get(`/customer-order/${id}`);
   },
 
   // Get order details by invoice number (customer-authenticated)
@@ -85,6 +85,16 @@ const OrderServices = {
 
   verifyRazorpayPayment: async (body) => {
     return requests.post("/order/razorpay/verify", body);
+  },
+
+  // New method for reverting order to checkout
+  revertToCheckout: async (orderId, version) => {
+    const headers = {
+      'If-Match': version.toString(),
+      'Idempotency-Key': `revert-${orderId}-${Date.now()}`,
+    };
+    
+    return requests.post(`/customer-order/${orderId}/revert-to-checkout`, {}, { headers });
   },
 };
 
