@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { IoCloudDownloadOutline, IoPrintOutline } from "react-icons/io5";
 import ReactToPrint from "react-to-print";
 import { useQuery } from "@tanstack/react-query";
+import useTranslation from "next-translate/useTranslation";
 
 //internal import
 
@@ -19,6 +20,7 @@ import EditOrderButton from "@components/order/EditOrderButton";
 const Order = ({ params }) => {
   const printRef = useRef();
   const orderInvoice = params.invoice;
+  const { t } = useTranslation('common');
 
   const {
     data,
@@ -30,7 +32,6 @@ const Order = ({ params }) => {
     queryFn: async () => await OrderServices.getOrderByInvoice(orderInvoice),
     enabled: !!orderInvoice,
     refetchInterval: (latestData) => {
-      // Poll every 30s only if order is not delivered or cancelled (reduced frequency)
       if (!latestData) return 30000;
       return ["Delivered", "Cancel", "Cancelled"].includes(latestData.status) ? false : 30000;
     },
@@ -56,10 +57,10 @@ const Order = ({ params }) => {
           <div className="flex justify-center items-center min-h-screen">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-red-600 mb-4">
-                Order Not Found
+                {t('orderNotFound') || 'Order Not Found'}
               </h2>
               <p className="text-gray-600">
-                The order you're looking for doesn't exist or you don't have permission to view it.
+                {t('orderNotFoundMsg') || "The order you're looking for doesn't exist or you don't have permission to view it."}
               </p>
             </div>
           </div>
@@ -69,7 +70,7 @@ const Order = ({ params }) => {
   }
 
   return (
-    <Layout title="Invoice" description="order confirmation page">
+    <Layout title={t('invoice') || 'Invoice'} description="order confirmation page">
       <div className="max-w-screen-2xl mx-auto py-10 px-3 sm:px-10">
         <div className="bg-white rounded-lg shadow-sm">
           <Invoice
@@ -96,7 +97,7 @@ const Order = ({ params }) => {
                 {({ blob, url, loading, error }) => (
                   <button className="mb-3 sm:mb-0 md:mb-0 lg:mb-0 flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
                     <IoCloudDownloadOutline className="mr-2" />
-                    Download Invoice
+                    {t('downloadInvoice') || 'Download Invoice'}
                   </button>
                 )}
               </PDFDownloadLink>
@@ -112,7 +113,7 @@ const Order = ({ params }) => {
                 trigger={() => (
                     <button className="flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
                       <IoPrintOutline className="mr-2" />
-                      Print Invoice
+                      {t('printInvoice') || 'Print Invoice'}
                   </button>
                 )}
                 content={() => printRef.current}
