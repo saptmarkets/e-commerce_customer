@@ -12,6 +12,7 @@ import {
 } from "react-icons/io5";
 import useTranslation from 'next-translate/useTranslation';
 import { useCart } from "react-use-cart";
+import { toggleWishlistId } from '@hooks/useWishlist';
 
 // Internal imports
 import ProductModal from "@components/modal/ProductModal";
