@@ -571,5 +571,20 @@
   "kmfromourstore": "km from our store",
   "Youre": "You're",
   "kmaway": "km away",
-  "processing": "Processing"
+  "processing": "Processing",
+  
+  "editOrder": "Edit Order",
+  "confirmEditOrder": "Confirm Edit Order",
+  "editOrderWarning": "This will cancel your current order and move your items back to checkout.",
+  "pricesStockMayChange": "Prices and stock availability may change",
+  "promotionsMayExpire": "Promotions or coupons may no longer be valid",
+  "newOrderNumber": "You will receive a new order number",
+  "confirmEdit": "Confirm Edit",
+  "orderMovedToCheckout": "Order moved to checkout successfully",
+  "orderModifiedRefresh": "Order has been modified. Please refresh and try again.",
+  "orderCannotBeModified": "Order has been accepted by a driver and cannot be modified.",
+  "featureNotAvailable": "Edit order feature is not available.",
+  "editOrderFailed": "Failed to edit order. Please try again.",
+  "orderNotFound": "Order Not Found",
+  "orderNotFoundMsg": "The order you're looking for doesn't exist or you don't have permission to view it."
 } 

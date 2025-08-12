@@ -598,5 +598,20 @@
   "kmfromourstore": "كم من متجرنا",
   "Youre": "أنت",
   "kmaway": "كم بعيداً",
-  "processing": "قيد المعالجة"
+  "processing": "قيد المعالجة",
+  
+  "editOrder": "تعديل الطلب",
+  "confirmEditOrder": "تأكيد تعديل الطلب",
+  "editOrderWarning": "سيتم إلغاء طلبك الحالي وإعادة العناصر إلى صفحة الدفع.",
+  "pricesStockMayChange": "قد تتغير الأسعار وتوافر المخزون",
+  "promotionsMayExpire": "قد لا تكون العروض أو القسائم سارية",
+  "newOrderNumber": "ستحصل على رقم طلب جديد",
+  "confirmEdit": "تأكيد التعديل",
+  "orderMovedToCheckout": "تم نقل الطلب إلى صفحة الدفع بنجاح",
+  "orderModifiedRefresh": "تم تعديل الطلب. يرجى التحديث والمحاولة مرة أخرى.",
+  "orderCannotBeModified": "تم قبول الطلب من قبل السائق ولا يمكن تعديله.",
+  "featureNotAvailable": "ميزة تعديل الطلب غير متاحة.",
+  "editOrderFailed": "فشل تعديل الطلب. يرجى المحاولة مرة أخرى.",
+  "orderNotFound": "الطلب غير موجود",
+  "orderNotFoundMsg": "الطلب الذي تبحث عنه غير موجود أو ليس لديك صلاحية لعرضه."
 }
