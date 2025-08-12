@@ -12,7 +12,7 @@ import {
 } from "react-icons/io5";
 import useTranslation from 'next-translate/useTranslation';
 import { useCart } from "react-use-cart";
-import { toggleWishlistId } from '@hooks/useWishlist';
+import { toggleWishlistId, getStoredWishlistIds } from '@hooks/useWishlist';
 
 // Internal imports
 import ProductModal from "@components/modal/ProductModal";
@@ -50,6 +50,25 @@ const ProductCardModern = ({
   const { items, addItem, updateItemQuantity, removeItem } = useCart();
   const { handleAddItem } = useAddToCart();
   const { showingTranslateValue, getNumberTwo, currency, lang } = useUtilsFunction();
+
+  // Initialize favorite state from storage and subscribe to changes
+  useEffect(() => {
+    if (!product?._id) return;
+    const updateFav = () => {
+      try {
+        const ids = getStoredWishlistIds();
+        setIsFavorite(Array.isArray(ids) && ids.includes(product._id));
+      } catch { /* ignore */ }
+    };
+    updateFav();
+    const onChange = () => updateFav();
+    window.addEventListener('wishlist:changed', onChange);
+    window.addEventListener('storage', onChange);
+    return () => {
+      window.removeEventListener('wishlist:changed', onChange);
+      window.removeEventListener('storage', onChange);
+    };
+  }, [product?._id]);
 
   // Helper function for localized unit display
   const getLocalizedUnitDisplayName = (unit) => {
@@ -623,16 +642,18 @@ const ProductCardModern = ({
 
           {/* Favorite Button */}
           {showFavorite && (
-            <button
-              onClick={() => setIsFavorite(!isFavorite)}
-              className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all z-10 hover:scale-110"
-            >
-              {isFavorite ? (
-                <IoHeart className="text-red-500" size={16} />
-              ) : (
-                <IoHeartOutline className="text-gray-600" size={16} />
-              )}
-            </button>
+            <div className="flex items-center justify-between mt-2">
+              <div />
+              <button
+                type="button"
+                aria-label="wishlist"
+                onClick={(e) => { e.stopPropagation(); const nowFav = toggleWishlistId(product._id); setIsFavorite(nowFav); }}
+                className="p-1 rounded hover:bg-gray-100"
+                title={t('wishlist') || 'Wishlist'}
+              >
+                {isFavorite ? <IoHeart className="text-red-500" /> : <IoHeartOutline className="text-gray-500" />}
+              </button>
+            </div>
           )}
 
           {/* Product Image */}
