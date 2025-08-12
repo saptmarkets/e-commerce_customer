@@ -95,14 +95,14 @@ const Order = ({ params }) => {
                 fileName={`Invoice-${data?.invoice}.pdf`}
               >
                 {({ blob, url, loading, error }) => (
-                  <button className="mb-3 sm:mb-0 md:mb-0 lg:mb-0 flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
+                  <button className="mb-3 sm:mb-0 md:mb-0 lg:mb-0 flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md rtl:ml-3 ltr:mr-3">
                     <IoCloudDownloadOutline className="mr-2" />
                     {t('downloadInvoice') || 'Download Invoice'}
                   </button>
                 )}
               </PDFDownloadLink>
 
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 {/* Edit Order Button - only show for Received orders */}
                 <EditOrderButton order={data} />
 
@@ -111,7 +111,7 @@ const Order = ({ params }) => {
 
               <ReactToPrint
                 trigger={() => (
-                    <button className="flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
+                    <button className="flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md ltr:ml-3 rtl:ml-0 rtl:mr-3">
                       <IoPrintOutline className="mr-2" />
                       {t('printInvoice') || 'Print Invoice'}
                   </button>
