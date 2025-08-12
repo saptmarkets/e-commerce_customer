@@ -67,13 +67,13 @@ const CategoryDropdown = () => {
             // Check children
             Promise.all(
               (category.children || []).map(async (sub) => {
-                try {
+            try {
                   const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
                   return { sub, hasProducts };
                 } catch (err) {
                   return { sub, hasProducts: false };
-                }
-              })
+            }
+          })
             ),
           ]);
 
@@ -165,12 +165,12 @@ const CategoryDropdown = () => {
                   ) : (
                     <ul className="space-y-1">
                       {(childrenWithProducts[category._id] ?? []).map((subcat) => (
-                        <li key={subcat._id}>
+                    <li key={subcat._id}>
                           <Link
                             href={`/category/${subcat.slug || subcat._id}`}
                             className="flex items-center px-2 py-1 rounded hover:bg-gray-100 text-sm"
                           >
-                            {subcat.icon && (
+                        {subcat.icon && (
                               <Image
                                 src={subcat.icon}
                                 alt={showingTranslateValue(subcat.name)}
@@ -178,16 +178,16 @@ const CategoryDropdown = () => {
                                 height={20}
                                 className="mr-2 object-contain"
                               />
-                            )}
-                            <span className="truncate">{showingTranslateValue(subcat.name)}</span>
-                          </Link>
-                        </li>
-                      ))}
+                        )}
+                        <span className="truncate">{showingTranslateValue(subcat.name)}</span>
+                      </Link>
+                    </li>
+                  ))}
 
                       {Array.isArray(childrenWithProducts[category._id]) && childrenWithProducts[category._id].length === 0 && (
                         <li className="px-2 py-1 text-xs text-gray-500">No subcategories with products</li>
                       )}
-                    </ul>
+                </ul>
                   )}
                 </div>
               )}

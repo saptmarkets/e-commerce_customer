@@ -178,7 +178,7 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
 
       // COD only
       await handleCashPayment(orderInfo);
-
+      
     } catch (error) {
       notifyError(error?.response?.data?.message || error?.message);
       setIsCheckoutSubmit(false);
@@ -208,7 +208,7 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
 
       // Redirect to order page
       router.push(`/order/${orderResponse?.invoice}`);
-
+      
       const successMessage = orderResponse?.verificationCode 
         ? t("common:orderConfirmedSuccess", { verificationCode: orderResponse.verificationCode })
         : t("common:orderConfirmedSuccessNoCode");
@@ -242,6 +242,37 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
 
   const handleDefaultShippingAddress = (value) => {
     setUseExistingAddress(value);
+    if (value && data) {
+      const address = data;
+      const name = (address?.name || '').trim();
+      let firstName = '';
+      let lastName = '';
+      if (name) {
+        const parts = name.split(' ');
+        firstName = parts[0] || '';
+        lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
+      }
+
+      // Populate form fields from saved address with sensible fallbacks
+      setValue('firstName', firstName);
+      setValue('lastName', lastName);
+      setValue('address', address.address || '');
+      setValue('contact', address.contact || userInfo?.phone || '');
+      setValue('email', userInfo?.email || address.email || '');
+      setValue('city', address.city || '');
+      setValue('country', address.country || '');
+      setValue('zipCode', address.zipCode || '');
+    } else {
+      // Clear fields (keep common user defaults where appropriate)
+      setValue('firstName', '');
+      setValue('lastName', '');
+      setValue('address', '');
+      setValue('contact', userInfo?.phone || '');
+      setValue('email', userInfo?.email || '');
+      setValue('city', '');
+      setValue('country', '');
+      setValue('zipCode', '');
+    }
   };
 
   const handleCouponCode = async (e) => {

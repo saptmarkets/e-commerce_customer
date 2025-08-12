@@ -108,16 +108,16 @@ const Order = ({ params }) => {
                 {/* Cancel Order Button - existing functionality */}
                 <CancelOrderButton order={data} />
 
-                <ReactToPrint
-                  trigger={() => (
+              <ReactToPrint
+                trigger={() => (
                     <button className="flex items-center text-sm leading-4 font-medium text-center text-white bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-md">
                       <IoPrintOutline className="mr-2" />
                       Print Invoice
-                    </button>
-                  )}
-                  content={() => printRef.current}
+                  </button>
+                )}
+                content={() => printRef.current}
                   documentTitle={`Invoice-${data?.invoice}`}
-                />
+              />
               </div>
             </div>
           </div>
@@ -133,4 +133,4 @@ export const getServerSideProps = ({ params }) => {
   return {
     props: { params },
   };
-}; 
+};

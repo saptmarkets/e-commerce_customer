@@ -596,18 +596,18 @@ const Checkout = () => {
             };
             setLocationStatus('Saved profile coordinates resolved to address');
           } catch {
-            window.userLocationCoords = {
-              latitude: profileLocation.latitude,
-              longitude: profileLocation.longitude,
-              accuracy: profileLocation.accuracy,
-              googleMapsLink: `https://www.google.com/maps?q=${profileLocation.latitude},${profileLocation.longitude}`,
-              googleMapsAddressLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(userInfo.address)}`,
-              address: userInfo.address,
-              addressComponents: {
-                city: userInfo.city,
-                country: userInfo.country || 'Saudi Arabia'
-              }
-            };
+        window.userLocationCoords = {
+          latitude: profileLocation.latitude,
+          longitude: profileLocation.longitude,
+          accuracy: profileLocation.accuracy,
+          googleMapsLink: `https://www.google.com/maps?q=${profileLocation.latitude},${profileLocation.longitude}`,
+          googleMapsAddressLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(userInfo.address)}`,
+          address: userInfo.address,
+          addressComponents: {
+            city: userInfo.city,
+            country: userInfo.country || 'Saudi Arabia'
+          }
+        };
           }
         })();;
       }

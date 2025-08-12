@@ -52,7 +52,7 @@ const Category = () => {
       const categoryId = category._id;
       const willExpand = !expanded[categoryId];
       setExpanded((prev) => ({ ...prev, [categoryId]: willExpand }));
-
+          
       if (
         willExpand &&
         childrenWithProducts[categoryId] === undefined &&
@@ -64,13 +64,13 @@ const Category = () => {
             ProductServices.checkCategoryHasProducts(categoryId).catch(() => false),
             Promise.all(
               (category.children || []).map(async (sub) => {
-                try {
+            try {
                   const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
                   return { sub, hasProducts };
                 } catch (err) {
                   return { sub, hasProducts: false };
-                }
-              })
+            }
+          })
             ),
           ]);
 
@@ -80,7 +80,7 @@ const Category = () => {
 
           if (!hasMainProducts && filteredSubs.length === 0) {
             setHiddenMainIds((prev) => new Set(prev).add(categoryId));
-          }
+              }
 
           setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filteredSubs }));
         } finally {
@@ -102,19 +102,19 @@ const Category = () => {
   return (
     <div className={`${categoryDrawerOpen ? "block" : "hidden"}`}>
       {isLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-          <span className="ml-2 text-gray-600">Loading categories...</span>
-        </div>
-      ) : error ? (
-        <div className="text-center py-4">
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <span className="ml-2 text-gray-600">Loading categories...</span>
+              </div>
+            ) : error ? (
+              <div className="text-center py-4">
           <p className="text-red-600 text-sm">{error?.message || "Error loading categories"}</p>
-        </div>
+                </div>
       ) : displayedMainCategories.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-gray-600 text-sm">No categories found</p>
-        </div>
-      ) : (
+                <p className="text-gray-600 text-sm">No categories found</p>
+              </div>
+            ) : (
         <ul className="space-y-2 p-4">
           {displayedMainCategories.map((category) => (
             <li key={category._id} className="group">
@@ -166,8 +166,8 @@ const Category = () => {
                         <li className="px-2 py-1 text-xs text-gray-500">No subcategories with products</li>
                       )}
                     </ul>
-                  )}
-                </div>
+          )}
+        </div>
               )}
             </li>
           ))}
