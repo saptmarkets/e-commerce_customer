@@ -18,12 +18,12 @@ const CategorySection = ({ title, description, categorySettings }) => {
   const carouselRef = useRef(null);
 
   const {
-    data: allCategories,
+    data: allCategoriesRaw,
     error,
     isLoading: loading,
   } = useQuery({
-    queryKey: ["category"],
-    queryFn: async () => await CategoryServices.getShowingCategory(),
+    queryKey: ["category-all"],
+    queryFn: async () => await CategoryServices.getAllCategories(),
   });
 
   // Flatten nested category tree to allow matching selected subcategories
@@ -41,7 +41,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
     return out;
   };
 
-  const flatCategories = flattenCategories(allCategories || []);
+  const flatCategories = flattenCategories(allCategoriesRaw || []);
 
   // Use selected categories from admin settings or fallback to all categories
   const selectedCategories = categorySettings?.selectedCategories || [];
@@ -55,7 +55,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
         .map(selected => flatCategories.find(cat => cat._id === selected.categoryId))
         .filter(Boolean)
         .slice(0, itemsPerView)
-    : (allCategories?.filter(category => !category.parentId || category.parentId === null).slice(0, itemsPerView) || []);
+    : (flatCategories.filter(category => !category.parentId || category.parentId === null).slice(0, itemsPerView) || []);
 
   const handleCategoryClick = (id, categoryName) => {
     router.push(`/category/${id}`);
