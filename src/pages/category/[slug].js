@@ -481,6 +481,7 @@ export const getServerSideProps = async (context) => {
     
     const productsData = await ProductServices.getShowingStoreProducts({
       category: category._id,
+      include_out_of_stock: true,
     });
 
     // Get attributes

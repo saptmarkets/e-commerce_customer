@@ -2,7 +2,7 @@ import requests from "./httpServices";
 
 const ProductServices = {
   // Get all products for store display
-  getShowingStoreProducts: async ({ category = '', title = '', slug = '', limit = 20, page = 1 } = {}) => {
+  getShowingStoreProducts: async ({ category = '', title = '', slug = '', limit = 20, page = 1, include_out_of_stock = false } = {}) => {
     try {
       const params = new URLSearchParams();
       if (category) params.append('category', category);
@@ -10,6 +10,7 @@ const ProductServices = {
       if (slug) params.append('slug', slug);
       if (limit) params.append('limit', limit);
       if (page) params.append('page', page);
+      if (include_out_of_stock) params.append('include_out_of_stock', 'true');
 
       const endpoint = `/products/store?${params.toString()}`;
       return await requests.get(endpoint);
