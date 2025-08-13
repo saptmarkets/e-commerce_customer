@@ -43,7 +43,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
 
   const flatCategories = flattenCategories(allCategoriesRaw || []);
 
-  // Use selected categories from admin settings or fallback to all categories
+  // Use selected categories from admin settings or fallback to first items from the full list
   const selectedCategories = categorySettings?.selectedCategories || [];
   const showAllProducts = categorySettings?.showAllProducts !== false;
   const itemsPerView = categorySettings?.itemsPerView || 6;
@@ -55,7 +55,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
         .map(selected => flatCategories.find(cat => cat._id === selected.categoryId))
         .filter(Boolean)
         .slice(0, itemsPerView)
-    : (flatCategories.filter(category => !category.parentId || category.parentId === null).slice(0, itemsPerView) || []);
+    : flatCategories.slice(0, itemsPerView);
 
   const handleCategoryClick = (id, categoryName) => {
     router.push(`/category/${id}`);

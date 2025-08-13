@@ -5,7 +5,8 @@ const CategoryServices = {
     return requests.get("/category/show");
   },
   getAllCategories: async () => {
-    return requests.get("/category/all");
+    // Use nested categories route to return parent->children tree
+    return requests.get("/category");
   },
 };
 
