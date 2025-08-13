@@ -16,98 +16,18 @@ const Categories = ({ categories }) => {
   const [loading, setLoading] = useState(true);
   const [filteredCategories, setFilteredCategories] = useState([]);
 
-  // Filter categories to only show those with products
+  // Show all active categories (as provided by backend), grouped by main with children nested
   useEffect(() => {
-    const filterCategoriesWithProducts = async () => {
-      setLoading(true);
-      
-      try {
-        // Generalized root detection: treat categories without a valid parentId as root
-        const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
-        const mainCategories = categories?.filter(isRoot) || [];
-
-        if (mainCategories.length === 0) {
-          setFilteredCategories([]);
-          setLoading(false);
-          return;
-        }
-
-        // Collect all category IDs that need to be checked (main categories + subcategories)
-        const allCategoryIds = [];
-        const categoryMap = new Map(); // To map category IDs back to category objects
-        
-        mainCategories.forEach(category => {
-          allCategoryIds.push(category._id);
-          categoryMap.set(category._id, { ...category });
-          
-          if (category.children && category.children.length > 0) {
-            category.children.forEach(subcategory => {
-              allCategoryIds.push(subcategory._id);
-              categoryMap.set(subcategory._id, { ...subcategory });
-            });
-          }
-        });
-
-        // Check all categories in parallel using Promise.all
-        const hasProductsResults = await Promise.all(
-          allCategoryIds.map(async (categoryId) => {
-            try {
-              const hasProducts = await ProductServices.checkCategoryHasProducts(categoryId);
-              return { categoryId, hasProducts };
-            } catch (error) {
-              console.error(`Error checking products for category ${categoryId}:`, error);
-              return { categoryId, hasProducts: false };
-            }
-          })
-        );
-
-        // Create a map of category ID to hasProducts result
-        const hasProductsMap = new Map();
-        hasProductsResults.forEach(result => {
-          hasProductsMap.set(result.categoryId, result.hasProducts);
-        });
-
-        // Filter categories based on the results
-        const categoriesWithProducts = [];
-        
-        for (const category of mainCategories) {
-          const hasMainCategoryProducts = hasProductsMap.get(category._id) || false;
-          
-          // Check if any subcategories have products
-          let hasSubcategoryProducts = false;
-          if (category.children && category.children.length > 0) {
-            for (const subcategory of category.children) {
-              if (hasProductsMap.get(subcategory._id)) {
-                hasSubcategoryProducts = true;
-                break;
-              }
-            }
-          }
-
-          // Only include category if it has products or its subcategories have products
-          if (hasMainCategoryProducts || hasSubcategoryProducts) {
-            // Filter subcategories to only include those with products
-            if (category.children && category.children.length > 0) {
-              const filteredSubcategories = category.children.filter(subcategory => 
-                hasProductsMap.get(subcategory._id)
-              );
-              category.children = filteredSubcategories;
-            }
-            
-            categoriesWithProducts.push(category);
-          }
-        }
-
-        setFilteredCategories(categoriesWithProducts);
-      } catch (error) {
-        console.error("Error filtering categories:", error);
-        setFilteredCategories([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    filterCategoriesWithProducts();
+    setLoading(true);
+    try {
+      const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
+      const mainCategories = (categories || []).filter(isRoot);
+      setFilteredCategories(mainCategories);
+    } catch (e) {
+      setFilteredCategories([]);
+    } finally {
+      setLoading(false);
+    }
   }, [categories]);
 
   return (
