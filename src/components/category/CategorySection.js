@@ -26,19 +26,36 @@ const CategorySection = ({ title, description, categorySettings }) => {
     queryFn: async () => await CategoryServices.getShowingCategory(),
   });
 
+  // Flatten nested category tree to allow matching selected subcategories
+  const flattenCategories = (list = []) => {
+    const out = [];
+    const stack = Array.isArray(list) ? [...list] : [];
+    while (stack.length) {
+      const node = stack.shift();
+      if (!node) continue;
+      out.push(node);
+      if (Array.isArray(node.children) && node.children.length) {
+        stack.push(...node.children);
+      }
+    }
+    return out;
+  };
+
+  const flatCategories = flattenCategories(allCategories || []);
+
   // Use selected categories from admin settings or fallback to all categories
   const selectedCategories = categorySettings?.selectedCategories || [];
   const showAllProducts = categorySettings?.showAllProducts !== false;
   const itemsPerView = categorySettings?.itemsPerView || 6;
   const scrollDirection = categorySettings?.scrollDirection || 'horizontal';
 
-  // Filter and order categories based on admin selection
+  // Filter and order categories based on admin selection (search in full flattened list)
   const displayCategories = selectedCategories.length > 0 
     ? selectedCategories
-        .map(selected => allCategories?.find(cat => cat._id === selected.categoryId))
+        .map(selected => flatCategories.find(cat => cat._id === selected.categoryId))
         .filter(Boolean)
         .slice(0, itemsPerView)
-    : allCategories?.filter(category => !category.parentId || category.parentId === null).slice(0, itemsPerView) || [];
+    : (allCategories?.filter(category => !category.parentId || category.parentId === null).slice(0, itemsPerView) || []);
 
   const handleCategoryClick = (id, categoryName) => {
     router.push(`/category/${id}`);
