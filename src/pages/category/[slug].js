@@ -462,19 +462,8 @@ export const getServerSideProps = async (context) => {
     // Get subcategories from the category's children property
     let subcategories = category.children || [];
     
-    // Filter subcategories to only include those with products
-    const subcategoriesWithProducts = [];
-    for (const subcategory of subcategories) {
-      try {
-        const hasProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-        if (hasProducts) {
-          subcategoriesWithProducts.push(subcategory);
-        }
-      } catch (error) {
-        console.error(`Error checking products for subcategory ${subcategory._id}:`, error);
-        // If we can't check, don't include the subcategory to be safe
-      }
-    }
+    // Show all active subcategories without filtering by product presence
+    const subcategoriesWithProducts = subcategories;
     
     // Get products for this category and its subcategories
     const allCategoryIds = [category._id, ...subcategoriesWithProducts.map(sub => sub._id)];
