@@ -86,7 +86,7 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
   const fetchProductsForSubcategory = async (subcategory) => {
     setLoading(true);
     try {
-      const res = await ProductServices.getShowingStoreProducts({ category: subcategory._id });
+      const res = await ProductServices.getShowingStoreProducts({ category: subcategory._id, limit: 50000, page: 1 });
       if (res && Array.isArray(res.products)) {
         setFilteredProducts(res.products);
         setAllProducts(res.products); // For fallback filtering if needed
@@ -470,6 +470,8 @@ export const getServerSideProps = async (context) => {
     
     const productsData = await ProductServices.getShowingStoreProducts({
       category: category._id,
+      limit: 50000,
+      page: 1,
     });
 
     // Get attributes
