@@ -132,22 +132,26 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
 
   // On mount, always show all products for the parent category
   useEffect(() => {
+    console.log(`Component mounted with ${products?.length || 0} products for category: ${category?.name}`);
+    console.log(`Category has ${subcategories?.length || 0} subcategories`);
+    
     // Store the original combined products
     setAllProducts(products);
+    
     // Show all products initially (All tab)
     setFilteredProducts(products);
     setActiveSubcategory(null);
     setCurrentPage(1);
-  }, [products]);
-
-  // Remove the conflicting useEffect that was causing infinite loops
-  // The filtering logic is now handled in handleSubcategoryTab and fetchProductsForSubcategory
-
+  }, [products, category, subcategories]);
+  
   // Calculate pagination
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts?.slice(indexOfFirstProduct, indexOfLastProduct) || [];
   const totalPages = Math.ceil((filteredProducts?.length || 0) / productsPerPage);
+  
+  // Determine if this is a parent category (has subcategories) or a subcategory
+  const isParentCategory = subcategories && subcategories.length > 0;
 
   // Change page
   const paginate = (pageNumber) => {
@@ -264,7 +268,7 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
           )}
 
           {/* Subcategories as Tabs */}
-          {subcategories && subcategories.length > 0 && (
+          {isParentCategory && (
             <div className="mb-8">
               <div className="flex justify-center">
                 <div className="flex flex-wrap justify-center gap-2 bg-gray-50 p-2 rounded-lg">
@@ -473,42 +477,71 @@ export const getServerSideProps = async (context) => {
     // For parent categories, we need to fetch products from ALL subcategories combined
     let allProducts = [];
     
-    if (category.parentId === null || category.parentId === undefined || category.parentId === '') {
+    // Check if this is a parent category (has children) or a subcategory
+    const isParentCategory = subcategories.length > 0;
+    
+    if (isParentCategory) {
       // This is a parent category - fetch products from all subcategories
       console.log(`Fetching products for parent category: ${category.name} with ${subcategories.length} subcategories`);
-      if (subcategories.length > 0) {
-        // Fetch products from each subcategory and combine them
-        for (const subcategory of subcategories) {
-          try {
-            console.log(`Fetching products for subcategory: ${subcategory.name}`);
-            const subcategoryProducts = await ProductServices.getShowingStoreProducts({
-              category: subcategory._id,
-              limit: 50000,
-              page: 1,
-            });
-            
-            if (subcategoryProducts.products && subcategoryProducts.products.length > 0) {
-              console.log(`Found ${subcategoryProducts.products.length} products in subcategory: ${subcategory.name}`);
-              allProducts.push(...subcategoryProducts.products);
-            } else {
-              console.log(`No products found in subcategory: ${subcategory.name}`);
-            }
-          } catch (err) {
-            console.error(`Error fetching products for subcategory ${subcategory._id}:`, err);
-          }
+      
+      // First try to fetch products directly for the parent category
+      try {
+        const parentProducts = await ProductServices.getShowingStoreProducts({
+          category: category._id,
+          limit: 50000,
+          page: 1,
+        });
+        
+        if (parentProducts.products && parentProducts.products.length > 0) {
+          console.log(`Found ${parentProducts.products.length} products directly in parent category: ${category.name}`);
+          allProducts.push(...parentProducts.products);
         }
-        console.log(`Total products combined from all subcategories: ${allProducts.length}`);
+      } catch (err) {
+        console.error(`Error fetching products for parent category ${category._id}:`, err);
       }
+      
+      // Then fetch products from each subcategory and combine them
+      for (const subcategory of subcategories) {
+        try {
+          console.log(`Fetching products for subcategory: ${subcategory.name}`);
+          const subcategoryProducts = await ProductServices.getShowingStoreProducts({
+            category: subcategory._id,
+            limit: 50000,
+            page: 1,
+          });
+          
+          if (subcategoryProducts.products && subcategoryProducts.products.length > 0) {
+            console.log(`Found ${subcategoryProducts.products.length} products in subcategory: ${subcategory.name}`);
+            allProducts.push(...subcategoryProducts.products);
+          } else {
+            console.log(`No products found in subcategory: ${subcategory.name}`);
+          }
+        } catch (err) {
+          console.error(`Error fetching products for subcategory ${subcategory._id}:`, err);
+        }
+      }
+      console.log(`Total products combined from all subcategories: ${allProducts.length}`);
     } else {
-      // This is a subcategory - fetch products directly
-      console.log(`Fetching products for subcategory: ${category.name}`);
+      // This is a subcategory or a leaf category - fetch products directly
+      console.log(`Fetching products for category: ${category.name}`);
       const productsData = await ProductServices.getShowingStoreProducts({
         category: category._id,
         limit: 50000,
         page: 1,
       });
       allProducts = productsData.products || [];
-      console.log(`Found ${allProducts.length} products in subcategory: ${category.name}`);
+      console.log(`Found ${allProducts.length} products in category: ${category.name}`);
+    }
+
+    // Remove duplicates (in case a product belongs to multiple subcategories)
+    const uniqueProducts = [];
+    const seenIds = new Set();
+    
+    for (const product of allProducts) {
+      if (!seenIds.has(product._id)) {
+        seenIds.add(product._id);
+        uniqueProducts.push(product);
+      }
     }
 
     // Get attributes
@@ -517,7 +550,7 @@ export const getServerSideProps = async (context) => {
     return {
       props: {
         category,
-        products: allProducts,
+        products: uniqueProducts,
         attributes: attributes || [],
         subcategories: subcategoriesWithProducts || [],
       },
