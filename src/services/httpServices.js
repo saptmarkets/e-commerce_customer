@@ -1,10 +1,7 @@
 import axios from "axios";
 
-// Prefer Next.js rewrite proxy (/api) in the browser to avoid CORS
-// Use absolute backend URL only on the server (SSR)
-const isBrowser = typeof window !== "undefined";
-const directApiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "https://e-commerce-backend-l0s0.onrender.com/api";
-const apiBaseUrl = isBrowser ? "/api" : directApiBase;
+// Get API base URL from environment or use default
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://e-commerce-backend-l0s0.onrender.com/api";
 
 // Create axios instance with default config
 const httpServices = axios.create({

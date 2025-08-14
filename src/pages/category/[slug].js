@@ -84,26 +84,31 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
 
   // Fetch products for a subcategory from backend
   const fetchProductsForSubcategory = async (subcategory) => {
+    console.log(`Fetching products for subcategory: ${subcategory.name} (${subcategory._id})`);
     setLoading(true);
     try {
       const res = await ProductServices.getShowingStoreProducts({ category: subcategory._id, limit: 50000, page: 1 });
       if (res && Array.isArray(res.products)) {
+        console.log(`Found ${res.products.length} products for subcategory: ${subcategory.name}`);
         setFilteredProducts(res.products);
-        setAllProducts(res.products); // For fallback filtering if needed
       } else {
+        console.log(`No products found in API response for subcategory: ${subcategory.name}, using fallback filtering`);
         // fallback to client-side filtering
         const filtered = allProducts?.filter(product => 
           product.categories?.some(cat => cat._id === subcategory._id) || 
           product.category?._id === subcategory._id
         ) || [];
+        console.log(`Fallback filtering found ${filtered.length} products`);
         setFilteredProducts(filtered);
       }
     } catch (err) {
+      console.error(`Error fetching products for subcategory ${subcategory.name}:`, err);
       // fallback to client-side filtering
       const filtered = allProducts?.filter(product => 
         product.categories?.some(cat => cat._id === subcategory._id) || 
         product.category?._id === subcategory._id
       ) || [];
+      console.log(`Error fallback filtering found ${filtered.length} products`);
       setFilteredProducts(filtered);
     }
     setLoading(false);
@@ -112,11 +117,14 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
 
   // Handle subcategory tab click
   const handleSubcategoryTab = (subcat) => {
+    console.log('Tab clicked:', subcat ? subcat.name : 'All');
     setActiveSubcategory(subcat);
     if (subcat) {
+      console.log(`Switching to subcategory: ${subcat.name}`);
       fetchProductsForSubcategory(subcat);
     } else {
-      // All tab: show parent category products
+      // All tab: show all products from parent category (combined from all subcategories)
+      console.log(`Switching to All tab, showing ${allProducts?.length || 0} products`);
       setFilteredProducts(allProducts);
       setCurrentPage(1);
     }
@@ -124,8 +132,10 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
 
   // On mount, always show all products for the parent category
   useEffect(() => {
-    setFilteredProducts(products);
+    // Store the original combined products
     setAllProducts(products);
+    // Show all products initially (All tab)
+    setFilteredProducts(products);
     setActiveSubcategory(null);
     setCurrentPage(1);
   }, [products]);
@@ -276,7 +286,7 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
                         className="mr-2 object-contain"
                       />
                     )}
-                    {tr('All', 'الكل')} {showingTranslateValue(category.name)}
+                    {tr('All', 'الكل')} {showingTranslateValue(category.name)} ({allProducts?.length || 0})
                   </button>
 
                   {/* Subcategory Tabs */}
@@ -308,22 +318,17 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
           )}
 
           {/* Products Section */}
-          <div className="flex flex-col">
-            <div className="mb-6 flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {activeSubcategory 
-                    ? showingTranslateValue(activeSubcategory.name) 
-                    : tr('Products', 'المنتجات')
-                  }
-                </h2>
-                <p className="text-sm text-gray-500">
-                  {lang === 'ar'
-                    ? `عرض ${filteredProducts?.length > 0 ? indexOfFirstProduct + 1 : 0}-${Math.min(indexOfLastProduct, filteredProducts?.length || 0)} من ${filteredProducts?.length || 0} منتج`
-                    : `Showing ${filteredProducts?.length > 0 ? indexOfFirstProduct + 1 : 0}-${Math.min(indexOfLastProduct, filteredProducts?.length || 0)} of ${filteredProducts?.length || 0} products`
-                  }
-                </p>
-              </div>
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                {activeSubcategory 
+                  ? showingTranslateValue(activeSubcategory.name) 
+                  : tr('Products', 'المنتجات')
+                }
+              </h2>
+              <p className="text-sm text-gray-600">
+                {tr('Showing', 'عرض')} {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, filteredProducts?.length || 0)} {tr('of', 'من')} {filteredProducts?.length || 0} {tr('products', 'منتج')}
+              </p>
             </div>
 
             {loading ? (
@@ -465,14 +470,46 @@ export const getServerSideProps = async (context) => {
     // Show all active subcategories without filtering by product presence
     const subcategoriesWithProducts = subcategories;
     
-    // Get products for this category and its subcategories
-    const allCategoryIds = [category._id, ...subcategoriesWithProducts.map(sub => sub._id)];
+    // For parent categories, we need to fetch products from ALL subcategories combined
+    let allProducts = [];
     
-    const productsData = await ProductServices.getShowingStoreProducts({
-      category: category._id,
-      limit: 50000,
-      page: 1,
-    });
+    if (category.parentId === null || category.parentId === undefined || category.parentId === '') {
+      // This is a parent category - fetch products from all subcategories
+      console.log(`Fetching products for parent category: ${category.name} with ${subcategories.length} subcategories`);
+      if (subcategories.length > 0) {
+        // Fetch products from each subcategory and combine them
+        for (const subcategory of subcategories) {
+          try {
+            console.log(`Fetching products for subcategory: ${subcategory.name}`);
+            const subcategoryProducts = await ProductServices.getShowingStoreProducts({
+              category: subcategory._id,
+              limit: 50000,
+              page: 1,
+            });
+            
+            if (subcategoryProducts.products && subcategoryProducts.products.length > 0) {
+              console.log(`Found ${subcategoryProducts.products.length} products in subcategory: ${subcategory.name}`);
+              allProducts.push(...subcategoryProducts.products);
+            } else {
+              console.log(`No products found in subcategory: ${subcategory.name}`);
+            }
+          } catch (err) {
+            console.error(`Error fetching products for subcategory ${subcategory._id}:`, err);
+          }
+        }
+        console.log(`Total products combined from all subcategories: ${allProducts.length}`);
+      }
+    } else {
+      // This is a subcategory - fetch products directly
+      console.log(`Fetching products for subcategory: ${category.name}`);
+      const productsData = await ProductServices.getShowingStoreProducts({
+        category: category._id,
+        limit: 50000,
+        page: 1,
+      });
+      allProducts = productsData.products || [];
+      console.log(`Found ${allProducts.length} products in subcategory: ${category.name}`);
+    }
 
     // Get attributes
     const attributes = await AttributeServices.getShowingAttributes();
@@ -480,7 +517,7 @@ export const getServerSideProps = async (context) => {
     return {
       props: {
         category,
-        products: productsData.products || [],
+        products: allProducts,
         attributes: attributes || [],
         subcategories: subcategoriesWithProducts || [],
       },
