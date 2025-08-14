@@ -68,7 +68,7 @@ const Categories = ({ categories }) => {
                 {filteredCategories.map((category) => (
                   <Link
                     key={category._id}
-                    href={`/category/${category.slug || category._id}`}
+                    href={`/category/${category._id}`}
                     className="group"
                   >
                     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 text-center hover:shadow-md transition-all duration-200 group-hover:border-green-200">

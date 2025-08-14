@@ -134,7 +134,7 @@ const CategoryDropdown = () => {
           {displayedMainCategories.map((category) => (
             <li key={category._id} className="group">
               <div className="flex items-center justify-between px-2 py-2 rounded hover:bg-gray-50 transition-colors">
-                <Link href={`/category/${category.slug || category._id}`} className="flex items-center flex-1 min-w-0">
+                <Link href={`/category/${category._id}`} className="flex items-center flex-1 min-w-0">
                   {category.icon && (
                     <Image src={category.icon} alt={showingTranslateValue(category.name)} width={24} height={24} className="mr-2 object-contain" />
                   )}
@@ -167,7 +167,7 @@ const CategoryDropdown = () => {
                       {(childrenWithProducts[category._id] ?? []).map((subcat) => (
                     <li key={subcat._id}>
                           <Link
-                            href={`/category/${subcat.slug || subcat._id}`}
+                            href={`/category/${subcat._id}`}
                             className="flex items-center px-2 py-1 rounded hover:bg-gray-100 text-sm"
                           >
                         {subcat.icon && (
