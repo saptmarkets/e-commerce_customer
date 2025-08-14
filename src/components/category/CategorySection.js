@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from "next/router";
 import { useContext } from "react";
@@ -7,7 +7,6 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 //internal import
 import CategoryServices from "@services/CategoryServices";
-import ProductServices from "@services/ProductServices";
 import CMSkeleton from "@components/preloader/CMSkeleton";
 import { SidebarContext } from "@context/SidebarContext";
 import useUtilsFunction from "@hooks/useUtilsFunction";
@@ -17,17 +16,6 @@ const CategorySection = ({ title, description, categorySettings }) => {
   const { isLoading, setIsLoading } = useContext(SidebarContext);
   const { showingTranslateValue } = useUtilsFunction();
   const carouselRef = useRef(null);
-  const [categoriesWithProducts, setCategoriesWithProducts] = useState([]);
-  const [checkingProducts, setCheckingProducts] = useState(false);
-
-  // Helper function to get parent category name
-  const getParentCategoryName = (subcategoryId) => {
-    if (!allCategoriesRaw) return '';
-    const parentCategory = allCategoriesRaw.find(cat => 
-      cat._id === subcategoryId || cat._id === subcategoryId?.toString()
-    );
-    return parentCategory ? showingTranslateValue(parentCategory.name) : '';
-  };
 
   const {
     data: allCategoriesRaw,
@@ -37,93 +25,6 @@ const CategorySection = ({ title, description, categorySettings }) => {
     queryKey: ["category-all"],
     queryFn: async () => await CategoryServices.getAllCategories(),
   });
-
-  // Check which categories have products
-  useEffect(() => {
-    const checkCategoriesWithProducts = async () => {
-      if (!allCategoriesRaw || allCategoriesRaw.length === 0) return;
-      
-      setCheckingProducts(true);
-      
-      // Add timeout to prevent infinite loading
-      const timeoutId = setTimeout(() => {
-        setCheckingProducts(false);
-        // Fallback to showing subcategories instead of parent categories
-        const subcategories = allCategoriesRaw.filter(cat => 
-          cat.status === 'show' && 
-          cat.parentId && 
-          cat.parentId !== null && 
-          cat.parentId !== undefined &&
-          cat.parentId !== ''
-        );
-        setCategoriesWithProducts(subcategories);
-      }, 5000); // 5 second timeout
-      
-      try {
-        // Instead of checking parent categories, let's show subcategories which are more likely to have products
-        const subcategories = allCategoriesRaw.filter(cat => 
-          cat.status === 'show' && 
-          cat.parentId && 
-          cat.parentId !== null && 
-          cat.parentId !== undefined &&
-          cat.parentId !== ''
-        );
-        
-        // Check which subcategories have products
-        const subcategoriesWithProducts = [];
-        
-        for (const subcategory of subcategories) {
-          try {
-            const productsData = await ProductServices.getShowingStoreProducts({
-              category: subcategory._id,
-              limit: 1,
-              page: 1,
-            });
-            
-            if (productsData.products && productsData.products.length > 0) {
-              subcategoriesWithProducts.push(subcategory);
-            }
-            
-            // If we have enough subcategories with products, stop checking
-            if (subcategoriesWithProducts.length >= itemsPerView) {
-              break;
-            }
-          } catch (err) {
-            console.error(`Error checking products for subcategory ${subcategory._id}:`, err);
-          }
-        }
-        
-        clearTimeout(timeoutId);
-        
-        // If we don't have enough subcategories with products, add some without products as fallback
-        if (subcategoriesWithProducts.length < Math.min(3, itemsPerView)) {
-          const fallbackSubcategories = subcategories.filter(sub => 
-            !subcategoriesWithProducts.find(s => s._id === sub._id)
-          ).slice(0, Math.min(3, itemsPerView) - subcategoriesWithProducts.length);
-          
-          subcategoriesWithProducts.push(...fallbackSubcategories);
-        }
-        
-        setCategoriesWithProducts(subcategoriesWithProducts);
-      } catch (err) {
-        console.error('Error checking subcategories with products:', err);
-        clearTimeout(timeoutId);
-        // Fallback to showing subcategories
-        const subcategories = allCategoriesRaw.filter(cat => 
-          cat.status === 'show' && 
-          cat.parentId && 
-          cat.parentId !== null && 
-          cat.parentId !== undefined &&
-          cat.parentId !== ''
-        );
-        setCategoriesWithProducts(subcategories);
-      } finally {
-        setCheckingProducts(false);
-      }
-    };
-    
-    checkCategoriesWithProducts();
-  }, [allCategoriesRaw]);
 
   // Flatten nested category tree to allow matching selected subcategories
   const flattenCategories = (list = []) => {
@@ -142,7 +43,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
 
   const flatCategories = flattenCategories(allCategoriesRaw || []);
 
-  // Use selected categories from admin settings or fallback to categories with products
+  // Use selected categories from admin settings or fallback to all categories
   const selectedCategories = categorySettings?.selectedCategories || [];
   const showAllProducts = categorySettings?.showAllProducts !== false;
   const itemsPerView = categorySettings?.itemsPerView || 6;
@@ -154,7 +55,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
         .map(selected => flatCategories.find(cat => cat._id === selected.categoryId))
         .filter(Boolean)
         .slice(0, itemsPerView)
-    : (categoriesWithProducts.slice(0, itemsPerView) || []);
+    : (flatCategories.filter(category => !category.parentId || category.parentId === null).slice(0, itemsPerView) || []);
 
   const handleCategoryClick = (id, categoryName) => {
     router.push(`/category/${id}`);
@@ -191,12 +92,9 @@ const CategorySection = ({ title, description, categorySettings }) => {
           </div>
         )}
 
-        {loading || checkingProducts ? (
+        {loading ? (
           <div className="text-center">
-            <CMSkeleton count={8} height={20} error={error} loading={loading || checkingProducts} />
-            {checkingProducts && !loading && (
-              <p className="text-sm text-gray-500 mt-2">Checking subcategories with products...</p>
-            )}
+            <CMSkeleton count={8} height={20} error={error} loading={loading} />
           </div>
         ) : (
           <div className="relative">
@@ -290,7 +188,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
                           </h3>
                           {category?.parentId && (
                             <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                              {getParentCategoryName(category.parentId)}
+                              {/* Parent category name is not available in the current data structure */}
                             </p>
                           )}
                         </div>

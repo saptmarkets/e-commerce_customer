@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useContext, useRef, useState, useEffect } from "react";
+import React, { useContext, useRef } from "react";
 import { IoChevronBackOutline, IoChevronForward } from "react-icons/io5";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -12,7 +12,6 @@ import { useQuery } from "@tanstack/react-query";
 //internal import
 import { SidebarContext } from "@context/SidebarContext";
 import CategoryServices from "@services/CategoryServices";
-import ProductServices from "@services/ProductServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import Loading from "@components/preloader/Loading";
 
@@ -21,8 +20,6 @@ const CategoryCarousel = () => {
 
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const [subcategoriesWithProducts, setSubcategoriesWithProducts] = useState([]);
-  const [checkingProducts, setCheckingProducts] = useState(false);
 
   const { showingTranslateValue } = useUtilsFunction();
   const { isLoading, setIsLoading } = useContext(SidebarContext);
@@ -35,60 +32,6 @@ const CategoryCarousel = () => {
     queryKey: ["category"],
     queryFn: async () => await CategoryServices.getShowingCategory(),
   });
-
-  // Check which subcategories have products
-  useEffect(() => {
-    const checkSubcategoriesWithProducts = async () => {
-      if (!data || data.length === 0) return;
-      
-      setCheckingProducts(true);
-      
-      try {
-        // Get all subcategories from all main categories
-        const allSubcategories = [];
-        data.forEach(mainCategory => {
-          if (mainCategory.children && mainCategory.children.length > 0) {
-            allSubcategories.push(...mainCategory.children);
-          }
-        });
-        
-        // Check which subcategories have products
-        const subcategoriesWithProductsData = [];
-        
-        for (const subcategory of allSubcategories) {
-          try {
-            const productsData = await ProductServices.getShowingStoreProducts({
-              category: subcategory._id,
-              limit: 1,
-              page: 1,
-            });
-            
-            if (productsData.products && productsData.products.length > 0) {
-              subcategoriesWithProductsData.push(subcategory);
-            }
-            
-            // If we have enough subcategories with products, stop checking
-            if (subcategoriesWithProductsData.length >= 20) {
-              break;
-            }
-          } catch (err) {
-            console.error(`Error checking products for subcategory ${subcategory._id}:`, err);
-          }
-        }
-        
-        setSubcategoriesWithProducts(subcategoriesWithProductsData);
-      } catch (err) {
-        console.error('Error checking subcategories with products:', err);
-        // Fallback to original behavior
-        const fallbackSubcategories = data[0]?.children || [];
-        setSubcategoriesWithProducts(fallbackSubcategories);
-      } finally {
-        setCheckingProducts(false);
-      }
-    };
-    
-    checkSubcategoriesWithProducts();
-  }, [data]);
 
   // console.log("data", data, "error", error, "isFetched", isFetched);
 
@@ -179,12 +122,9 @@ const CategoryCarousel = () => {
           }
         }}
       >
-        {loading || checkingProducts ? (
+        {loading ? (
           <div className="text-center">
-            <Loading loading={loading || checkingProducts} />
-            {checkingProducts && !loading && (
-              <p className="text-sm text-gray-500 mt-2">Checking subcategories with products...</p>
-            )}
+            <Loading loading={loading} />
           </div>
         ) : error ? (
           <p className="flex justify-center align-middle items-center m-auto text-responsive-lg text-red-500">
@@ -192,7 +132,7 @@ const CategoryCarousel = () => {
           </p>
         ) : (
           <div>
-            {(subcategoriesWithProducts.length > 0 ? subcategoriesWithProducts : (data[0]?.children || [])).map((category, i) => (
+            {(data?.[0]?.children || []).map((category, i) => (
               <SwiperSlide key={i + 1} className="group">
                 <div
                   onClick={() =>
