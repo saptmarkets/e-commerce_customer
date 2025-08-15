@@ -468,6 +468,14 @@ export const getServerSideProps = async (context) => {
       };
     }
 
+    console.log(`Found category:`, {
+      id: category._id,
+      name: category.name,
+      parentId: category.parentId,
+      hasChildren: category.children && category.children.length > 0,
+      childrenCount: category.children ? category.children.length : 0
+    });
+
     // Get subcategories from the category's children property
     let subcategories = category.children || [];
     
@@ -481,46 +489,50 @@ export const getServerSideProps = async (context) => {
     const isParentCategory = subcategories.length > 0;
     
     if (isParentCategory) {
-      // This is a parent category - fetch products from all subcategories
+      // This is a parent category - the backend will automatically fetch products from all subcategories
       console.log(`Fetching products for parent category: ${category.name} with ${subcategories.length} subcategories`);
+      console.log(`Using backend's getAllChildCategoryIds functionality for category: ${category._id}`);
+      console.log(`Subcategories found:`, subcategories.map(sub => ({ id: sub._id, name: sub.name })));
       
-      // First try to fetch products directly for the parent category
       try {
-        const parentProducts = await ProductServices.getShowingStoreProducts({
+        const productsData = await ProductServices.getShowingStoreProducts({
           category: category._id,
           limit: 50000,
           page: 1,
         });
         
-        if (parentProducts.products && parentProducts.products.length > 0) {
-          console.log(`Found ${parentProducts.products.length} products directly in parent category: ${category.name}`);
-          allProducts.push(...parentProducts.products);
+        console.log(`Backend response:`, productsData);
+        
+        if (productsData.products && productsData.products.length > 0) {
+          console.log(`Backend returned ${productsData.products.length} products for parent category: ${category.name}`);
+          allProducts = productsData.products;
+        } else {
+          console.log(`No products returned from backend for parent category: ${category.name}`);
+          console.log(`This might indicate an issue with the backend's getAllChildCategoryIds function or product-category relationships`);
+          
+          // Let's test what products exist in the database
+          try {
+            console.log(`Testing direct product fetch for debugging...`);
+            const testProducts = await ProductServices.getShowingStoreProducts({
+              limit: 10,
+              page: 1,
+            });
+            console.log(`Total products in database: ${testProducts.products ? testProducts.products.length : 0}`);
+            if (testProducts.products && testProducts.products.length > 0) {
+              console.log(`Sample products:`, testProducts.products.slice(0, 3).map(p => ({
+                id: p._id,
+                title: p.title,
+                category: p.category,
+                categories: p.categories
+              })));
+            }
+          } catch (testErr) {
+            console.error(`Error in test product fetch:`, testErr);
+          }
         }
       } catch (err) {
         console.error(`Error fetching products for parent category ${category._id}:`, err);
       }
-      
-      // Then fetch products from each subcategory and combine them
-      for (const subcategory of subcategories) {
-        try {
-          console.log(`Fetching products for subcategory: ${subcategory.name}`);
-          const subcategoryProducts = await ProductServices.getShowingStoreProducts({
-            category: subcategory._id,
-            limit: 50000,
-            page: 1,
-          });
-          
-          if (subcategoryProducts.products && subcategoryProducts.products.length > 0) {
-            console.log(`Found ${subcategoryProducts.products.length} products in subcategory: ${subcategory.name}`);
-            allProducts.push(...subcategoryProducts.products);
-          } else {
-            console.log(`No products found in subcategory: ${subcategory.name}`);
-          }
-        } catch (err) {
-          console.error(`Error fetching products for subcategory ${subcategory._id}:`, err);
-        }
-      }
-      console.log(`Total products combined from all subcategories: ${allProducts.length}`);
     } else {
       // This is a subcategory or a leaf category - fetch products directly
       console.log(`Fetching products for category: ${category.name}`);
