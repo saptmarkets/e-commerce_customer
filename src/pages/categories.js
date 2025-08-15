@@ -22,7 +22,18 @@ const Categories = ({ categories }) => {
     try {
       // Categories are already filtered to main categories by the backend
       setFilteredCategories(categories || []);
+      
+      // Debug: Log what we're setting in state
+      console.log('🔍 Categories page useEffect:');
+      console.log('  Categories prop:', categories?.length || 0);
+      console.log('  Filtered categories:', (categories || []).length);
+      if (categories && categories.length > 0) {
+        categories.forEach((cat, index) => {
+          console.log(`  ${index + 1}. ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon || 'NO ICON'}`);
+        });
+      }
     } catch (e) {
+      console.error('Error in useEffect:', e);
       setFilteredCategories([]);
     } finally {
       setLoading(false);
@@ -139,8 +150,17 @@ const Categories = ({ categories }) => {
 
 export const getServerSideProps = async () => {
   try {
-    // Get main categories for the categories page
+    // Get main categories for the categories page - use same method as homepage
     const categories = await CategoryServices.getMainCategories();
+    
+    // Debug: Log what we're getting
+    console.log('🔍 Categories page getServerSideProps:');
+    console.log('  Total categories:', categories?.length || 0);
+    if (categories && categories.length > 0) {
+      categories.forEach((cat, index) => {
+        console.log(`  ${index + 1}. ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon || 'NO ICON'}`);
+      });
+    }
     
     return {
       props: {
