@@ -150,8 +150,23 @@ const Categories = ({ categories }) => {
 
 export const getServerSideProps = async () => {
   try {
-    // Get main categories for the categories page - use same method as homepage
-    const categories = await CategoryServices.getMainCategories();
+    // Try to get categories from the same source as homepage
+    let categories;
+    
+    // First try the processed categories (like homepage)
+    try {
+      const processedCategories = await CategoryServices.getShowingCategory();
+      console.log('🔍 getServerSideProps: getShowingCategory returned', processedCategories?.length || 0, 'categories');
+      
+      // Filter to main categories only
+      categories = processedCategories.filter(cat => 
+        cat.status === 'show' && (!cat.parentId || cat.parentId === null || cat.parentId === "")
+      );
+      console.log('🔍 getServerSideProps: Filtered to', categories?.length || 0, 'main categories');
+    } catch (error) {
+      console.log('🔍 getServerSideProps: getShowingCategory failed, falling back to getMainCategories');
+      categories = await CategoryServices.getMainCategories();
+    }
     
     // Debug: Log what we're getting
     console.log('🔍 Categories page getServerSideProps:');
