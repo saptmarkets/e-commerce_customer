@@ -85,13 +85,26 @@ const Categories = ({ categories }) => {
                       {/* Category Icon */}
                       <div className="mb-3 flex justify-center">
                         {category.icon ? (
-                          <Image
-                            src={category.icon}
-                            alt={showingTranslateValue(category.name)}
-                            width={60}
-                            height={60}
-                            className="object-contain"
-                          />
+                          <div>
+                            {/* Debug info - remove after fixing */}
+                            <div className="text-xs text-gray-400 mb-1">
+                              {category._id.slice(-4)}: {category.icon.slice(-20)}
+                            </div>
+                            <Image
+                              src={category.icon}
+                              alt={showingTranslateValue(category.name)}
+                              width={60}
+                              height={60}
+                              className="object-contain"
+                              unoptimized={true}
+                              onError={(e) => {
+                                console.error('❌ Image failed to load:', category.icon, e);
+                              }}
+                              onLoad={() => {
+                                console.log('✅ Image loaded successfully:', category.icon);
+                              }}
+                            />
+                          </div>
                         ) : (
                           <div className="w-15 h-15 bg-gray-100 rounded-full flex items-center justify-center">
                             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
