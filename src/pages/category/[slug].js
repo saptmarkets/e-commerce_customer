@@ -118,9 +118,10 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
   // Handle subcategory tab click
   const handleSubcategoryTab = (subcat) => {
     console.log('Tab clicked:', subcat ? subcat.name : 'All');
+    console.log('Subcategory object:', subcat);
     setActiveSubcategory(subcat);
     if (subcat) {
-      console.log(`Switching to subcategory: ${subcat.name}`);
+      console.log(`Switching to subcategory: ${subcat.name?.en || subcat.name} (${subcat._id})`);
       fetchProductsForSubcategory(subcat);
     } else {
       // All tab: show all products from parent category (combined from all subcategories)
@@ -132,8 +133,25 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
 
   // On mount, always show all products for the parent category
   useEffect(() => {
-    console.log(`Component mounted with ${products?.length || 0} products for category: ${category?.name}`);
+    console.log(`Component mounted with ${products?.length || 0} products for category:`, {
+      id: category?._id,
+      name: category?.name,
+      parentId: category?.parentId,
+      hasChildren: category?.children?.length > 0
+    });
     console.log(`Category has ${subcategories?.length || 0} subcategories`);
+    console.log(`Subcategories details:`, subcategories?.map(sub => ({
+      id: sub._id,
+      name: sub.name,
+      parentId: sub.parentId
+    })));
+    console.log(`Products received:`, products);
+    
+    // If we have subcategories but no products, try to fetch products manually
+    if (subcategories && subcategories.length > 0 && (!products || products.length === 0)) {
+      console.log(`No products received from backend, trying manual frontend fetch...`);
+      fetchProductsFromSubcategories();
+    }
     
     // Store the original combined products
     setAllProducts(products);
@@ -144,6 +162,61 @@ const CategoryPage = ({ category, products, attributes, subcategories }) => {
     setCurrentPage(1);
   }, [products, category, subcategories]);
   
+  // Manual function to fetch products from subcategories if backend fails
+  const fetchProductsFromSubcategories = async () => {
+    if (!subcategories || subcategories.length === 0) return;
+    
+    console.log(`Manually fetching products from ${subcategories.length} subcategories...`);
+    setLoading(true);
+    
+    try {
+      let allProducts = [];
+      
+      for (const subcategory of subcategories) {
+        try {
+          console.log(`Fetching products for subcategory: ${subcategory.name?.en || subcategory.name} (${subcategory._id})`);
+          const response = await ProductServices.getShowingStoreProducts({
+            category: subcategory._id,
+            limit: 50000,
+            page: 1,
+          });
+          
+          if (response.products && response.products.length > 0) {
+            console.log(`Found ${response.products.length} products in subcategory: ${subcategory.name?.en || subcategory.name}`);
+            allProducts.push(...response.products);
+          } else {
+            console.log(`No products found in subcategory: ${subcategory.name?.en || subcategory.name}`);
+          }
+        } catch (err) {
+          console.error(`Error fetching products for subcategory ${subcategory._id}:`, err);
+        }
+      }
+      
+      console.log(`Total products found manually: ${allProducts.length}`);
+      
+      if (allProducts.length > 0) {
+        // Remove duplicates
+        const uniqueProducts = [];
+        const seenIds = new Set();
+        
+        for (const product of allProducts) {
+          if (!seenIds.has(product._id)) {
+            seenIds.add(product._id);
+            uniqueProducts.push(product);
+          }
+        }
+        
+        console.log(`Setting ${uniqueProducts.length} unique products from manual fetch`);
+        setAllProducts(uniqueProducts);
+        setFilteredProducts(uniqueProducts);
+      }
+    } catch (err) {
+      console.error('Error in manual product fetch:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Calculate pagination
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
