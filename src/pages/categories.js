@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
 import Layout from "@layout/Layout";
 import CategoryTopBanner from "@components/banner/CategoryTopBanner";
 import CategoryServices from "@services/CategoryServices";
@@ -90,13 +89,12 @@ const Categories = ({ categories }) => {
                             <div className="text-xs text-gray-400 mb-1">
                               {category._id.slice(-4)}: {category.icon.slice(-20)}
                             </div>
-                            <Image
+                            <img
                               src={category.icon}
                               alt={showingTranslateValue(category.name)}
                               width={60}
                               height={60}
                               className="object-contain"
-                              unoptimized={true}
                               onError={(e) => {
                                 console.error('❌ Image failed to load:', category.icon, e);
                               }}
