@@ -68,6 +68,14 @@ const MainCarousel = ({ animationType = 'fade' }) => {
 
   // Convert API banners to slider format with proper translations
   const sliderData = banners.banners.map((banner, index) => {
+    // Debug: Log banner data to see textAlignment
+    console.log('🔍 Banner data:', {
+      id: banner._id,
+      title: banner.title,
+      textAlignment: banner.textAlignment,
+      hasTextAlignment: !!banner.textAlignment
+    });
+    
     // Helper function to safely extract text from object or string
     const getLocalizedText = (field, fallback = '') => {
       if (!field) return fallback;
