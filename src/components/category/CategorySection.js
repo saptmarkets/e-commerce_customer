@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from "next/router";
 import { useContext } from "react";
@@ -10,22 +10,44 @@ import CategoryServices from "@services/CategoryServices";
 import CMSkeleton from "@components/preloader/CMSkeleton";
 import { SidebarContext } from "@context/SidebarContext";
 import useUtilsFunction from "@hooks/useUtilsFunction";
+import { useCategoryCache } from "@utils/categoryCacheUtils";
 
 const CategorySection = ({ title, description, categorySettings }) => {
   const router = useRouter();
   const { isLoading, setIsLoading } = useContext(SidebarContext);
   const { showingTranslateValue } = useUtilsFunction();
   const carouselRef = useRef(null);
+  const { invalidateCache, refetchAll } = useCategoryCache();
+
+  // Force refresh when component mounts or window gains focus
+  useEffect(() => {
+    const handleFocus = () => {
+      // Refetch data when window gains focus (user returns to tab)
+      refetchAll();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    
+    // Also refetch on mount to ensure fresh data
+    refetchAll();
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [refetchAll]);
 
   const {
     data: allCategoriesRaw,
     error,
     isLoading: loading,
+    refetch,
   } = useQuery({
     queryKey: ["category-main"],
     queryFn: async () => await CategoryServices.getMainCategories(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 1000, // 30 seconds - much shorter for real-time updates
+    cacheTime: 2 * 60 * 1000, // 2 minutes - shorter cache time
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    refetchOnMount: true, // Always refetch when component mounts
   });
 
   // Use selected categories from admin settings or fallback to main categories
@@ -73,7 +95,23 @@ const CategorySection = ({ title, description, categorySettings }) => {
               <p className="text-responsive-base text-gray-600 text-center max-w-xl mx-auto">
                 {description}
               </p>
-            )}
+              )}
+            {/* Refresh button for categories */}
+            <div className="mt-2">
+              <button
+                onClick={() => {
+                  invalidateCache();
+                  refetchAll();
+                }}
+                className="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-800 transition-colors duration-200"
+                title="Refresh categories and clear cache"
+              >
+                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh & Clear Cache
+              </button>
+            </div>
           </div>
         )}
 
@@ -128,6 +166,8 @@ const CategorySection = ({ title, description, categorySettings }) => {
                             fill
                             className="object-contain group-hover:scale-110 transition-transform duration-300"
                             sizes="64px"
+                            unoptimized={false}
+                            priority={false}
                           />
                         </div>
                       ) : (

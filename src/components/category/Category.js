@@ -23,11 +23,13 @@ const Category = () => {
   const { t } = useTranslation("common");
 
   // Fetch main categories only for better performance
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["category-main"],
     queryFn: async () => await CategoryServices.getMainCategories(),
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
+    staleTime: 30 * 1000, // 30 seconds - much shorter for real-time updates
+    cacheTime: 2 * 60 * 1000, // 2 minutes - shorter cache time
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    refetchOnMount: true, // Always refetch when component mounts
   });
 
   const [expanded, setExpanded] = useState({});

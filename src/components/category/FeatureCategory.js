@@ -19,11 +19,14 @@ const FeatureCategory = () => {
     data,
     error,
     isLoading: loading,
+    refetch,
   } = useQuery({
     queryKey: ["category-feature"],
     queryFn: async () => await CategoryServices.getMainCategories(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 1000, // 30 seconds - much shorter for real-time updates
+    cacheTime: 2 * 60 * 1000, // 2 minutes - shorter cache time
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    refetchOnMount: true, // Always refetch when component mounts
   });
 
   // console.log("category", data);
