@@ -135,6 +135,7 @@ const MainCarousel = ({ animationType = 'fade' }) => {
       leftImageAnimation: banner.leftImageAnimation || 'slideUp',
       rightImageAnimation: banner.rightImageAnimation || 'slideUp',
       centerImageAnimation: banner.centerImageAnimation || 'slideRight',
+      textAlignment: banner.textAlignment || { en: 'left', ar: 'right' },
       openInNewTab: banner.openInNewTab
     };
   });
@@ -166,75 +167,105 @@ const MainCarousel = ({ animationType = 'fade' }) => {
   const rightSideImage2 = staticSideImages?.rightImage2;
 
   // Single image layout component
-  const SingleImageSlide = ({ item, i }) => (
-    <div className="relative w-full h-full">
-      <Image 
-        src={item.image}
-        alt={item.title}
-        fill
-        className="object-cover w-full h-full"
-        sizes="100vw" // Add sizes prop for performance
-        priority
-        unoptimized={true} 
-      />
-      <div className="absolute inset-0 bg-black bg-opacity-30">
-        <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
-          <div className={`max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'}`}>
-            <h1 className="text-responsive-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
-              {item.title}
-            </h1>
-            <p className="text-white text-responsive-2xl mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
-              {item.info}
-            </p>
-            {item.url && item.buttonName && (
-              <Link
-                href={item.url}
-                target={item.openInNewTab ? "_blank" : "_self"}
-                rel={item.openInNewTab ? "noopener noreferrer" : ""}
-                className="inline-block px-8 py-4 text-2xl font-bold bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200 shadow-lg font-noor"
-              >
-                {item.buttonName}
+  const SingleImageSlide = ({ item, i }) => {
+    // Get text alignment based on current language
+    const getTextAlignment = () => {
+      const alignment = item.textAlignment?.[lang] || item.textAlignment?.en || 'left';
+      switch (alignment) {
+        case 'center':
+          return 'mx-auto text-center';
+        case 'right':
+          return isRTL ? 'ml-auto text-right' : 'mr-auto text-right';
+        case 'left':
+        default:
+          return isRTL ? 'mr-auto text-left' : 'ml-auto text-left';
+      }
+    };
+
+    return (
+      <div className="relative w-full h-full">
+        <Image 
+          src={item.image}
+          alt={item.title}
+          fill
+          className="object-cover w-full h-full"
+          sizes="100vw" // Add sizes prop for performance
+          priority
+          unoptimized={true} 
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-30">
+          <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
+            <div className={`max-w-lg ${getTextAlignment()}`}>
+              <h1 className="text-responsive-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+                {item.title}
+              </h1>
+              <p className="text-white text-responsive-2xl mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
+                {item.info}
+              </p>
+              {item.url && item.buttonName && (
+                <Link
+                  href={item.url}
+                  target={item.openInNewTab ? "_blank" : "_self"}
+                  rel={item.openInNewTab ? "noopener noreferrer" : ""}
+                  className="inline-block px-8 py-4 text-2xl font-bold bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200 shadow-lg font-noor"
+                >
+                  {item.buttonName}
                 </Link>
               )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Triple layout center slide component with multiple animation options
   const TripleCenterSlide = ({ item, i, animationType = 'fade' }) => {
+    // Get text alignment based on current language
+    const getTextAlignment = () => {
+      const alignment = item.textAlignment?.[lang] || item.textAlignment?.en || 'left';
+      switch (alignment) {
+        case 'center':
+          return 'mx-auto text-center';
+        case 'right':
+          return isRTL ? 'ml-auto text-right' : 'mr-auto text-right';
+        case 'left':
+        default:
+          return isRTL ? 'mr-auto text-left' : 'ml-auto text-left';
+      }
+    };
+
     // Animation variants
     const animationVariants = {
       fade: {
         container: "relative w-full h-full",
         image: "object-cover transition-all duration-1000 ease-out",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-slide-up`
+        content: `max-w-lg ${getTextAlignment()} animate-slide-up`
       },
       zoom: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover transition-transform duration-2000 ease-out hover:scale-110",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-slide-up-delayed`
+        content: `max-w-lg ${getTextAlignment()} animate-slide-up-delayed`
       },
       slide: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-slide-in-right`
+        content: `max-w-lg ${getTextAlignment()} animate-slide-in-right`
       },
       modern: {
         container: "relative w-full h-full overflow-hidden",
         image: "object-cover transition-all duration-1500 ease-out",
         overlay: "absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-transparent",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-modern-slide-up`
+        content: `max-w-lg ${getTextAlignment()} animate-modern-slide-up`
       },
       parallax: {
         container: "relative w-full h-full overflow-hidden",
-        image: "object-cover transition-transform duration-3000 ease-out",
+        image: "object-cover transition-all duration-3000 ease-out",
         overlay: "absolute inset-0 bg-black bg-opacity-30",
-        content: `max-w-lg ${isRTL ? 'ml-auto text-right' : 'mr-auto text-left'} animate-parallax-slide-up`
+        content: `max-w-lg ${getTextAlignment()} animate-parallax-slide-up`
       }
     };
 
