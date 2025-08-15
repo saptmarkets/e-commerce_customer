@@ -20,9 +20,8 @@ const Categories = ({ categories }) => {
   useEffect(() => {
     setLoading(true);
     try {
-      const isRoot = (cat) => !cat.parentId || cat.parentId === "0" || cat.parentId === "root" || cat.parentId === "ROOT" || cat.parentId === "null" || cat.parentId === null || cat.parentId === undefined;
-      const mainCategories = (categories || []).filter(isRoot);
-      setFilteredCategories(mainCategories);
+      // Categories are already filtered to main categories by the backend
+      setFilteredCategories(categories || []);
     } catch (e) {
       setFilteredCategories([]);
     } finally {
@@ -85,7 +84,7 @@ const Categories = ({ categories }) => {
                         ) : (
                           <div className="w-15 h-15 bg-gray-100 rounded-full flex items-center justify-center">
                             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                           </div>
                         )}
@@ -98,18 +97,15 @@ const Categories = ({ categories }) => {
                       
                       {/* Category Description */}
                       {category.description && (
-                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                        <p className="text-xs text-gray-500 mt-2 line-clamp-2">
                           {showingTranslateValue(category.description)}
                         </p>
                       )}
                       
-                      {/* Subcategories Count */}
+                      {/* Subcategory Count */}
                       {category.children && category.children.length > 0 && (
-                        <p className="text-xs text-green-600 mt-2">
-                          {lang === "ar"
-                            ? `${category.children.length} فئة فرعية`
-                            : `${category.children.length} subcategories`
-                          }
+                        <p className="text-xs text-gray-400 mt-2">
+                          {category.children.length} {category.children.length === 1 ? 'subcategory' : 'subcategories'}
                         </p>
                       )}
                     </div>
@@ -118,19 +114,18 @@ const Categories = ({ categories }) => {
               </div>
             )}
 
-            {/* No Categories Message */}
             {!loading && filteredCategories.length === 0 && (
               <div className="text-center py-16">
                 <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
                 <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                  {tr("No Categories Found", "لا توجد فئات")}
+                  {tr('No Categories Found', 'لا توجد فئات')}
                 </h3>
                 <p className="text-gray-500">
                   {tr(
-                    "Categories with products will appear here once they are added.",
-                    "ستظهر الفئات التي تحتوي على منتجات هنا بمجرد إضافتها."
+                    'No categories are available at the moment.',
+                    'لا توجد فئات متاحة حالياً.'
                   )}
                 </p>
               </div>
@@ -144,7 +139,8 @@ const Categories = ({ categories }) => {
 
 export const getServerSideProps = async () => {
   try {
-    const categories = await CategoryServices.getShowingCategory();
+    // Get main categories for the categories page
+    const categories = await CategoryServices.getMainCategories();
     
     return {
       props: {

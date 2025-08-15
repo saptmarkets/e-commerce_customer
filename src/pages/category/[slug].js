@@ -471,10 +471,8 @@ export const getServerSideProps = async (context) => {
       }
     }
     
-    // Get products for this category and its subcategories
-    const productsData = await ProductServices.getShowingStoreProducts({
-      category: category._id,
-    });
+    // Get products for this category and its subcategories using the consolidated backend logic
+    const productsData = await ProductServices.getProductsForCategoryWithSubcategories(category._id);
 
     // Get attributes
     const attributes = await AttributeServices.getShowingAttributes();

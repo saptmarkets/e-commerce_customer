@@ -29,8 +29,10 @@ const CategoryCarousel = () => {
     error,
     isLoading: loading,
   } = useQuery({
-    queryKey: ["category"],
-    queryFn: async () => await CategoryServices.getShowingCategory(),
+    queryKey: ["category-carousel"],
+    queryFn: async () => await CategoryServices.getMainCategories(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
   });
 
   // console.log("data", data, "error", error, "isFetched", isFetched);
@@ -99,88 +101,81 @@ const CategoryCarousel = () => {
           1680: {
             width: 1680,
             slidesPerView: 10,
-            spaceBetween: 8,
-          },
-          1920: {
-            width: 1920,
-            slidesPerView: 10,
-            spaceBetween: 8,
+            spaceBetween: 10,
           },
         }}
-        modules={[Autoplay, Navigation, Pagination, Controller]}
-        className="mySwiper category-slider my-4 sm:my-6 swiper-ltr"
-        onSlideChange={(swiper) => {
-          // Custom loop behavior for category carousel
-          const currentIndex = swiper.activeIndex;
-          const totalSlides = data?.[0]?.children?.length || 0;
-          
-          // If we've reached the last slide, reset to the first slide
-          if (currentIndex >= totalSlides - 1) {
-            setTimeout(() => {
-              swiper.slideTo(0, 0, false);
-            }, 100);
-          }
-        }}
+        modules={[Autoplay, Controller, Navigation, Pagination]}
+        className="category-carousel-swiper"
       >
         {loading ? (
-          <div className="text-center">
-            <Loading loading={loading} />
+          <div className="flex justify-center items-center h-32">
+            <Loading />
           </div>
-        ) : error ? (
-          <p className="flex justify-center align-middle items-center m-auto text-responsive-lg text-red-500">
-            {error?.response?.data?.message || error?.message}
-          </p>
-        ) : (
-          <div>
-            {(data?.[0]?.children || []).map((category, i) => (
-              <SwiperSlide key={i + 1} className="group">
-                <div
-                  onClick={() =>
-                    handleCategoryClick(category?._id, category.name)
-                  }
-                  className="text-center cursor-pointer card-responsive bg-white rounded-lg touch-target"
-                >
-                  <div className="bg-white p-1 sm:p-2 mx-auto w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full shadow-md">
-                    <div className="relative w-4 h-4 sm:w-6 sm:h-6 md:w-6 md:h-8">
+        ) : data && data.length > 0 ? (
+          data.map((category) => (
+            <SwiperSlide key={category._id}>
+              <div
+                onClick={() =>
+                  handleCategoryClick(category._id, showingTranslateValue(category.name))
+                }
+                className="group cursor-pointer transition-all duration-300 hover:scale-105"
+              >
+                <div className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-300">
+                  {category.icon ? (
+                    <div className="w-12 h-12 mx-auto mb-2 relative">
                       <Image
-                        src={
-                          category?.icon ||
-                          "https://res.cloudinary.com/dxjobesyt/image/upload/v1752706908/placeholder_kvepfp_wkyfut.png"
-                        }
-                        alt="category"
-                        width={40}
-                        height={40}
-                        className="object-fill"
+                        src={category.icon}
+                        alt={showingTranslateValue(category.name)}
+                        fill
+                        className="object-contain group-hover:scale-110 transition-transform duration-300"
+                        sizes="48px"
                       />
                     </div>
-                  </div>
-
-                  <h3
-                    className="text-responsive-xs text-gray-600 mt-1 sm:mt-2 font-serif group-hover:text-emerald-500 break-words whitespace-normal"
-                    style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      fontSize: (typeof window !== 'undefined' && document?.documentElement?.dir === 'rtl') ? '0.7rem' : undefined
-                    }}
-                  >
-                    {showingTranslateValue(category?.name)}
+                  ) : (
+                    <div className="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-green-100 transition-colors duration-300">
+                      <svg className="w-6 h-6 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                  )}
+                  <h3 className="text-xs font-medium text-gray-800 group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
+                    {showingTranslateValue(category.name)}
                   </h3>
+                  {category.children && category.children.length > 0 && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {category.children.length} {category.children.length === 1 ? 'sub' : 'subs'}
+                    </p>
+                  )}
                 </div>
-              </SwiperSlide>
-            ))}
+              </div>
+            </SwiperSlide>
+          ))
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No categories available</p>
           </div>
         )}
-        <button ref={prevRef} className="prev">
-          <IoChevronBackOutline />
-        </button>
-        <button ref={nextRef} className="next">
-          <IoChevronForward />
-        </button>
       </Swiper>
+
+      {/* Custom Navigation Buttons */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          ref={prevRef}
+          className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 border border-gray-200"
+          aria-label="Previous categories"
+        >
+          <IoChevronBackOutline className="w-5 h-5 text-gray-600" />
+        </button>
+        <button
+          ref={nextRef}
+          className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 border border-gray-200"
+          aria-label="Next categories"
+        >
+          <IoChevronForward className="w-5 h-5 text-gray-600" />
+        </button>
+      </div>
     </>
   );
 };
 
-export default React.memo(CategoryCarousel);
+export default CategoryCarousel;

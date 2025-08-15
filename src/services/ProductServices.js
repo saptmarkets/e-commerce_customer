@@ -19,6 +19,22 @@ const ProductServices = {
     }
   },
 
+  // Get products for a category including all subcategories (for parent categories)
+  getProductsForCategoryWithSubcategories: async (categoryId, { limit = 20, page = 1 } = {}) => {
+    try {
+      const params = new URLSearchParams();
+      if (limit) params.append('limit', limit);
+      if (page) params.append('page', page);
+
+      // Use the backend's consolidated category logic
+      const endpoint = `/products/store?category=${encodeURIComponent(categoryId)}&${params.toString()}`;
+      return await requests.get(endpoint);
+    } catch (error) {
+      console.error('Error fetching products for category with subcategories:', error);
+      throw error;
+    }
+  },
+
   // Get all products (admin)
   getAllProducts: async ({ limit = 20, page = 1 } = {}) => {
     try {

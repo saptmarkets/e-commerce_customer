@@ -22,30 +22,17 @@ const Category = () => {
   const { showingTranslateValue } = useUtilsFunction();
   const { t } = useTranslation("common");
 
-  // Fetch categories only
+  // Fetch main categories only for better performance
   const { data, error, isLoading } = useQuery({
-    queryKey: ["category"],
-    queryFn: async () => await CategoryServices.getShowingCategory(),
+    queryKey: ["category-main"],
+    queryFn: async () => await CategoryServices.getMainCategories(),
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
   });
 
-  const mainCategories = useMemo(() => {
-    const isRoot = (cat) =>
-      !cat?.parentId ||
-      cat.parentId === "0" ||
-      cat.parentId === "root" ||
-      cat.parentId === "ROOT" ||
-      cat.parentId === "null" ||
-      cat.parentId === null ||
-      cat.parentId === undefined;
-    return (data || []).filter(isRoot);
-  }, [data]);
-
   const [expanded, setExpanded] = useState({});
   const [loadingByCategory, setLoadingByCategory] = useState({});
   const [childrenWithProducts, setChildrenWithProducts] = useState({});
-  const [hiddenMainIds, setHiddenMainIds] = useState(new Set());
 
   const toggleExpand = useCallback(
     async (category) => {
@@ -60,27 +47,24 @@ const Category = () => {
       ) {
         setLoadingByCategory((prev) => ({ ...prev, [categoryId]: true }));
         try {
-          const [hasMainProducts, subResults] = await Promise.all([
-            ProductServices.checkCategoryHasProducts(categoryId).catch(() => false),
-            Promise.all(
-              (category.children || []).map(async (sub) => {
-            try {
-                  const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
-                  return { sub, hasProducts };
-                } catch (err) {
-                  return { sub, hasProducts: false };
-            }
-          })
-            ),
-          ]);
+          // Get subcategories for this category
+          const subcategories = await CategoryServices.getSubcategories(categoryId);
+          
+          // Check which subcategories have products
+          const subResults = await Promise.all(
+            subcategories.map(async (sub) => {
+              try {
+                const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
+                return { sub, hasProducts };
+              } catch (err) {
+                return { sub, hasProducts: false };
+              }
+            })
+          );
 
-          const filteredSubs = (subResults || [])
+          const filteredSubs = subResults
             .filter((r) => r.hasProducts)
             .map((r) => r.sub);
-
-          if (!hasMainProducts && filteredSubs.length === 0) {
-            setHiddenMainIds((prev) => new Set(prev).add(categoryId));
-              }
 
           setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filteredSubs }));
         } finally {
@@ -92,87 +76,139 @@ const Category = () => {
   );
 
   const displayedMainCategories = useMemo(() => {
-    return mainCategories.filter((cat) => {
-      if (hiddenMainIds.has(cat._id)) return false;
-      const displayName = showingTranslateValue(cat.name);
-      return isValidName(displayName);
-    });
-  }, [mainCategories, hiddenMainIds, showingTranslateValue]);
+    return (data || []).filter(cat => 
+      cat && isValidName(cat.name) && cat.status === "show"
+    );
+  }, [data]);
+
+  if (isLoading) {
+    return (
+      <div className="animate-pulse space-y-4">
+        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-6 bg-gray-200 rounded w-2/3"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 text-sm p-4">
+        Error loading categories: {error.message}
+      </div>
+    );
+  }
+
+  if (!displayedMainCategories || displayedMainCategories.length === 0) {
+    return (
+      <div className="text-gray-500 text-sm p-4">
+        No categories available
+      </div>
+    );
+  }
 
   return (
-    <div className={`${categoryDrawerOpen ? "block" : "hidden"}`}>
-      {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                <span className="ml-2 text-gray-600">Loading categories...</span>
-              </div>
-            ) : error ? (
-              <div className="text-center py-4">
-          <p className="text-red-600 text-sm">{error?.message || "Error loading categories"}</p>
-                </div>
-      ) : displayedMainCategories.length === 0 ? (
-        <div className="text-center py-4">
-                <p className="text-gray-600 text-sm">No categories found</p>
-              </div>
-            ) : (
-        <ul className="space-y-2 p-4">
-          {displayedMainCategories.map((category) => (
-            <li key={category._id} className="group">
-              <div className="flex items-center justify-between px-2 py-2 rounded hover:bg-gray-50 transition-colors">
-                <Link href={`/category/${category._id}`} className="flex items-center flex-1 min-w-0">
+    <div className="p-4">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        {t("Categories", "الفئات")}
+      </h3>
+      
+      <div className="space-y-2">
+        {displayedMainCategories.map((category) => {
+          const categoryId = category._id;
+          const isExpanded = expanded[categoryId];
+          const isLoadingChildren = loadingByCategory[categoryId];
+          const children = childrenWithProducts[categoryId] || [];
+
+          return (
+            <div key={categoryId} className="border border-gray-200 rounded-lg">
+              {/* Main Category */}
+              <div className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
+                <Link
+                  href={`/category/${categoryId}`}
+                  className="flex items-center flex-1 min-w-0 group"
+                >
                   {category.icon && (
-                    <Image src={category.icon} alt={showingTranslateValue(category.name)} width={24} height={24} className="mr-2 object-contain" />
+                    <div className="w-8 h-8 mr-3 flex-shrink-0 relative">
+                      <Image
+                        src={category.icon}
+                        alt={showingTranslateValue(category.name)}
+                        fill
+                        className="object-contain"
+                        sizes="32px"
+                      />
+                    </div>
                   )}
-                  <span className="truncate">{showingTranslateValue(category.name)}</span>
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-green-600 transition-colors truncate">
+                    {showingTranslateValue(category.name)}
+                  </span>
                 </Link>
-                {category.children && category.children.length > 0 && (
+
+                {/* Expand/Collapse Button */}
+                {children.length > 0 && (
                   <button
                     onClick={() => toggleExpand(category)}
-                    className="ml-2 p-1 focus:outline-none"
-                    aria-label={expanded[category._id] ? "Collapse" : "Expand"}
+                    className="ml-2 p-1 hover:bg-gray-200 rounded transition-colors flex-shrink-0"
+                    aria-label={isExpanded ? "Collapse" : "Expand"}
                   >
                     <svg
-                      className={`w-4 h-4 text-gray-400 group-hover:text-green-600 transform transition-transform ${expanded[category._id] ? "rotate-90" : ""}`}
+                      className={`w-4 h-4 text-gray-500 transition-transform ${
+                        isExpanded ? "rotate-90" : ""
+                      }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
                 )}
               </div>
 
-              {category.children && category.children.length > 0 && expanded[category._id] && (
-                <div className="ml-8 mt-1">
-                  {loadingByCategory[category._id] ? (
-                    <div className="flex items-center py-2 text-sm text-gray-600">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
-                      Loading subcategories...
+              {/* Subcategories */}
+              {isExpanded && (
+                <div className="border-t border-gray-200 bg-gray-50">
+                  {isLoadingChildren ? (
+                    <div className="p-3">
+                      <div className="animate-pulse space-y-2">
+                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                      </div>
                     </div>
                   ) : (
-                    <ul className="space-y-1">
-                      {(childrenWithProducts[category._id] ?? []).map((subcat) => (
-                        <li key={subcat._id}>
-                          <Link href={`/category/${subcat._id}`} className="flex items-center px-2 py-1 rounded hover:bg-gray-100 text-sm">
-                            {subcat.icon && (
-                              <Image src={subcat.icon} alt={showingTranslateValue(subcat.name)} width={20} height={20} className="mr-2 object-contain" />
+                    <div className="p-3 space-y-1">
+                      {children.map((subcategory) => (
+                        <Link
+                          key={subcategory._id}
+                          href={`/category/${subcategory._id}`}
+                          className="block py-2 px-3 hover:bg-white rounded transition-colors group"
+                        >
+                          <div className="flex items-center">
+                            {subcategory.icon && (
+                              <div className="w-6 h-6 mr-2 flex-shrink-0 relative">
+                                <Image
+                                  src={subcategory.icon}
+                                  alt={showingTranslateValue(subcategory.name)}
+                                  fill
+                                  className="object-contain"
+                                  sizes="24px"
+                                />
+                              </div>
                             )}
-                            <span className="truncate">{showingTranslateValue(subcat.name)}</span>
-                          </Link>
-                        </li>
+                            <span className="text-sm text-gray-600 group-hover:text-green-600 transition-colors truncate">
+                              {showingTranslateValue(subcategory.name)}
+                            </span>
+                          </div>
+                        </Link>
                       ))}
-                      {Array.isArray(childrenWithProducts[category._id]) && childrenWithProducts[category._id].length === 0 && (
-                        <li className="px-2 py-1 text-xs text-gray-500">No subcategories with products</li>
-                      )}
-                    </ul>
-          )}
-        </div>
+                    </div>
+                  )}
+                </div>
               )}
-            </li>
-          ))}
-        </ul>
-      )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
