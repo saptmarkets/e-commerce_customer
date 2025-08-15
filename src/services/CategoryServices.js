@@ -20,11 +20,16 @@ const CategoryServices = {
   // Get main categories (parent categories) for homepage display
   getMainCategories: async () => {
     try {
-      const categories = await requests.get("/category/show");
+      // Use /category/all to get raw categories without processing
+      const categories = await requests.get("/category/all");
       // Filter to only show main categories (no parentId or top-level)
       const mainCategories = categories.filter(cat => 
-        !cat.parentId || cat.parentId === null || cat.parentId === ""
+        cat.status === 'show' && (!cat.parentId || cat.parentId === null || cat.parentId === "")
       );
+      console.log('🔍 getMainCategories: Found', mainCategories.length, 'main categories');
+      mainCategories.forEach(cat => {
+        console.log(`  - ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon ? 'Yes' : 'No'}`);
+      });
       return mainCategories;
     } catch (error) {
       console.error("Error fetching main categories:", error);

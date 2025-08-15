@@ -31,8 +31,14 @@ const CategorySection = ({ title, description, categorySettings }) => {
     // Also refetch on mount to ensure fresh data
     refetchAll();
 
+    // Force refresh every 2 minutes to ensure fresh data
+    const interval = setInterval(() => {
+      refetchAll();
+    }, 2 * 60 * 1000);
+
     return () => {
       window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
     };
   }, [refetchAll]);
 
@@ -63,6 +69,15 @@ const CategorySection = ({ title, description, categorySettings }) => {
         .filter(Boolean)
         .slice(0, itemsPerView)
     : (allCategoriesRaw || []).slice(0, itemsPerView);
+
+  // Debug logging
+  console.log('🔍 CategorySection: allCategoriesRaw:', allCategoriesRaw?.length || 0);
+  console.log('🔍 CategorySection: displayCategories:', displayCategories?.length || 0);
+  if (displayCategories && displayCategories.length > 0) {
+    displayCategories.forEach((cat, index) => {
+      console.log(`  ${index + 1}. ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon || 'NO ICON'}`);
+    });
+  }
 
   const handleCategoryClick = (id, categoryName) => {
     router.push(`/category/${id}`);
@@ -100,8 +115,11 @@ const CategorySection = ({ title, description, categorySettings }) => {
             <div className="mt-2">
               <button
                 onClick={() => {
+                  console.log('🔄 Manual refresh triggered');
                   invalidateCache();
                   refetchAll();
+                  // Force immediate refetch
+                  refetch();
                 }}
                 className="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-800 transition-colors duration-200"
                 title="Refresh categories and clear cache"
@@ -109,7 +127,7 @@ const CategorySection = ({ title, description, categorySettings }) => {
                 <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Refresh & Clear Cache
+                Force Refresh
               </button>
             </div>
           </div>
