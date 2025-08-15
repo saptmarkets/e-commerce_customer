@@ -204,10 +204,10 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className="absolute inset-0 bg-black bg-opacity-30">
           <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
             <div className={`max-w-lg ${getTextAlignment()}`}>
-              <h1 className="text-responsive-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+              <h1 className="text-responsive-4xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
                 {item.title}
               </h1>
-              <p className="text-white text-responsive-2xl mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
+              <p className="text-white text-responsive-lg mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
                 {item.info}
               </p>
               {item.url && item.buttonName && (
@@ -293,10 +293,10 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className={currentAnimation.overlay}>
           <div className="flex flex-col justify-center h-full responsive-padding">
             <div className={currentAnimation.content}>
-              <h1 className="text-responsive-5xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+              <h1 className="text-responsive-3xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
                 {item.title}
               </h1>
-              <p className="text-white text-responsive-xl mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor">
+              <p className="text-white text-responsive-base mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor">
                 {item.info}
               </p>
               {item.url && item.buttonName && (
