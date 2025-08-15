@@ -101,10 +101,21 @@ const ProductServices = {
       const params = new URLSearchParams();
       if (limit) params.append('limit', limit);
 
-      return await requests.get(`/products/discounted?${params.toString()}`);
+      return await requests.get(`/products/discount?${params.toString()}`);
     } catch (error) {
       console.error('Error fetching discounted products:', error);
       throw error;
+    }
+  },
+
+  // Check if a category has any products
+  checkCategoryHasProducts: async (categoryId) => {
+    try {
+      const response = await requests.get(`/products/store?category=${encodeURIComponent(categoryId)}&limit=1&page=1`);
+      return response && response.products && response.products.length > 0;
+    } catch (error) {
+      console.error("Error checking category products:", error);
+      return false;
     }
   },
 
@@ -118,17 +129,6 @@ const ProductServices = {
     } catch (error) {
       console.error('Error fetching related products:', error);
       throw error;
-    }
-  },
-
-  // Check if a category has products
-  checkCategoryHasProducts: async (categoryId) => {
-    try {
-      const response = await requests.get(`/products/category/${categoryId}/has-products`);
-      return response.hasProducts;
-    } catch (error) {
-      console.error('Error checking if category has products:', error);
-      return false; // Default to false if there's an error
     }
   }
 };
