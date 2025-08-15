@@ -21,16 +21,6 @@ const Categories = ({ categories }) => {
     try {
       // Categories are already filtered to main categories by the backend
       setFilteredCategories(categories || []);
-      
-      // Debug: Log what we're setting in state
-      console.log('🔍 Categories page useEffect:');
-      console.log('  Categories prop:', categories?.length || 0);
-      console.log('  Filtered categories:', (categories || []).length);
-      if (categories && categories.length > 0) {
-        categories.forEach((cat, index) => {
-          console.log(`  ${index + 1}. ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon || 'NO ICON'}`);
-        });
-      }
     } catch (e) {
       console.error('Error in useEffect:', e);
       setFilteredCategories([]);
@@ -58,11 +48,11 @@ const Categories = ({ categories }) => {
           <CategoryTopBanner />
           
           <div className="flex flex-col">
-            <div className="mb-6">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+            <div className="mb-8 text-center">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
                 {tr("Shop by Categories", "تسوق حسب الفئات")}
               </h1>
-              <p className="text-gray-600">
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 {tr(
                   "Discover our wide range of product categories",
                   "اكتشف مجموعتنا الواسعة من فئات المنتجات"
@@ -73,35 +63,27 @@ const Categories = ({ categories }) => {
             {loading ? (
               <CMSkeleton count={12} height={200} />
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
                 {filteredCategories.map((category) => (
                   <Link
                     key={category._id}
                     href={`/category/${category._id}`}
                     className="group"
                   >
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 text-center hover:shadow-md transition-all duration-200 group-hover:border-green-200">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6 text-center hover:shadow-lg hover:shadow-emerald-100/50 transition-all duration-300 group-hover:border-emerald-200 group-hover:-translate-y-1">
                       {/* Category Icon */}
                       <div className="mb-3 flex justify-center">
                         {category.icon ? (
-                          <div>
-                            {/* Debug info - remove after fixing */}
-                            <div className="text-xs text-gray-400 mb-1">
-                              {category._id.slice(-4)}: {category.icon.slice(-20)}
-                            </div>
+                          <div className="relative group">
                             <img
                               src={category.icon}
                               alt={showingTranslateValue(category.name)}
-                              width={60}
-                              height={60}
-                              className="object-contain"
-                              onError={(e) => {
-                                console.error('❌ Image failed to load:', category.icon, e);
-                              }}
-                              onLoad={() => {
-                                console.log('✅ Image loaded successfully:', category.icon);
-                              }}
+                              width={80}
+                              height={80}
+                              className="object-cover rounded-lg shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105"
                             />
+                            {/* Hover overlay effect */}
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 rounded-lg transition-all duration-300"></div>
                           </div>
                         ) : (
                           <div className="w-15 h-15 bg-gray-100 rounded-full flex items-center justify-center">
@@ -113,22 +95,24 @@ const Categories = ({ categories }) => {
                       </div>
                       
                       {/* Category Name */}
-                      <h3 className="text-sm md:text-base font-medium text-gray-800 group-hover:text-green-600 transition-colors duration-200">
+                      <h3 className="text-sm md:text-base font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300 mb-2">
                         {showingTranslateValue(category.name)}
                       </h3>
                       
                       {/* Category Description */}
                       {category.description && (
-                        <p className="text-xs text-gray-500 mt-2 line-clamp-2">
+                        <p className="text-xs text-gray-600 mt-2 line-clamp-2 font-medium">
                           {showingTranslateValue(category.description)}
                         </p>
                       )}
                       
                       {/* Subcategory Count */}
                       {category.children && category.children.length > 0 && (
-                        <p className="text-xs text-gray-400 mt-2">
-                          {category.children.length} {category.children.length === 1 ? 'subcategory' : 'subcategories'}
-                        </p>
+                        <div className="mt-3">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 group-hover:bg-emerald-200 transition-colors duration-300">
+                            {category.children.length} {category.children.length === 1 ? 'subcategory' : 'subcategories'}
+                          </span>
+                        </div>
                       )}
                     </div>
                   </Link>
@@ -167,25 +151,13 @@ export const getServerSideProps = async () => {
     // First try the processed categories (like homepage)
     try {
       const processedCategories = await CategoryServices.getShowingCategory();
-      console.log('🔍 getServerSideProps: getShowingCategory returned', processedCategories?.length || 0, 'categories');
       
       // Filter to main categories only
       categories = processedCategories.filter(cat => 
         cat.status === 'show' && (!cat.parentId || cat.parentId === null || cat.parentId === "")
       );
-      console.log('🔍 getServerSideProps: Filtered to', categories?.length || 0, 'main categories');
     } catch (error) {
-      console.log('🔍 getServerSideProps: getShowingCategory failed, falling back to getMainCategories');
       categories = await CategoryServices.getMainCategories();
-    }
-    
-    // Debug: Log what we're getting
-    console.log('🔍 Categories page getServerSideProps:');
-    console.log('  Total categories:', categories?.length || 0);
-    if (categories && categories.length > 0) {
-      categories.forEach((cat, index) => {
-        console.log(`  ${index + 1}. ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon || 'NO ICON'}`);
-      });
     }
     
     return {
