@@ -121,78 +121,97 @@ const CategorySection = ({ title, description, categorySettings }) => {
           </div>
         ) : (
           <div className="relative">
-            {/* Navigation Arrows */}
-            {displayCategories && displayCategories.length > itemsPerView && (
-              <>
-                <button
-                  onClick={scrollLeft}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-                  aria-label="Scroll left"
-                >
-                  <FaChevronLeft className="text-gray-600" />
-                </button>
-                <button
-                  onClick={scrollRight}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-                  aria-label="Scroll right"
-                >
-                  <FaChevronRight className="text-gray-600" />
-                </button>
-              </>
-            )}
-
-            {/* Categories Grid/Carousel */}
-            <div
-              ref={carouselRef}
-              className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 ${
-                scrollDirection === 'horizontal' && displayCategories && displayCategories.length > itemsPerView
-                  ? 'overflow-x-auto scrollbar-hide'
-                  : ''
-              }`}
+            {/* Carousel Navigation - Hidden on mobile */}
+            <button 
+              onClick={scrollLeft}
+              className="mobile-hide absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md text-emerald-700 hover:bg-gray-50 focus:outline-none md:-left-5"
+              aria-label="Scroll left"
             >
-              {displayCategories && displayCategories.length > 0 ? (
-                displayCategories.map((category) => (
-                  <div
-                    key={category._id}
-                    onClick={() => handleCategoryClick(category._id, showingTranslateValue(category.name))}
-                    className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              <FaChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            
+            <button 
+              onClick={scrollRight}
+              className="mobile-hide absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md text-emerald-700 hover:bg-gray-50 focus:outline-none md:-right-5"
+              aria-label="Scroll right"
+            >
+              <FaChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
+            {/* Carousel Container */}
+            <div 
+              ref={carouselRef}
+              className={`flex ${scrollDirection === 'vertical' ? 'flex-col' : 'overflow-x-auto'} py-2 px-1 snap-x scrollbar-hide scroll-smooth`}
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {showAllProducts && (
+                <div className="flex-shrink-0 w-[100px] sm:w-[120px] md:w-[130px] lg:w-[129px] mx-1 sm:mx-2 snap-start">
+                  <div 
+                    className="flex flex-col cursor-pointer bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-lg transition duration-300 hover:border-emerald-500 overflow-hidden group touch-target"
+                    onClick={() => router.push('/products')}
                   >
-                    <div className="bg-white rounded-lg p-4 text-center border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-300">
-                      {category.icon ? (
-                        <div className="w-16 h-16 mx-auto mb-3 relative">
-                          <Image
-                            src={category.icon}
-                            alt={showingTranslateValue(category.name)}
-                            fill
-                            className="object-contain group-hover:scale-110 transition-transform duration-300"
-                            sizes="64px"
-                            unoptimized={false}
-                            priority={false}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-green-100 transition-colors duration-300">
-                          <svg className="w-8 h-8 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                          </svg>
-                        </div>
-                      )}
-                      <h3 className="text-sm font-medium text-gray-800 group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
-                        {showingTranslateValue(category.name)}
+                    {/* Square Image container - responsive */}
+                    <div className="w-full h-16 sm:h-20 md:h-24 lg:h-[5.5rem] bg-gradient-to-br from-emerald-50 to-emerald-100 relative overflow-hidden rounded-lg">
+                      <Image
+                        src="/logo/logo-color.svg"
+                        alt="All Products"
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                    
+                    {/* Category Name */}
+                    <div className="p-1 sm:p-2 text-center h-8 sm:h-10 md:h-12 flex items-center justify-center">
+                      <h3 className="text-responsive-xs font-semibold text-gray-800 group-hover:text-emerald-600 transition duration-200 leading-tight line-clamp-2">
+                        All Products
                       </h3>
-                      {category.children && category.children.length > 0 && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          {category.children.length} {category.children.length === 1 ? 'subcategory' : 'subcategories'}
-                        </p>
-                      )}
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="col-span-full text-center py-8">
-                  <p className="text-gray-500">No categories available</p>
                 </div>
               )}
+              
+              {displayCategories.map((category, i) => (
+                <div 
+                  key={i} 
+                  className="flex-shrink-0 w-[100px] sm:w-[120px] md:w-[130px] lg:w-[129px] mx-1 sm:mx-2 snap-start"
+                >
+                  <div 
+                    className="flex flex-col cursor-pointer bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-lg hover:border-emerald-500 transition duration-300 overflow-hidden group touch-target"
+                    onClick={() =>
+                      handleCategoryClick(
+                        category._id,
+                        showingTranslateValue(category?.name)
+                      )
+                    }
+                  >
+                    {/* Square Image container - responsive */}
+                    <div className="w-full h-16 sm:h-20 md:h-24 lg:h-[5.5rem] bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden rounded-lg">
+                      {category.icon ? (
+                        <Image
+                          src={category?.icon}
+                          alt={showingTranslateValue(category?.name)}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <Image
+                          src="https://res.cloudinary.com/dxjobesyt/image/upload/v1752706908/placeholder_kvepfp_wkyfut.png"
+                          alt={showingTranslateValue(category?.name)}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      )}
+                    </div>
+                    
+                    {/* Category Name */}
+                    <div className="p-1 sm:p-2 text-center h-8 sm:h-10 md:h-12 flex items-center justify-center">
+                      <h3 className="text-responsive-xs font-semibold text-gray-800 group-hover:text-emerald-600 transition duration-200 leading-tight line-clamp-2">
+                        {showingTranslateValue(category?.name)}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
