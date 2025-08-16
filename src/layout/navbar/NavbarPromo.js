@@ -28,6 +28,7 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 import useTranslation from "next-translate/useTranslation";
 import LanguageSelector from "@components/common/LanguageSelector";
 import CategoryDropdown from "@components/category/CategoryDropdown";
+import SocialLinks from "@components/common/SocialLinks";
 
 const NavbarPromo = () => {
   const { t } = useTranslation();
@@ -218,7 +219,7 @@ const NavbarPromo = () => {
               </Popover>
             </div>
 
-            {/* Right Navigation - Call Us, Delivery, Language */}
+            {/* Right Navigation - Call Us, Social Icons */}
             <div className="flex items-center space-x-8 text-gray-700 text-sm font-medium">
               {storeCustomizationSetting?.navbar?.call_us_status && (
                 <a
@@ -229,10 +230,12 @@ const NavbarPromo = () => {
                   <span>{t("common:Call Us")}: {storeCustomizationSetting?.navbar?.call_us_phone}</span>
                 </a>
               )}
-              <span className="flex items-center space-x-2">
-                <FiPocket className="w-4 h-4" />
-                <span>{t("common:Fast delivery within city")}</span>
-              </span>
+              
+              {/* Social Media Icons - Replacing Fast Delivery Text */}
+              <div className="flex items-center">
+                <SocialLinks className="!space-x-2" />
+              </div>
+              
               {/* Language Selector in top bar */}
               {/* <LanguageSelector /> */}
             </div>
