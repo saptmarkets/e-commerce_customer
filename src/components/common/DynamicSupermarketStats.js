@@ -52,7 +52,7 @@ const DynamicSupermarketStats = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-12 lg:gap-16 items-center">
           <div>
             <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
-              <h2 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 font-noor">
+              <h2 className="text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 font-noor">
                 {/* Split the title to color 'أسواق سبت' in purple, rest in green */}
                 {(() => {
                   const t = showingTranslateValue(title) || '';

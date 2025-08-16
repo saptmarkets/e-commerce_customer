@@ -18,8 +18,8 @@ const SupermarketStats = () => {
           <div>
             <div className="mb-8">
               <h2 className="font-bold mb-2 font-noor">
-                <span className="text-4xl md:text-5xl lg:text-6xl" style={{ color: "#76bd44" }}>Why Choose</span><br />
-                <span className="text-4xl md:text-5xl lg:text-6xl brand-name-arabic" style={{ color: "#74338c" }}>SAPT Markets?</span>
+                <span className="text-3xl md:text-4xl lg:text-5xl" style={{ color: "#76bd44" }}>Why Choose</span><br />
+                <span className="text-3xl md:text-4xl lg:text-5xl brand-name-arabic" style={{ color: "#74338c" }}>SAPT Markets?</span>
               </h2>
               <h3 className="text-3xl md:text-4xl text-gray-800 font-semibold mt-6 font-noor" style={{ color: "#76bd44" }}>Saudi Arabia's Leading Online Supermarket</h3>
               <p className="text-gray-600 mt-8 mb-10 max-w-lg text-xl font-noor leading-relaxed">
