@@ -101,22 +101,185 @@ html[lang="ar"] .slogan-arabic {
 .image-carousel .swiper-slide,
 .main-carousel .swiper,
 .main-carousel .swiper-wrapper,
-.main-carousel .swiper-slide,
-[dir="rtl"] .product-card-carousel .swiper,
-[dir="rtl"] .product-card-carousel .swiper-wrapper,
-[dir="rtl"] .product-card-carousel .swiper-slide,
-[dir="rtl"] .category-slider .swiper,
-[dir="rtl"] .category-slider .swiper-wrapper,
-[dir="rtl"] .category-slider .swiper-slide,
-[dir="rtl"] .image-carousel .swiper,
-[dir="rtl"] .image-carousel .swiper-wrapper,
-[dir="rtl"] .image-carousel .swiper-slide,
-[dir="rtl"] .main-carousel .swiper,
-[dir="rtl"] .main-carousel .swiper-wrapper,
-[dir="rtl"] .main-carousel .swiper-slide {
+.main-carousel .swiper-slide {
   direction: ltr !important;
 }
 
+/* Testimonials Section Enhanced Animations */
+.testimonials-section {
+  overflow: hidden;
+}
+
+.testimonials-section h2 {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+.testimonials-section p {
+  animation: slideInFromTop 0.6s ease-out 0.1s both;
+}
+
+.testimonial-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInFromBottom 0.6s ease-out 0.2s both;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-avatar {
+  transition: all 0.3s ease;
+}
+
+.testimonial-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.testimonial-stars {
+  transition: all 0.2s ease;
+}
+
+.testimonial-stars .star {
+  transition: all 0.2s ease;
+}
+
+.testimonial-stars .star:hover {
+  transform: scale(1.1);
+}
+
+/* Enhanced Navigation Dots */
+.testimonial-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.testimonial-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.testimonial-dot:hover {
+  background-color: #9ca3af;
+  transform: scale(1.1);
+}
+
+.testimonial-dot.active {
+  background-color: var(--color-brand-primary);
+  transform: scale(1.25);
+  box-shadow: 0 4px 12px rgba(14, 125, 74, 0.3);
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+.testimonial-dot.active::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background-color: var(--color-brand-primary);
+  opacity: 0.3;
+  animation: testimonial-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes testimonial-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes dot-pulse {
+  0%, 100% {
+    transform: scale(1.25);
+  }
+  50% {
+    transform: scale(1.35);
+  }
+}
+
+/* Navigation Arrows */
+.testimonial-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+.testimonial-nav-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background-color: #f9fafb;
+}
+
+.testimonial-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: translateY(-50%) scale(1);
+}
+
+.testimonial-nav-btn:disabled:hover {
+  transform: translateY(-50%) scale(1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Testimonial Content Animations */
+.testimonial-content {
+  transition: all 0.3s ease;
+}
+
+.testimonial-content.animating {
+  transform: scale(0.98);
+  opacity: 0.8;
+}
+
+/* Smooth transitions for all testimonial elements */
+.testimonial-section * {
+  transition: all 0.3s ease;
+}
+
+/* Responsive adjustments for testimonials */
+@media (max-width: 640px) {
+  .testimonial-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .testimonial-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-dots {
+    gap: 8px;
+  }
+  
+  .testimonial-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
 
 
 /* Force all carousel animations to be LTR regardless of page direction */
