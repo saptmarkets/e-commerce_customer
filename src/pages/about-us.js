@@ -65,14 +65,14 @@ const AboutUs = () => {
               <div className="absolute inset-0 opacity-80" style={{ background: brandColor }}></div>
             )}
             <div className="relative container mx-auto px-4 text-center">
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6 capitalize">
+              <h1 className="text-4xl lg:text-6xl font-bold mb-6 capitalize font-noor">
                 {loading ? (
                   <CMSkeleton count={1} height={60} loading={loading} />
                 ) : (
                   showingTranslateValue(ab.title) || 'About Us'
                 )}
               </h1>
-              <p className="text-lg lg:text-2xl opacity-90 max-w-3xl mx-auto">
+              <p className="text-lg lg:text-2xl opacity-90 max-w-3xl mx-auto font-noor">
                 {loading ? (
                   <CMSkeleton count={2} height={30} loading={loading} />
                 ) : (
@@ -94,14 +94,14 @@ const AboutUs = () => {
           <SectionBox>
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <h2 className="text-4xl lg:text-5xl font-bold text-emerald-800 leading-tight">
+              <h2 className="text-4xl lg:text-5xl font-bold text-emerald-800 leading-tight font-noor">
                 {loading ? (
                   <CMSkeleton count={1} height={50} loading={loading} />
                 ) : (
                   showingTranslateValue(storeCustomizationSetting?.about_us?.top_section_title) || "A Trusted Name in Qassim Retail"
                 )}
               </h2>
-              <p className="text-lg text-gray-600 leading-relaxed mb-4">
+              <p className="text-lg text-gray-600 leading-relaxed mb-4 font-noor">
                 {loading ? (
                   <CMSkeleton count={3} height={25} loading={loading} />
                 ) : (
@@ -121,12 +121,12 @@ const AboutUs = () => {
                 const BadgeLine = ({ pill, text }) => (
                   <div className="flex items-center space-x-2 mb-2">
                     {pill && (
-                      <span className="inline-block bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">
+                      <span className="inline-block bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full font-noor">
                         {pill}
                       </span>
                     )}
                     {text && (
-                      <span className="text-sm text-gray-600 font-medium">
+                      <span className="text-sm text-gray-600 font-medium font-noor">
                         {text}
                       </span>
                     )}
@@ -160,7 +160,7 @@ const AboutUs = () => {
                       <span>🥕</span>
                       <span>🍅</span>
                     </div>
-                    <p className="text-lg font-semibold text-emerald-800">Fresh Local Produce</p>
+                    <p className="text-lg font-semibold text-emerald-800 font-noor">Fresh Local Produce</p>
                   </div>
                 )}
               </div>
@@ -175,10 +175,10 @@ const AboutUs = () => {
           <SectionBox className="mx-4 md:mx-8">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div className="lg:order-2">
-                <h2 className="text-4xl font-bold text-emerald-800 mb-8">
+                <h2 className="text-4xl font-bold text-emerald-800 mb-8 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.heritage_title) || "Our Heritage & Vision"}
               </h2>
-                <div className="space-y-6 text-gray-700 leading-relaxed">
+                <div className="space-y-6 text-gray-700 leading-relaxed font-noor">
                   <p>
                     {showingTranslateValue(storeCustomizationSetting?.about_us?.heritage_description_one) || 
                       "SAPT Markets is proudly part of the Al-Muhaysini Holding family, a trusted name in the Qassim region with deep roots in our community. Our journey began with a simple vision: to provide families with convenient access to quality products at competitive prices."}
@@ -221,20 +221,20 @@ const AboutUs = () => {
 
             {/* Optional short description placed above card container */}
             {hasContent(storeCustomizationSetting?.about_us?.team_description) && (
-              <p className="text-center text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="text-center text-lg text-gray-600 mb-8 max-w-3xl mx-auto font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.team_description)}
               </p>
             )}
 
             <SectionBox>
               {/* Main heading */}
-              <h2 className="text-3xl md:text-4xl font-bold text-emerald-800 mb-8 text-left">
+              <h2 className="text-3xl md:text-4xl font-bold text-emerald-800 mb-8 text-left font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.team_title) || "Meet the SAPT Family"}
             </h2>
 
               {/* Leadership tagline (extra text) */}
               {hasContent(storeCustomizationSetting?.about_us?.leadership_title) && (
-                <h3 className="text-xl md:text-2xl font-semibold text-emerald-600 mb-10">
+                <h3 className="text-xl md:text-2xl font-semibold text-emerald-600 mb-10 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.leadership_title)}
                 </h3>
               )}
@@ -265,14 +265,14 @@ const AboutUs = () => {
                     )
                   )}
                 </div>
-                  <h3 className="text-base md:text-lg font-bold text-emerald-800 mb-1">
+                  <h3 className="text-base md:text-lg font-bold text-emerald-800 mb-1 font-noor">
                   {loading ? (
                     <CMSkeleton count={1} height={25} loading={loading} />
                   ) : (
                         showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_name`]) || `Team Member ${index}`
                   )}
                 </h3>
-                  <div className="text-emerald-600 font-semibold text-xs md:text-sm">
+                  <div className="text-emerald-600 font-semibold text-xs md:text-sm font-noor">
                   {loading ? (
                     <CMSkeleton count={1} height={20} loading={loading} />
                   ) : (
@@ -294,10 +294,10 @@ const AboutUs = () => {
           <SectionBox>
             <div>
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-emerald-800 mb-6">
+              <h2 className="text-4xl font-bold text-emerald-800 mb-6 font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.values_title) || "Our Core Values"}
             </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.values_description) || 
                   "These fundamental principles guide every decision we make and every interaction we have with our customers and community."}
               </p>
@@ -308,10 +308,10 @@ const AboutUs = () => {
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-2xl">🎯</span>
                 </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4">
+                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_one_title) || "Quality First"}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_one_description) || 
                     "We never compromise on the quality of our products, ensuring every item meets our high standards."}
                 </p>
@@ -321,10 +321,10 @@ const AboutUs = () => {
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-2xl">❤️</span>
                 </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4">
+                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_two_title) || "Customer Care"}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_two_description) || 
                     "Every customer is valued and deserves exceptional service, respect, and attention to their needs."}
                 </p>
@@ -334,10 +334,10 @@ const AboutUs = () => {
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-2xl">🤝</span>
                 </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4">
+                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_three_title) || "Community Focus"}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_three_description) || 
                     "We're not just a store; we're part of the Qassim community, supporting local families and traditions."}
             </p>
@@ -347,10 +347,10 @@ const AboutUs = () => {
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-2xl">🚀</span>
                 </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4">
+                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_four_title) || "Innovation"}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.value_four_description) || 
                     "We continuously evolve to meet changing customer needs and embrace new technologies."}
                 </p>
@@ -368,10 +368,10 @@ const AboutUs = () => {
           <div className="w-full px-4 sm:px-6 lg:px-8">
           <SectionBox>
           <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-emerald-800 mb-6">
+              <h2 className="text-4xl font-bold text-emerald-800 mb-6 font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.branches_title) || "Our Locations"}
             </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.branches_description) || 
                   "Visit any of our convenient locations throughout Buraidah. Each store is designed to provide you with a comfortable and efficient shopping experience."}
             </p>
@@ -448,11 +448,11 @@ const AboutUs = () => {
                       <div className="flex items-start space-x-4 mb-4">
                         <BranchIcon className="w-10 h-10 text-emerald-500 flex-shrink-0" />
                         <div>
-                          <h3 className="text-xl font-bold text-emerald-800">
+                          <h3 className="text-xl font-bold text-emerald-800 font-noor">
                             {name}
                 </h3>
                           {subtitle && (
-                            <span className="text-sm font-medium text-emerald-600">
+                            <span className="text-sm font-medium text-emerald-600 font-noor">
                               {subtitle}
                             </span>
                           )}
@@ -462,31 +462,31 @@ const AboutUs = () => {
                       {/* Address & Hours */}
                       <div className="space-y-2 text-sm mb-4">
                         {address && (
-                          <p className="flex items-center text-emerald-800 font-medium">
+                          <p className="flex items-center text-emerald-800 font-medium font-noor">
                             <LocationMarkerIcon className="w-4 h-4 mr-1" /> {address}
                           </p>
                         )}
                         {hours && (
-                          <p className="flex items-center text-emerald-600">
+                          <p className="flex items-center text-emerald-600 font-noor">
                             <ClockIcon className="w-4 h-4 mr-1" /> {hours}
                           </p>
                         )}
                         {phone && (
-                          <p className="text-gray-600">📞 {phone}</p>
+                          <p className="text-gray-600 font-noor">📞 {phone}</p>
                         )}
                       </div>
 
                       {/* Services */}
                       {services.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="font-semibold text-emerald-800 text-sm mb-1">
+                          <h4 className="font-semibold text-emerald-800 text-sm mb-1 font-noor">
                             Available Services:
                           </h4>
                           <div className="flex flex-wrap gap-2">
                             {services.map((svc, i) => (
                               <span
                                 key={i}
-                                className="bg-white border border-emerald-200 text-emerald-700 text-xs px-2 py-0.5 rounded-full"
+                                className="bg-white border border-emerald-200 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-noor"
                               >
                                 {svc}
                               </span>
@@ -501,7 +501,7 @@ const AboutUs = () => {
                           href={directions}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block w-full text-center bg-gradient-to-r from-emerald-500 to-emerald-700 text-white py-2 rounded-lg font-semibold hover:shadow-md hover:scale-[1.02] transition-transform"
+                          className="block w-full text-center bg-gradient-to-r from-emerald-500 to-emerald-700 text-white py-2 rounded-lg font-semibold hover:shadow-md hover:scale-[1.02] transition-transform font-noor"
                         >
                           View Directions
                         </a>
@@ -514,21 +514,21 @@ const AboutUs = () => {
           
           {hasContent(storeCustomizationSetting?.about_us?.branches_cta_title) && (
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-12 rounded-2xl text-center border">
-            <h3 className="text-2xl font-bold text-emerald-800 mb-4">
+            <h3 className="text-2xl font-bold text-emerald-800 mb-4 font-noor">
               {loading ? (
                 <CMSkeleton count={1} height={30} loading={loading} />
               ) : (
                 showingTranslateValue(storeCustomizationSetting?.about_us?.branches_cta_title) || "Can't Find Us?"
               )}
             </h3>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 font-noor">
               {loading ? (
                 <CMSkeleton count={1} height={22} loading={loading} />
               ) : (
                 showingTranslateValue(storeCustomizationSetting?.about_us?.branches_cta_description) || "We're expanding! New locations opening soon."
               )}
             </p>
-            <button className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all">
+            <button className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all font-noor">
               Get Directions
             </button>
           </div>
@@ -543,7 +543,7 @@ const AboutUs = () => {
         <section className="">
           <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-emerald-800 mb-4">
+              <h2 className="text-4xl font-bold text-emerald-800 mb-4 font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.upcoming_branches_title)}
               </h2>
               <SectionBox className="bg-amber-50/50 shadow-none border border-dashed border-emerald-200">
@@ -577,7 +577,7 @@ const AboutUs = () => {
                           <div key={idx} className="relative bg-amber-50/60 border border-amber-100 p-8 rounded-2xl shadow hover:shadow-lg transition-all">
                             {/* Quarter badge */}
                             {quarter && (
-                              <span className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                              <span className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full font-noor">
                                 {quarter}
                               </span>
                             )}
@@ -586,14 +586,14 @@ const AboutUs = () => {
                             <div className="flex items-start space-x-4 mb-4">
                               <span className="text-4xl">{emoji}</span>
                               <div>
-                                <h3 className="text-xl font-bold text-amber-900">{name}</h3>
-                                <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded mt-1">Coming&nbsp;Soon</span>
+                                <h3 className="text-xl font-bold text-amber-900 font-noor">{name}</h3>
+                                <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded mt-1 font-noor">Coming&nbsp;Soon</span>
                               </div>
                             </div>
 
                             {/* Address */}
                             {address && (
-                              <p className="flex items-center text-amber-900 font-medium mb-4 text-sm">
+                              <p className="flex items-center text-amber-900 font-medium mb-4 text-sm font-noor">
                                 <LocationMarkerIcon className="w-4 h-4 mr-1" /> {address}
                               </p>
                             )}
@@ -601,16 +601,16 @@ const AboutUs = () => {
                             {/* Planned features */}
                             {features.length > 0 && (
                               <div className="mb-6">
-                                <h4 className="font-semibold text-amber-900 text-sm mb-2">Planned Features:</h4>
+                                <h4 className="font-semibold text-amber-900 text-sm mb-2 font-noor">Planned Features:</h4>
                                 <div className="flex flex-wrap gap-2">
                                   {features.map((ft,i)=>(
-                                    <span key={i} className="bg-white border border-amber-300 text-amber-700 text-xs px-2 py-0.5 rounded-full">{ft}</span>
+                                    <span key={i} className="bg-white border border-amber-300 text-amber-700 text-xs px-2 py-0.5 rounded-full font-noor">{ft}</span>
                                   ))}
                                 </div>
                               </div>
                             )}
 
-                            <button className="block w-full text-center border border-amber-300 text-amber-700 py-2 rounded-lg font-semibold hover:bg-amber-100 transition-colors text-sm">
+                            <button className="block w-full text-center border border-amber-300 text-amber-700 py-2 rounded-lg font-semibold hover:bg-amber-100 transition-colors text-sm font-noor">
                               Get Notified
                             </button>
                           </div>
