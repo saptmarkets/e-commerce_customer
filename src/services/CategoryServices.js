@@ -26,10 +26,6 @@ const CategoryServices = {
       const mainCategories = categories.filter(cat => 
         cat.status === 'show' && (!cat.parentId || cat.parentId === null || cat.parentId === "")
       );
-      console.log('🔍 getMainCategories: Found', mainCategories.length, 'main categories');
-      mainCategories.forEach(cat => {
-        console.log(`  - ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon ? 'Yes' : 'No'}`);
-      });
       return mainCategories;
     } catch (error) {
       console.error("Error fetching main categories:", error);

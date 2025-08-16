@@ -62,22 +62,11 @@ const CategorySection = ({ title, description, categorySettings }) => {
   const itemsPerView = categorySettings?.itemsPerView || 6;
   const scrollDirection = categorySettings?.scrollDirection || 'horizontal';
 
-  // Filter and order categories based on admin selection or show main categories
-  const displayCategories = selectedCategories.length > 0 
-    ? selectedCategories
-        .map(selected => allCategoriesRaw?.find(cat => cat._id === selected.categoryId))
-        .filter(Boolean)
+  // Calculate display categories based on showAllProducts flag
+  const displayCategories = showAllProducts
+    ? (allCategoriesRaw || [])
         .slice(0, itemsPerView)
     : (allCategoriesRaw || []).slice(0, itemsPerView);
-
-  // Debug logging
-  console.log('🔍 CategorySection: allCategoriesRaw:', allCategoriesRaw?.length || 0);
-  console.log('🔍 CategorySection: displayCategories:', displayCategories?.length || 0);
-  if (displayCategories && displayCategories.length > 0) {
-    displayCategories.forEach((cat, index) => {
-      console.log(`  ${index + 1}. ${cat.name?.en || 'Unknown'} (${cat._id}): Icon: ${cat.icon || 'NO ICON'}`);
-    });
-  }
 
   const handleCategoryClick = (id, categoryName) => {
     router.push(`/category/${id}`);
@@ -115,7 +104,6 @@ const CategorySection = ({ title, description, categorySettings }) => {
             <div className="mt-2">
               <button
                 onClick={() => {
-                  console.log('🔄 Manual refresh triggered');
                   invalidateCache();
                   refetchAll();
                   // Force immediate refetch

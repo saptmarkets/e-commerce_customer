@@ -20,8 +20,6 @@ export const invalidateCategoryCache = (queryClient) => {
     queryKey: ['category'],
     exact: false 
   });
-  
-  console.log('🔄 Category cache invalidated');
 };
 
 // Function to refetch all category data
@@ -29,8 +27,6 @@ export const refetchAllCategories = async (queryClient) => {
   Object.values(CATEGORY_CACHE_KEYS).forEach(key => {
     queryClient.refetchQueries({ queryKey: [key] });
   });
-  
-  console.log('🔄 All category queries refetched');
 };
 
 // Hook to get category cache utilities
@@ -44,7 +40,6 @@ export const useCategoryCache = () => {
       Object.values(CATEGORY_CACHE_KEYS).forEach(key => {
         queryClient.removeQueries({ queryKey: [key] });
       });
-      console.log('🗑️ Category cache cleared');
     }
   };
 }; 
