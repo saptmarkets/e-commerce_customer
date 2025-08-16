@@ -34,7 +34,7 @@ const SocialLinks = ({ className = '' }) => {
       {links.map((item, idx) => {
         const Icon = iconMap[item.iconType] || FaLink;
         return (
-          <li key={idx} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105">
+          <li key={idx} className="w-8 h-8 rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105">
             <a 
               href={formatUrl(item.url)} 
               target="_blank" 
@@ -42,17 +42,20 @@ const SocialLinks = ({ className = '' }) => {
               aria-label={showingTranslateValue(item.label) || item.iconType} 
               className="flex items-center justify-center w-full h-full rounded-full transition-all duration-200"
               style={{
-                backgroundColor: 'transparent',
-                '&:hover': { backgroundColor: '#74338c' }
+                backgroundColor: '#74338c'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#74338c'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.querySelector('svg').style.color = '#74338c';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#74338c';
+                e.currentTarget.querySelector('svg').style.color = '#ffffff';
+              }}
             >
               <Icon 
                 className="w-4 h-4 transition-colors duration-200" 
-                style={{ color: '#6b7280' }}
-                onMouseEnter={(e) => e.target.style.color = '#ffffff'}
-                onMouseLeave={(e) => e.target.style.color = '#6b7280'}
+                style={{ color: '#ffffff' }}
               />
             </a>
           </li>
