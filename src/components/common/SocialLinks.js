@@ -42,7 +42,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           icon: 'w-8 h-8 sm:w-9 sm:h-9',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5',
           spacing: 'space-x-4 sm:space-x-5',
-          rtlSpacing: 'space-x-reverse space-x-4 sm:space-x-5'
+          rtlSpacing: 'space-x-4 sm:space-x-5' // Same spacing for RTL
         };
       case 'footer':
         return {
@@ -50,7 +50,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           icon: 'w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6',
           spacing: 'space-x-3 sm:space-x-4 md:space-x-5',
-          rtlSpacing: 'space-x-reverse space-x-3 sm:space-x-4 md:space-x-5'
+          rtlSpacing: 'space-x-3 sm:space-x-4 md:space-x-5' // Same spacing for RTL
         };
       default:
         return {
@@ -58,7 +58,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           icon: 'w-8 h-8 sm:w-9 sm:h-9',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5',
           spacing: 'space-x-3 sm:space-x-4',
-          rtlSpacing: 'space-x-reverse space-x-3 sm:space-x-4'
+          rtlSpacing: 'space-x-3 sm:space-x-4' // Same spacing for RTL
         };
     }
   };
@@ -66,7 +66,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
   const styles = getVariantStyles();
 
   return (
-    <ul className={`${styles.container} ${isRTL ? styles.rtlSpacing : styles.spacing} ${className}`}>
+    <ul className={`${styles.container} ${styles.spacing} ${className}`}>
       {links.map((item, idx) => {
         const Icon = iconMap[item.iconType] || FaLink;
         return (
