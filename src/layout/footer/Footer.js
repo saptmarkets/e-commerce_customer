@@ -45,7 +45,7 @@ const Footer = () => {
               {tr('Your go-to supermarket in Qassim for fresh deals every day.','متجرك المفضل في القصيم لصفقات طازجة كل يوم.')}
             </p>
             <div className="mt-3 sm:mt-4 md:mt-6">
-              <SocialLinks />
+              <SocialLinks variant="footer" />
             </div>
           </div>
 

@@ -233,7 +233,7 @@ const NavbarPromo = () => {
               
               {/* Social Media Icons - Replacing Fast Delivery Text */}
               <div className="flex items-center">
-                <SocialLinks className="!space-x-2" />
+                <SocialLinks variant="navigation" />
               </div>
               
               {/* Language Selector in top bar */}

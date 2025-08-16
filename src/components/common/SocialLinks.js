@@ -15,7 +15,7 @@ const iconMap = {
   snapchat: FaSnapchatGhost,
 };
 
-const SocialLinks = ({ className = '' }) => {
+const SocialLinks = ({ className = '', variant = 'default' }) => {
   const { getSection } = useHomepageSections();
   const { showingTranslateValue } = useUtilsFunction();
   const section = getSection('social_links');
@@ -29,12 +29,38 @@ const SocialLinks = ({ className = '' }) => {
     return /^https?:\/\//i.test(u) ? u : `https://${u.replace(/^\/+/, '')}`;
   };
 
+  // Different spacing and sizing based on variant
+  const getVariantStyles = () => {
+    switch (variant) {
+      case 'navigation':
+        return {
+          container: 'flex space-x-4 sm:space-x-5',
+          icon: 'w-8 h-8 sm:w-9 sm:h-9',
+          iconSize: 'w-4 h-4 sm:w-5 sm:h-5'
+        };
+      case 'footer':
+        return {
+          container: 'flex space-x-3 sm:space-x-4 md:space-x-5',
+          icon: 'w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10',
+          iconSize: 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
+        };
+      default:
+        return {
+          container: 'flex space-x-3 sm:space-x-4',
+          icon: 'w-8 h-8 sm:w-9 sm:h-9',
+          iconSize: 'w-4 h-4 sm:w-5 sm:h-5'
+        };
+    }
+  };
+
+  const styles = getVariantStyles();
+
   return (
-    <ul className={`flex space-x-3 ${className}`}>
+    <ul className={`${styles.container} ${className}`}>
       {links.map((item, idx) => {
         const Icon = iconMap[item.iconType] || FaLink;
         return (
-          <li key={idx} className="w-8 h-8 rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105">
+          <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105`}>
             <a 
               href={formatUrl(item.url)} 
               target="_blank" 
@@ -54,7 +80,7 @@ const SocialLinks = ({ className = '' }) => {
               }}
             >
               <Icon 
-                className="w-4 h-4 transition-colors duration-200" 
+                className={`${styles.iconSize} transition-colors duration-200`}
                 style={{ color: '#ffffff' }}
               />
             </a>
