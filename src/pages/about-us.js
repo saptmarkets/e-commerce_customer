@@ -228,13 +228,13 @@ const AboutUs = () => {
 
             <SectionBox>
               {/* Main heading */}
-              <h2 className="text-3xl md:text-4xl font-bold text-emerald-800 mb-8 text-left font-noor">
+              <h2 className={`text-3xl md:text-4xl font-bold text-emerald-800 mb-8 font-noor ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.team_title) || "Meet the SAPT Family"}
             </h2>
 
               {/* Leadership tagline (extra text) */}
               {hasContent(storeCustomizationSetting?.about_us?.leadership_title) && (
-                <h3 className="text-xl md:text-2xl font-semibold text-emerald-600 mb-10 font-noor">
+                <h3 className={`text-xl md:text-2xl font-semibold text-emerald-600 mb-10 font-noor ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.leadership_title)}
                 </h3>
               )}
@@ -518,7 +518,7 @@ const AboutUs = () => {
                           rel="noopener noreferrer"
                           className="block w-full text-center bg-gradient-to-r from-emerald-500 to-emerald-700 text-white py-2 rounded-lg font-semibold hover:shadow-md hover:scale-[1.02] transition-transform font-noor"
                         >
-                          View Directions
+                          {lang === 'ar' ? 'عرض الاتجاهات' : 'View Directions'}
                         </a>
                       )}
               </div>
@@ -544,7 +544,7 @@ const AboutUs = () => {
               )}
             </p>
             <button className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all font-noor">
-              Get Directions
+              {lang === 'ar' ? 'احصل على الاتجاهات' : 'Get Directions'}
             </button>
           </div>
           )}
@@ -602,7 +602,9 @@ const AboutUs = () => {
                               <span className="text-4xl">{emoji}</span>
                               <div>
                                 <h3 className="text-xl font-bold text-amber-900 font-noor">{name}</h3>
-                                <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded mt-1 font-noor">Coming&nbsp;Soon</span>
+                                <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded mt-1 font-noor">
+                                  {lang === 'ar' ? 'قريباً' : 'Coming Soon'}
+                                </span>
                               </div>
                             </div>
 
@@ -616,7 +618,9 @@ const AboutUs = () => {
                             {/* Planned features */}
                             {features.length > 0 && (
                               <div className="mb-6">
-                                <h4 className="font-semibold text-amber-900 text-sm mb-2 font-noor">Planned Features:</h4>
+                                <h4 className="font-semibold text-amber-900 text-sm mb-2 font-noor">
+                                  {lang === 'ar' ? 'الميزات المخططة:' : 'Planned Features:'}
+                                </h4>
                                 <div className="flex flex-wrap gap-2">
                                   {features.map((ft,i)=>(
                                     <span key={i} className="bg-white border border-amber-300 text-amber-700 text-xs px-2 py-0.5 rounded-full font-noor">{ft}</span>
@@ -626,7 +630,7 @@ const AboutUs = () => {
                             )}
 
                             <button className="block w-full text-center border border-amber-300 text-amber-700 py-2 rounded-lg font-semibold hover:bg-amber-100 transition-colors text-sm font-noor">
-                              Get Notified
+                              {lang === 'ar' ? 'احصل على إشعار' : 'Get Notified'}
                             </button>
                           </div>
                         );
