@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { IoLockOpenOutline } from "react-icons/io5";
-import { FiPhoneCall, FiUser, FiTruck } from "react-icons/fi";
+import { FiPhoneCall, FiUser, FiTruck } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useContext } from "react";
 import useTranslation from "next-translate/useTranslation"; // Corrected import
@@ -21,10 +21,13 @@ const NavBarTop = () => {
   const userInfo = state.userInfo;
   const router = useRouter();
   const { handleLogout } = useLoginSubmit();
-  const { t } = useTranslation("common"); // Use common namespace for translations
+  const { t, lang } = useTranslation("common"); // Use common namespace for translations
 
   const { storeCustomizationSetting } = useGetSetting();
   const { showingTranslateValue } = useUtilsFunction();
+
+  // Check if current language is RTL (Arabic)
+  const isRTL = lang === 'ar';
 
   const handleLogOut = () => {
     handleLogout();
@@ -57,8 +60,8 @@ const NavBarTop = () => {
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-10 text-sm">
             
-            {/* Left - Phone & Help Text */}
-            <div className="flex items-center space-x-6">
+            {/* Phone & Help Text - Position based on language direction */}
+            <div className={`flex items-center space-x-6 ${isRTL ? 'order-3' : 'order-1'}`}>
               <div className="flex items-center text-gray-600">
                 <FiPhoneCall className="w-4 h-4 mr-2" style={{ color: "#76bd44" }} />
                 <span className="hidden sm:inline">
@@ -74,14 +77,14 @@ const NavBarTop = () => {
               </div>
             </div>
             
-            {/* Center - Fast Delivery */}
-            <div className="flex items-center text-gray-600">
+            {/* Center - Fast Delivery - Always in center */}
+            <div className="flex items-center text-gray-600 order-2">
               <FiTruck className="w-4 h-4 mr-2" style={{ color: "#76bd44" }} />
               <span className="font-medium" style={{ color: "#74338c" }}>{t("common:Fast delivery within city")}</span>
             </div>
             
-            {/* Right - Navigation Links */}
-            <div className="flex items-center gap-x-2">
+            {/* Navigation Links - Position based on language direction */}
+            <div className={`flex items-center gap-x-2 ${isRTL ? 'order-1' : 'order-3'}`}>
               {storeCustomizationSetting?.navbar?.about_menu_status && (
                 <Link
                   href="/about-us"
