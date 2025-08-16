@@ -17,6 +17,8 @@ import {
   FiGrid,
   FiTag,
   FiLayers,
+  FiMenu,
+  FiX,
 } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 
@@ -33,6 +35,7 @@ const NavbarPromo = () => {
   const { t } = useTranslation();
   const { lang, storeCustomizationSetting } = useGetSetting();
   const { isLoading, setIsLoading } = useContext(SidebarContext);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { showingTranslateValue } = useUtilsFunction();
 
@@ -86,6 +89,145 @@ const NavbarPromo = () => {
 
   return (
     <>
+      {/* Mobile Navigation Menu */}
+      <div className="lg:hidden border-t border-gray-100" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)" }}>
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6">
+          <div className="flex justify-between items-center h-14">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md"
+              style={{
+                background: mobileMenuOpen ? "#76bd44" : "transparent",
+                color: mobileMenuOpen ? "white" : "#374151"
+              }}
+            >
+              {mobileMenuOpen ? (
+                <FiX className="w-5 h-5" />
+              ) : (
+                <FiMenu className="w-5 h-5" />
+              )}
+              <span className="hidden sm:inline">{t("common:Menu")}</span>
+            </button>
+
+            {/* Mobile Navigation Items */}
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/"
+                onClick={() => setIsLoading(!isLoading)}
+                className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md"
+                onMouseEnter={(e) => e.target.style.backgroundColor = "#76bd44"}
+                onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
+              >
+                <FiHome className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("common:HOME")}</span>
+              </Link>
+
+              <Link
+                href="/products"
+                onClick={() => setIsLoading(!isLoading)}
+                className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md"
+                onMouseEnter={(e) => e.target.style.backgroundColor = "#76bd44"}
+                onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
+              >
+                <FiGrid className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("common:Products")}</span>
+              </Link>
+
+              <Link
+                href="/promotions"
+                onClick={() => setIsLoading(!isLoading)}
+                className="relative flex items-center space-x-2 px-3 py-2 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-md"
+                style={{ backgroundColor: "#74338c" }}
+              >
+                <FiGift className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("common:Promotions")}</span>
+                <div className="absolute -top-1 -right-1 flex">
+                  <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+                </div>
+              </Link>
+            </div>
+
+            {/* Right side - Delivery Info */}
+            <span className="flex items-center space-x-2 text-gray-700 text-sm font-medium">
+              <FiPocket className="w-4 h-4" />
+              <span className="hidden sm:inline">{t("common:Fast delivery within city")}</span>
+            </span>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <div className="border-t border-gray-200 bg-white shadow-lg rounded-b-lg">
+              <div className="py-2 space-y-1">
+                {/* Categories Link */}
+                {storeCustomizationSetting?.navbar?.categories_menu_status && (
+                  <Link
+                    href="/categories"
+                    onClick={() => {
+                      setIsLoading(!isLoading);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md mx-2"
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                  >
+                    <FiLayers className="w-4 h-4" />
+                    <span>{t("common:Categories")}</span>
+                  </Link>
+                )}
+
+                {/* About Us Link */}
+                {storeCustomizationSetting?.navbar?.about_menu_status && (
+                  <Link
+                    href="/about-us"
+                    onClick={() => {
+                      setIsLoading(!isLoading);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md mx-2"
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                  >
+                    <FiUsers className="w-4 h-4" />
+                    <span>{t("common:About Us")}</span>
+                  </Link>
+                )}
+
+                {/* Pages Link */}
+                {storeCustomizationSetting?.navbar?.pages_menu_status && (
+                  <Link
+                    href="/pages"
+                    onClick={() => {
+                      setIsLoading(!isLoading);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md mx-2"
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                  >
+                    <FiFileText className="w-4 h-4" />
+                    <span>{t("common:Pages")}</span>
+                  </Link>
+                )}
+
+                {/* Call Us Link */}
+                {storeCustomizationSetting?.navbar?.call_us_status && (
+                  <a
+                    href={`tel:${storeCustomizationSetting?.navbar?.call_us_phone || ''}`}
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:text-emerald-600 transition-colors mx-2"
+                  >
+                    <FiPhoneIncoming className="w-4 h-4" />
+                    <span>{t("common:Call Us")}: {storeCustomizationSetting?.navbar?.call_us_phone}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop Navigation Menu */}
       <div className="hidden lg:block xl:block border-t border-gray-100" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)" }}>
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14">
@@ -103,8 +245,7 @@ const NavbarPromo = () => {
                         onClick={() => setIsLoading(!isLoading)}
                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md group"
                         style={{
-                          background: "transparent",
-                          "&:hover": { backgroundColor: "#76bd44" }
+                          background: "transparent"
                         }}
                         onMouseEnter={(e) => e.target.style.backgroundColor = "#76bd44"}
                         onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
@@ -145,11 +286,11 @@ const NavbarPromo = () => {
                         <div className="flex items-center relative">
                           {/* direct link to categories page */}
                           <Link
-                            href="/categories" // adjust route if different
+                            href="/categories"
                             onClick={() => setIsLoading(!isLoading)}
                             className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md"
-                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#76bd44")}
-                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                           >
                             <FiLayers className="w-4 h-4" />
                             <span>{t("common:Categories")}</span>
@@ -158,8 +299,8 @@ const NavbarPromo = () => {
                           {/* dropdown arrow for category list */}
                           <Popover className="relative">
                             <Popover.Button className="p-2 text-gray-700 hover:text-white rounded-lg transition-all duration-200 focus:outline-none hover:shadow-md"
-                              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#76bd44")}
-                              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                             >
                               <ChevronDownIcon className="h-4 w-4" />
                             </Popover.Button>
@@ -191,15 +332,13 @@ const NavbarPromo = () => {
                           href="/about-us"
                           onClick={() => setIsLoading(!isLoading)}
                           className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md"
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#76bd44")}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                         >
                           <FiUsers className="w-4 h-4" />
                           <span>{t("common:About Us")}</span>
                         </Link>
                       )}
-
-
 
                       {/* Pages Link */}
                       {storeCustomizationSetting?.navbar?.pages_menu_status && (
@@ -207,8 +346,8 @@ const NavbarPromo = () => {
                           href="/pages"
                           onClick={() => setIsLoading(!isLoading)}
                           className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-white rounded-lg font-medium transition-all duration-200 hover:shadow-md"
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#76bd44")}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#76bd44"}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                         >
                           <FiFileText className="w-4 h-4" />
                           <span>{t("common:Pages")}</span>
