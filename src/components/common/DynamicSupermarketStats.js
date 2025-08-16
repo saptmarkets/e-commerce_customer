@@ -52,7 +52,7 @@ const DynamicSupermarketStats = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-12 lg:gap-16 items-center">
           <div>
             <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-3 sm:mb-4 font-noor">
+              <h2 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 font-noor">
                 {/* Split the title to color 'أسواق سبت' in purple, rest in green */}
                 {(() => {
                   const t = showingTranslateValue(title) || '';
@@ -94,9 +94,14 @@ const DynamicSupermarketStats = () => {
                 const valueStr = toPlainString(typeof stat.value === 'object' ? (stat.value[lang] || stat.value.en) : stat.value);
                 const labelStr = toPlainString(stat.label ? (typeof stat.label === 'object' ? (stat.label[lang] || stat.label.en || '') : stat.label) : '');
                 return (
-                  <div key={index} className="bg-white p-3 sm:p-4 md:p-5 lg:p-8 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-green-600 mb-2 sm:mb-3 font-noor">{valueStr}</h3>
-                    {labelStr && <p className="text-gray-600 text-sm sm:text-base md:text-lg font-noor font-medium">{labelStr}</p>}
+                  <div key={index} className="p-3 sm:p-4 md:p-5 lg:p-8 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 font-noor"
+                       style={{
+                         background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%)',
+                         border: '2px solid #76bd44',
+                         borderLeft: '4px solid #74338c'
+                       }}>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 font-noor" style={{color:'#76bd44'}}>{valueStr}</h3>
+                    {labelStr && <p className="text-gray-700 text-sm sm:text-base md:text-lg font-noor font-medium" style={{color:'#74338c'}}>{labelStr}</p>}
                   </div>
                 );
               })}

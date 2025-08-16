@@ -18,8 +18,8 @@ const SupermarketStats = () => {
           <div>
             <div className="mb-8">
               <h2 className="font-bold mb-2 font-noor">
-                <span className="text-5xl md:text-6xl lg:text-7xl" style={{ color: "#76bd44" }}>Why Choose</span><br />
-                <span className="text-5xl md:text-6xl lg:text-7xl brand-name-arabic" style={{ color: "#74338c" }}>SAPT Markets?</span>
+                <span className="text-4xl md:text-5xl lg:text-6xl" style={{ color: "#76bd44" }}>Why Choose</span><br />
+                <span className="text-4xl md:text-5xl lg:text-6xl brand-name-arabic" style={{ color: "#74338c" }}>SAPT Markets?</span>
               </h2>
               <h3 className="text-3xl md:text-4xl text-gray-800 font-semibold mt-6 font-noor" style={{ color: "#76bd44" }}>Saudi Arabia's Leading Online Supermarket</h3>
               <p className="text-gray-600 mt-8 mb-10 max-w-lg text-xl font-noor leading-relaxed">
@@ -44,9 +44,14 @@ const SupermarketStats = () => {
           
                       <div className="grid grid-cols-2 gap-6 md:gap-8">
               {stats.map((stat, index) => (
-                <div key={index} className="bg-white p-6 md:p-8 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-green-600 mb-3 font-noor">{stat.value}</h3>
-                  <p className="text-gray-600 font-noor font-medium text-lg">{stat.label}</p>
+                <div key={index} className="p-6 md:p-8 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 font-noor"
+                     style={{
+                       background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%)',
+                       border: '2px solid #76bd44',
+                       borderLeft: '4px solid #74338c'
+                     }}>
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 font-noor" style={{color:'#76bd44'}}>{stat.value}</h3>
+                  <p className="font-noor font-medium text-lg" style={{color:'#74338c'}}>{stat.label}</p>
                 </div>
               ))}
             </div>
