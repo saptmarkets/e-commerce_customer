@@ -66,11 +66,13 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
   const styles = getVariantStyles();
 
   return (
-    <ul className={`${styles.container} ${styles.spacing} ${className}`}>
+    <ul className={`${styles.container} ${className}`}>
       {links.map((item, idx) => {
         const Icon = iconMap[item.iconType] || FaLink;
+        // Add explicit margin to each icon except the first one
+        const marginClass = idx === 0 ? '' : 'ml-4 sm:ml-5';
         return (
-          <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105`}>
+          <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105 ${marginClass}`}>
             <a 
               href={formatUrl(item.url)} 
               target="_blank" 
