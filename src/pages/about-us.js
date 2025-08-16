@@ -276,7 +276,22 @@ const AboutUs = () => {
                   {loading ? (
                     <CMSkeleton count={1} height={20} loading={loading} />
                   ) : (
-                        showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_sub`]) || "Team Role"
+                    (() => {
+                      const indexWord = index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve';
+                      const position = showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`]);
+                      
+                      // Debug logging to understand the data structure
+                      if (index <= 4) { // Only log first 4 to avoid spam
+                        console.log(`Team Member ${index} (${indexWord}):`, {
+                          rawField: `founder_${indexWord}_sub`,
+                          rawValue: storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`],
+                          translatedValue: position,
+                          hasContent: position && position.trim()
+                        });
+                      }
+                      
+                      return position && position.trim() ? position : "Team Role";
+                    })()
                   )}
                 </div>
               </div>
