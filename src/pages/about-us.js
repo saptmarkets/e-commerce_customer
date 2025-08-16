@@ -247,8 +247,8 @@ const AboutUs = () => {
                     return hasContent(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_name`]);
                   })
                   .map((index) => (
-              <div key={index} className="bg-white rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-shadow">
-                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold">
+              <div key={index} className="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-emerald-300 hover:scale-105">
+                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                       {storeCustomizationSetting?.about_us?.[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_img`] ? (
                     <Image
                           src={storeCustomizationSetting.about_us[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_img`]}
@@ -304,8 +304,8 @@ const AboutUs = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="bg-emerald-50 p-8 rounded-xl shadow text-center">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
                   <span className="text-2xl">🎯</span>
                 </div>
                 <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
@@ -317,8 +317,8 @@ const AboutUs = () => {
                 </p>
               </div>
 
-              <div className="bg-emerald-50 p-8 rounded-xl shadow text-center">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
                   <span className="text-2xl">❤️</span>
                 </div>
                 <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
@@ -330,8 +330,8 @@ const AboutUs = () => {
                 </p>
               </div>
               
-              <div className="bg-emerald-50 p-8 rounded-xl shadow text-center">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
                   <span className="text-2xl">🤝</span>
                 </div>
                 <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
@@ -343,8 +343,8 @@ const AboutUs = () => {
             </p>
           </div>
           
-              <div className="bg-emerald-50 p-8 rounded-xl shadow text-center">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
                   <span className="text-2xl">🚀</span>
                 </div>
                 <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
