@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { IoLockOpenOutline } from "react-icons/io5";
-import { FiPhoneCall, FiUser, FiTruck } from "react-icons/io5";
+import { FiPhoneCall, FiUser, FiTruck } from "react-icons/fi";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useContext } from "react";
 import useTranslation from "next-translate/useTranslation"; // Corrected import
