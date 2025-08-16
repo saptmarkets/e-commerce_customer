@@ -41,24 +41,21 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           container: 'flex',
           icon: 'w-8 h-8 sm:w-9 sm:h-9',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5',
-          spacing: 'space-x-4 sm:space-x-5',
-          rtlSpacing: 'space-x-4 sm:space-x-5' // Same spacing for RTL
+          spacing: 'ml-6 sm:ml-8', // More aggressive spacing for navigation
         };
       case 'footer':
         return {
           container: 'flex',
           icon: 'w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6',
-          spacing: 'space-x-3 sm:space-x-4 md:space-x-5',
-          rtlSpacing: 'space-x-3 sm:space-x-4 md:space-x-5' // Same spacing for RTL
+          spacing: 'ml-4 sm:ml-5 md:ml-6',
         };
       default:
         return {
           container: 'flex',
           icon: 'w-8 h-8 sm:w-9 sm:h-9',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5',
-          spacing: 'space-x-3 sm:space-x-4',
-          rtlSpacing: 'space-x-3 sm:space-x-4' // Same spacing for RTL
+          spacing: 'ml-4 sm:ml-5',
         };
     }
   };
@@ -70,7 +67,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
       {links.map((item, idx) => {
         const Icon = iconMap[item.iconType] || FaLink;
         // Add explicit margin to each icon except the first one
-        const marginClass = idx === 0 ? '' : 'ml-4 sm:ml-5';
+        const marginClass = idx === 0 ? '' : styles.spacing;
         return (
           <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105 ${marginClass}`}>
             <a 
