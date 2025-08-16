@@ -1,215 +1,173 @@
-import useTranslation from "next-translate/useTranslation";
-import { useContext, useMemo, useState, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { SidebarContext } from "@context/SidebarContext";
-import useUtilsFunction from "@hooks/useUtilsFunction";
-import CategoryServices from "@services/CategoryServices";
-import ProductServices from "@services/ProductServices";
+import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { IoClose } from "react-icons/io5";
+import { useQuery } from "@tanstack/react-query";
+import { IoChevronDown, IoChevronForward } from "react-icons/io5";
+import { IoHomeOutline, IoBagOutline, IoGiftOutline, IoInformationCircleOutline, IoDocumentTextOutline, IoShieldCheckmarkOutline, IoHelpCircleOutline, IoPersonCircleOutline } from "react-icons/io5";
 
-const isValidName = (nameValue) => {
-  if (nameValue === null || nameValue === undefined) return false;
-  const asString = typeof nameValue === "string" ? nameValue : String(nameValue);
-  const trimmed = asString.trim();
-  if (!trimmed) return false;
-  if (trimmed.toLowerCase() === "false") return false;
-  return true;
-};
+//internal import
+import Loading from "@components/preloader/Loading";
+import { SidebarContext } from "@context/SidebarContext";
+import CategoryServices from "@services/CategoryServices";
+import ProductServices from "@services/ProductServices";
+import CategoryCard from "@components/category/CategoryCard";
+import useUtilsFunction from "@hooks/useUtilsFunction";
+import useTranslation from "next-translate/useTranslation";
 
 const Category = () => {
-  const { categoryDrawerOpen } = useContext(SidebarContext);
+  const { categoryDrawerOpen, closeCategoryDrawer } = useContext(SidebarContext);
   const { showingTranslateValue } = useUtilsFunction();
   const { t } = useTranslation("common");
-
-  // Fetch main categories only for better performance
-  const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["category-main"],
-    queryFn: async () => await CategoryServices.getMainCategories(),
-    staleTime: 30 * 1000, // 30 seconds - much shorter for real-time updates
-    cacheTime: 2 * 60 * 1000, // 2 minutes - shorter cache time
-    refetchOnWindowFocus: true, // Refetch when user returns to tab
-    refetchOnMount: true, // Always refetch when component mounts
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const { data, error, isLoading, isFetched } = useQuery({
+    queryKey: ["category"],
+    queryFn: async () => await CategoryServices.getShowingCategory(),
   });
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [expanded, setExpanded] = useState({});
-  const [loadingByCategory, setLoadingByCategory] = useState({});
-  const [childrenWithProducts, setChildrenWithProducts] = useState({});
-
-  const toggleExpand = useCallback(
-    async (category) => {
-      const categoryId = category._id;
-      const willExpand = !expanded[categoryId];
-      setExpanded((prev) => ({ ...prev, [categoryId]: willExpand }));
-          
-      if (
-        willExpand &&
-        childrenWithProducts[categoryId] === undefined &&
-        !loadingByCategory[categoryId]
-      ) {
-        setLoadingByCategory((prev) => ({ ...prev, [categoryId]: true }));
-        try {
-          // Get subcategories for this category
-          const subcategories = await CategoryServices.getSubcategories(categoryId);
-          
-          // Check which subcategories have products
-          const subResults = await Promise.all(
-            subcategories.map(async (sub) => {
-              try {
-                const hasProducts = await ProductServices.checkCategoryHasProducts(sub._id);
-                return { sub, hasProducts };
-              } catch (err) {
-                return { sub, hasProducts: false };
+  useEffect(() => {
+    const filterCategoriesWithProducts = async () => {
+      setLoading(true);
+      try {
+        const mainCategories = data?.filter(
+          (cat) => !cat.parentId || cat.parentId === "62c827b5a427b63741da9175"
+        ) || [];
+        const categoriesWithProducts = [];
+        for (const category of mainCategories) {
+          const hasMainCategoryProducts = await ProductServices.checkCategoryHasProducts(category._id);
+          let hasSubcategoryProducts = false;
+          if (category.children && category.children.length > 0) {
+            for (const subcategory of category.children) {
+              const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
+              if (hasSubProducts) {
+                hasSubcategoryProducts = true;
+                break;
               }
-            })
-          );
-
-          const filteredSubs = subResults
-            .filter((r) => r.hasProducts)
-            .map((r) => r.sub);
-
-          setChildrenWithProducts((prev) => ({ ...prev, [categoryId]: filteredSubs }));
-        } finally {
-          setLoadingByCategory((prev) => ({ ...prev, [categoryId]: false }));
+            }
+          }
+          if (hasMainCategoryProducts || hasSubcategoryProducts) {
+            if (category.children && category.children.length > 0) {
+              const filteredSubcategories = [];
+              for (const subcategory of category.children) {
+                const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
+                if (hasSubProducts) {
+                  filteredSubcategories.push(subcategory);
+                }
+              }
+              category.children = filteredSubcategories;
+            }
+            categoriesWithProducts.push(category);
+          }
         }
+        setFilteredCategories(categoriesWithProducts);
+      } catch (error) {
+        setFilteredCategories([]);
+      } finally {
+        setLoading(false);
       }
-    },
-    [expanded, childrenWithProducts, loadingByCategory]
-  );
-
-  const displayedMainCategories = useMemo(() => {
-    return (data || []).filter(cat => 
-      cat && isValidName(cat.name) && cat.status === "show"
-    );
+    };
+    if (data) filterCategoriesWithProducts();
   }, [data]);
 
-  if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-4">
-        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-6 bg-gray-200 rounded w-1/2"></div>
-        <div className="h-6 bg-gray-200 rounded w-2/3"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-red-500 text-sm p-4">
-        Error loading categories: {error.message}
-      </div>
-    );
-  }
-
-  if (!displayedMainCategories || displayedMainCategories.length === 0) {
-    return (
-      <div className="text-gray-500 text-sm p-4">
-        No categories available
-      </div>
-    );
-  }
+  // Define internal pages as a fallback if @utils/data is not correctly structured or found
+  const pages = [
+    { titleKey: "HOME", href: "/", icon: <IoHomeOutline className="text-lg ml-2" /> },
+    { titleKey: "Products", href: "/products", icon: <IoBagOutline className="text-lg ml-2" /> },
+    { titleKey: "Promotions", href: "/promotions", icon: <IoGiftOutline className="text-lg ml-2" /> },
+    { titleKey: "About Us", href: "/about-us", icon: <IoInformationCircleOutline className="text-lg ml-2" /> },
+    { titleKey: "Terms & Conditions", href: "/terms-and-conditions", icon: <IoDocumentTextOutline className="text-lg ml-2" /> },
+    { titleKey: "Privacy Policy", href: "/privacy-policy", icon: <IoShieldCheckmarkOutline className="text-lg ml-2" /> },
+    { titleKey: "FAQ", href: "/faq", icon: <IoHelpCircleOutline className="text-lg ml-2" /> },
+    { titleKey: "My account", href: "/user/dashboard", icon: <IoPersonCircleOutline className="text-lg ml-2" /> },
+  ];
 
   return (
-    <div className="p-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">
-        {t("Categories", "الفئات")}
-      </h3>
-      
-      <div className="space-y-2">
-        {displayedMainCategories.map((category) => {
-          const categoryId = category._id;
-          const isExpanded = expanded[categoryId];
-          const isLoadingChildren = loadingByCategory[categoryId];
-          const children = childrenWithProducts[categoryId] || [];
-
-          return (
-            <div key={categoryId} className="border border-gray-200 rounded-lg">
-              {/* Main Category */}
-              <div className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
-                <Link
-                  href={`/category/${categoryId}`}
-                  className="flex items-center flex-1 min-w-0 group"
-                >
-                  {category.icon && (
-                    <div className="w-8 h-8 mr-3 flex-shrink-0 relative">
-                      <Image
-                        src={category.icon}
-                        alt={showingTranslateValue(category.name)}
-                        fill
-                        className="object-contain"
-                        sizes="32px"
-                      />
-                    </div>
-                  )}
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-green-600 transition-colors truncate">
-                    {showingTranslateValue(category.name)}
+    <div className="flex flex-col w-full h-full bg-white cursor-pointer scrollbar-hide">
+      {categoryDrawerOpen && (
+        <div className="w-full flex justify-between items-center h-16 px-6 py-4 bg-green-600 text-white border-b border-gray-100">
+          <h2 className="font-semibold font-serif text-lg m-0 text-heading flex align-center">
+            <Link href="/" className="mr-10">
+              <Image
+                width={60}
+                height={22}
+                src="/logo/logo-light.svg"
+                alt="logo"
+              />
+            </Link>
+          </h2>
+          <button
+            onClick={closeCategoryDrawer}
+            className="flex text-xl items-center justify-center w-8 h-8 rounded-full bg-gray-50 text-red-500 p-2 focus:outline-none transition-opacity hover:text-red-600"
+            aria-label="close"
+          >
+            <IoClose />
+          </button>
+        </div>
+      )}
+      <div className="w-full max-h-full">
+        {/* New Pages Section */}
+        <div className="relative grid gap-2 mt-2">
+          {/* Removed Pages header */}
+          <div className="relative grid gap-1 p-6">
+            {pages.map((item) => (
+              <Link
+                key={item.titleKey}
+                href={item.href}
+                className="p-2 flex font-serif items-center rounded-md hover:bg-gray-50 w-full hover:text-emerald-600"
+                onClick={closeCategoryDrawer}
+              >
+                <span className="flex items-center w-full">
+                  {item.icon}
+                  <span className="text-sm font-medium w-full hover:text-emerald-600">
+                    {t(item.titleKey)}
                   </span>
-                </Link>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
 
-                {/* Expand/Collapse Button */}
-                {children.length > 0 && (
-                  <button
-                    onClick={() => toggleExpand(category)}
-                    className="ml-2 p-1 hover:bg-gray-200 rounded transition-colors flex-shrink-0"
-                    aria-label={isExpanded ? "Collapse" : "Expand"}
-                  >
-                    <svg
-                      className={`w-4 h-4 text-gray-500 transition-transform ${
-                        isExpanded ? "rotate-90" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                )}
+        {/* Categories Section (Collapsible) */}
+        <div className="relative grid gap-2 mt-2">
+          <button
+            className="w-full flex items-center justify-between border-b px-8 py-3 bg-transparent focus:outline-none"
+            onClick={() => setCategoriesOpen((open) => !open)}
+            aria-expanded={categoriesOpen}
+            aria-controls="category-list"
+          >
+            <h2 className="font-semibold font-serif text-lg m-0 text-heading flex align-center">
+              {t("Categories")}
+          </h2>
+            {categoriesOpen ? (
+              <IoChevronDown className="text-xl" />
+            ) : (
+              <IoChevronForward className="text-xl" />
+            )}
+          </button>
+          {categoriesOpen && (
+            loading ? (
+              <Loading loading={loading} />
+            ) : error ? (
+              <p className="flex justify-center align-middle items-center m-auto text-xl text-red-500">
+                {error?.response?.data?.message || error?.message}
+              </p>
+            ) : (
+              <div className="relative grid gap-2 p-6" id="category-list">
+                {filteredCategories?.map((category) => (
+                  <CategoryCard
+                    key={category._id}
+                    id={category._id}
+                    icon={category.icon}
+                    nested={category.children || []}
+                    title={showingTranslateValue(category?.name)}
+                  />
+                ))}
               </div>
-
-              {/* Subcategories */}
-              {isExpanded && (
-                <div className="border-t border-gray-200 bg-gray-50">
-                  {isLoadingChildren ? (
-                    <div className="p-3">
-                      <div className="animate-pulse space-y-2">
-                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-3 space-y-1">
-                      {children.map((subcategory) => (
-                        <Link
-                          key={subcategory._id}
-                          href={`/category/${subcategory._id}`}
-                          className="block py-2 px-3 hover:bg-white rounded transition-colors group"
-                        >
-                          <div className="flex items-center">
-                            {subcategory.icon && (
-                              <div className="w-6 h-6 mr-2 flex-shrink-0 relative">
-                                <Image
-                                  src={subcategory.icon}
-                                  alt={showingTranslateValue(subcategory.name)}
-                                  fill
-                                  className="object-contain"
-                                  sizes="24px"
-                                />
-                              </div>
-                            )}
-                            <span className="text-sm text-gray-600 group-hover:text-green-600 transition-colors truncate">
-                              {showingTranslateValue(subcategory.name)}
-                            </span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+            )
+          )}
+        </div>
       </div>
     </div>
   );

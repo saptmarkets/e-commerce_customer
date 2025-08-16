@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import dynamic from "next/dynamic";
 import Drawer from "rc-drawer";
 
 import Category from "@components/category/Category";
@@ -20,4 +21,4 @@ const CategoryDrawer = () => {
     </Drawer>
   );
 };
-export default CategoryDrawer;
+export default dynamic(() => Promise.resolve(CategoryDrawer), { ssr: false });
