@@ -10,7 +10,6 @@ import { IoHomeOutline, IoBagOutline, IoGiftOutline, IoInformationCircleOutline,
 import Loading from "@components/preloader/Loading";
 import { SidebarContext } from "@context/SidebarContext";
 import CategoryServices from "@services/CategoryServices";
-import ProductServices from "@services/ProductServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import useTranslation from "next-translate/useTranslation";
 
@@ -18,84 +17,20 @@ const Category = () => {
   const { categoryDrawerOpen, closeCategoryDrawer } = useContext(SidebarContext);
   const { showingTranslateValue } = useUtilsFunction();
   const { t } = useTranslation("common");
-  const [filteredCategories, setFilteredCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // Use getMainCategories instead of getShowingCategory for better performance
-  const { data, error, isLoading, isFetched } = useQuery({
-    queryKey: ["category-main"],
-    queryFn: async () => await CategoryServices.getMainCategories(),
-    staleTime: 30 * 1000, // 30 seconds
-    cacheTime: 2 * 60 * 1000, // 2 minutes
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
+  // Use getShowingCategory like the backup version for immediate loading
+  const { data: categories, error, isLoading } = useQuery({
+    queryKey: ["category-show"],
+    queryFn: async () => await CategoryServices.getShowingCategory(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    const filterCategoriesWithProducts = async () => {
-      if (!data || data.length === 0) {
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        console.log('🔍 Processing categories:', data.length);
-        
-        const categoriesWithProducts = [];
-        for (const category of data) {
-          try {
-            const hasMainCategoryProducts = await ProductServices.checkCategoryHasProducts(category._id);
-            let hasSubcategoryProducts = false;
-            
-            if (category.children && category.children.length > 0) {
-              for (const subcategory of category.children) {
-                const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-                if (hasSubProducts) {
-                  hasSubcategoryProducts = true;
-                  break;
-                }
-              }
-            }
-            
-            if (hasMainCategoryProducts || hasSubcategoryProducts) {
-              if (category.children && category.children.length > 0) {
-                const filteredSubcategories = [];
-                for (const subcategory of category.children) {
-                  const hasSubProducts = await ProductServices.checkCategoryHasProducts(subcategory._id);
-                  if (hasSubProducts) {
-                    filteredSubcategories.push(subcategory);
-                  }
-                }
-                category.children = filteredSubcategories;
-              }
-              categoriesWithProducts.push(category);
-            }
-          } catch (err) {
-            console.error('Error processing category:', category._id, err);
-            // Still add the category if we can't check products
-            categoriesWithProducts.push(category);
-          }
-        }
-        
-        console.log('✅ Final categories with products:', categoriesWithProducts.length);
-        setFilteredCategories(categoriesWithProducts);
-      } catch (error) {
-        console.error('Error filtering categories:', error);
-        // Fallback: show all categories if filtering fails
-        setFilteredCategories(data || []);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (data) {
-      filterCategoriesWithProducts();
-    } else if (isFetched && !isLoading) {
-      // If query is done but no data, stop loading
-      setLoading(false);
-    }
-  }, [data, isFetched, isLoading]);
+  // Filter to only show main categories (no parentId or top-level)
+  const mainCategories = categories?.filter(
+    (cat) => !cat.parentId || cat.parentId === "62c827b5a427b63741da9175"
+  ) || [];
 
   // Define internal pages as a fallback if @utils/data is not correctly structured or found
   const pages = [
@@ -165,15 +100,15 @@ const Category = () => {
           
           {/* Categories List - Always Visible */}
           <div className="relative grid gap-2 p-6" id="category-list">
-            {loading ? (
-              <Loading loading={loading} />
+            {isLoading ? (
+              <Loading loading={isLoading} />
             ) : error ? (
               <div className="text-center py-4">
                 <p className="text-red-500 text-sm mb-2">Error loading categories</p>
                 <p className="text-gray-500 text-xs">{error?.message || 'Unknown error'}</p>
               </div>
-            ) : filteredCategories && filteredCategories.length > 0 ? (
-              filteredCategories.map((category) => (
+            ) : mainCategories && mainCategories.length > 0 ? (
+              mainCategories.map((category) => (
                 <Link
                   key={category._id}
                   href={`/category/${category._id}`}
