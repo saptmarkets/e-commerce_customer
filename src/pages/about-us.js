@@ -67,10 +67,10 @@ const AboutUs = () => {
           img: storeCustomizationSetting?.about_us?.founder_four_img
         },
         // Check if data exists but is empty
-        hasFounderOneName: !!storeCustomizationSetting?.about_us?.founder_one_name?.trim(),
-        hasFounderTwoName: !!storeCustomizationSetting?.about_us?.founder_two_name?.trim(),
-        hasFounderThreeName: !!storeCustomizationSetting?.about_us?.founder_three_name?.trim(),
-        hasFounderFourName: !!storeCustomizationSetting?.about_us?.founder_four_name?.trim(),
+        hasFounderOneName: !!storeCustomizationSetting?.about_us?.founder_one_name && typeof storeCustomizationSetting?.about_us?.founder_one_name === 'string' && storeCustomizationSetting?.about_us?.founder_one_name.trim().length > 0,
+        hasFounderTwoName: !!storeCustomizationSetting?.about_us?.founder_two_name && typeof storeCustomizationSetting?.about_us?.founder_two_name === 'string' && storeCustomizationSetting?.about_us?.founder_two_name.trim().length > 0,
+        hasFounderThreeName: !!storeCustomizationSetting?.about_us?.founder_three_name && typeof storeCustomizationSetting?.about_us?.founder_three_name === 'string' && storeCustomizationSetting?.about_us?.founder_three_name.trim().length > 0,
+        hasFounderFourName: !!storeCustomizationSetting?.about_us?.founder_four_name && typeof storeCustomizationSetting?.about_us?.founder_four_name === 'string' && storeCustomizationSetting?.about_us?.founder_four_name.trim().length > 0,
         // Raw data for debugging
         rawAboutUs: storeCustomizationSetting?.about_us
       });
@@ -79,7 +79,11 @@ const AboutUs = () => {
 
   // Helper to test if a translation field actually contains visible text
   const hasContent = (field) => {
-    return (showingTranslateValue(field) || "").toString().trim().length > 0;
+    // Ensure field is a string and safely handle trim
+    if (!field || typeof field !== 'string') {
+      return false;
+    }
+    return field.trim().length > 0;
   };
 
   // Derive brand color (fallback to emerald brand)
@@ -393,7 +397,7 @@ const AboutUs = () => {
                         });
                       }
                       
-                      return position && position.trim() ? position : "Team Role";
+                      return position && typeof position === 'string' && position.trim() ? position : "Team Role";
                     })()
                   )}
                 </div>
