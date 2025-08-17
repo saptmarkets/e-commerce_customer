@@ -66,11 +66,103 @@ const AboutUs = () => {
           sub: storeCustomizationSetting?.about_us?.founder_four_sub,
           img: storeCustomizationSetting?.about_us?.founder_four_img
         },
-        // Check if data exists but is empty
-        hasFounderOneName: !!storeCustomizationSetting?.about_us?.founder_one_name && typeof storeCustomizationSetting?.about_us?.founder_one_name === 'string' && storeCustomizationSetting?.about_us?.founder_one_name.trim().length > 0,
-        hasFounderTwoName: !!storeCustomizationSetting?.about_us?.founder_two_name && typeof storeCustomizationSetting?.about_us?.founder_two_name === 'string' && storeCustomizationSetting?.about_us?.founder_two_name.trim().length > 0,
-        hasFounderThreeName: !!storeCustomizationSetting?.about_us?.founder_three_name && typeof storeCustomizationSetting?.about_us?.founder_three_name === 'string' && storeCustomizationSetting?.about_us?.founder_three_name.trim().length > 0,
-        hasFounderFourName: !!storeCustomizationSetting?.about_us?.founder_four_name && typeof storeCustomizationSetting?.about_us?.founder_four_name === 'string' && storeCustomizationSetting?.about_us?.founder_four_name.trim().length > 0,
+        founderFiveData: {
+          name: storeCustomizationSetting?.about_us?.founder_five_name,
+          position: storeCustomizationSetting?.about_us?.founder_five_position,
+          sub: storeCustomizationSetting?.about_us?.founder_five_sub,
+          img: storeCustomizationSetting?.about_us?.founder_five_img
+        },
+        founderSixData: {
+          name: storeCustomizationSetting?.about_us?.founder_six_name,
+          position: storeCustomizationSetting?.about_us?.founder_six_position,
+          sub: storeCustomizationSetting?.about_us?.founder_six_sub,
+          img: storeCustomizationSetting?.about_us?.founder_six_img
+        },
+        founderSevenData: {
+          name: storeCustomizationSetting?.about_us?.founder_seven_name,
+          position: storeCustomizationSetting?.about_us?.founder_seven_position,
+          sub: storeCustomizationSetting?.about_us?.founder_seven_sub,
+          img: storeCustomizationSetting?.about_us?.founder_seven_img
+        },
+        founderEightData: {
+          name: storeCustomizationSetting?.about_us?.founder_eight_name,
+          position: storeCustomizationSetting?.about_us?.founder_eight_position,
+          sub: storeCustomizationSetting?.about_us?.founder_eight_sub,
+          img: storeCustomizationSetting?.about_us?.founder_eight_img
+        },
+        founderNineData: {
+          name: storeCustomizationSetting?.about_us?.founder_nine_name,
+          position: storeCustomizationSetting?.about_us?.founder_nine_position,
+          sub: storeCustomizationSetting?.about_us?.founder_nine_sub,
+          img: storeCustomizationSetting?.about_us?.founder_nine_img
+        },
+        founderTenData: {
+          name: storeCustomizationSetting?.about_us?.founder_ten_name,
+          position: storeCustomizationSetting?.about_us?.founder_ten_position,
+          sub: storeCustomizationSetting?.about_us?.founder_ten_sub,
+          img: storeCustomizationSetting?.about_us?.founder_ten_img
+        },
+        founderElevenData: {
+          name: storeCustomizationSetting?.about_us?.founder_eleven_name,
+          position: storeCustomizationSetting?.about_us?.founder_eleven_position,
+          sub: storeCustomizationSetting?.about_us?.founder_eleven_sub,
+          img: storeCustomizationSetting?.about_us?.founder_eleven_img
+        },
+        founderTwelveData: {
+          name: storeCustomizationSetting?.about_us?.founder_twelve_name,
+          position: storeCustomizationSetting?.about_us?.founder_twelve_position,
+          sub: storeCustomizationSetting?.about_us?.founder_twelve_sub,
+          img: storeCustomizationSetting?.about_us?.founder_twelve_img
+        },
+        // Check if data exists but is empty - now handles new object structure with language keys
+        hasFounderOneName: !!storeCustomizationSetting?.about_us?.founder_one_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_one_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_one_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_one_name?.en || storeCustomizationSetting?.about_us?.founder_one_name?.ar)),
+        hasFounderTwoName: !!storeCustomizationSetting?.about_us?.founder_two_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_two_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_two_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_two_name?.en || storeCustomizationSetting?.about_us?.founder_two_name?.ar)),
+        hasFounderThreeName: !!storeCustomizationSetting?.about_us?.founder_three_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_three_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_three_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_three_name?.en || storeCustomizationSetting?.about_us?.founder_three_name?.ar)),
+        hasFounderFourName: !!storeCustomizationSetting?.about_us?.founder_four_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_four_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_four_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_four_name?.en || storeCustomizationSetting?.about_us?.founder_four_name?.ar)),
+        hasFounderFiveName: !!storeCustomizationSetting?.about_us?.founder_five_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_five_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_five_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_five_name?.en || storeCustomizationSetting?.about_us?.founder_five_name?.ar)),
+        hasFounderSixName: !!storeCustomizationSetting?.about_us?.founder_six_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_six_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_six_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_six_name?.en || storeCustomizationSetting?.about_us?.founder_six_name?.ar)),
+        hasFounderSevenName: !!storeCustomizationSetting?.about_us?.founder_seven_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_seven_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_seven_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_seven_name?.en || storeCustomizationSetting?.about_us?.founder_seven_name?.ar)),
+        hasFounderEightName: !!storeCustomizationSetting?.about_us?.founder_eight_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_eight_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_eight_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_eight_name?.en || storeCustomizationSetting?.about_us?.founder_eight_name?.ar)),
+        hasFounderNineName: !!storeCustomizationSetting?.about_us?.founder_nine_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_nine_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_nine_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_nine_name?.en || storeCustomizationSetting?.about_us?.founder_nine_name?.ar)),
+        hasFounderTenName: !!storeCustomizationSetting?.about_us?.founder_ten_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_ten_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_ten_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_ten_name?.en || storeCustomizationSetting?.about_us?.founder_ten_name?.ar)),
+        hasFounderElevenName: !!storeCustomizationSetting?.about_us?.founder_eleven_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_eleven_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_eleven_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_eleven_name?.en || storeCustomizationSetting?.about_us?.founder_eleven_name?.ar)),
+        hasFounderTwelveName: !!storeCustomizationSetting?.about_us?.founder_twelve_name && 
+          (typeof storeCustomizationSetting?.about_us?.founder_twelve_name === 'string' ? 
+            storeCustomizationSetting?.about_us?.founder_twelve_name.trim().length > 0 : 
+            (storeCustomizationSetting?.about_us?.founder_twelve_name?.en || storeCustomizationSetting?.about_us?.founder_twelve_name?.ar)),
         // Raw data for debugging
         rawAboutUs: storeCustomizationSetting?.about_us
       });
@@ -79,7 +171,11 @@ const AboutUs = () => {
 
   // Helper to test if a translation field actually contains visible text
   const hasContent = (field) => {
-    // Ensure field is a string and safely handle trim
+    // Handle new object structure with language keys
+    if (field && typeof field === 'object' && (field.en || field.ar)) {
+      return !!(field.en || field.ar);
+    }
+    // Handle old string structure for backward compatibility
     if (!field || typeof field !== 'string') {
       return false;
     }
@@ -326,7 +422,12 @@ const AboutUs = () => {
                       fieldValue,
                       hasContentResult,
                       rawValue: fieldValue,
-                      translatedValue: showingTranslateValue(fieldValue)
+                      translatedValue: showingTranslateValue(fieldValue),
+                      fieldType: typeof fieldValue,
+                      isNull: fieldValue === null,
+                      isUndefined: fieldValue === undefined,
+                      isEmptyString: fieldValue === "",
+                      hasLength: fieldValue ? fieldValue.length : 'N/A'
                     });
                     
                     return hasContentResult;
@@ -334,75 +435,49 @@ const AboutUs = () => {
                   
                   console.log("🔍 Final filtered indexes:", filteredIndexes);
                   
-                  return filteredIndexes.map((index) => (
-              <div key={index} className="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-emerald-300 hover:scale-105">
-                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                      {storeCustomizationSetting?.about_us?.[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_img`] ? (
-                    <Image
-                          src={storeCustomizationSetting.about_us[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_img`]}
-                      alt={`Team member ${index}`}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    loading ? (
-                      <CMSkeleton count={1} height={30} loading={loading} />
-                    ) : (
-                      `T${index}`
-                    )
-                  )}
-                </div>
-                  <h3 className="text-base md:text-lg font-bold text-emerald-800 mb-1 font-noor">
-                  {loading ? (
-                    <CMSkeleton count={1} height={25} loading={loading} />
-                  ) : (
-                        showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_name`]) || `Team Member ${index}`
-                  )}
-                </h3>
-                  <div className="text-emerald-600 font-semibold text-xs md:text-sm font-noor">
-                  {loading ? (
-                    <CMSkeleton count={1} height={20} loading={loading} />
-                  ) : (
-                    (() => {
-                      const indexWord = index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve';
-                      
-                      // Try to get position from both possible field names
-                      const positionFromSub = showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`]);
-                      const positionFromPosition = showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_position`]);
-                      
-                      // Use whichever field has content, preferring 'position' field
-                      const position = positionFromPosition || positionFromSub;
-                      
-                      // Debug logging to understand the data structure
-                      if (index <= 4) { // Only log first 4 to avoid spam
-                        console.log(`Team Member ${index} (${indexWord}):`, {
-                          rawFieldSub: `founder_${indexWord}_sub`,
-                          rawValueSub: storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`],
-                          rawFieldPosition: `founder_${indexWord}_position`,
-                          rawValuePosition: storeCustomizationSetting?.about_us?.[`founder_${indexWord}_position`],
-                          positionFromSub,
-                          positionFromPosition,
-                          finalPosition: position,
-                          hasContent: position && position.trim(),
-                          fullAboutUs: storeCustomizationSetting?.about_us,
-                          language: lang,
-                          // Check if the fields exist
-                          fieldSubExists: storeCustomizationSetting?.about_us?.hasOwnProperty(`founder_${indexWord}_sub`),
-                          fieldPositionExists: storeCustomizationSetting?.about_us?.hasOwnProperty(`founder_${indexWord}_position`),
-                          // Check all founder fields
-                          allFounderFields: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.startsWith('founder_')),
-                          // Check if there are any position-like fields
-                          positionFields: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.includes('position'))
-                        });
-                      }
-                      
-                      return position && typeof position === 'string' && position.trim() ? position : "Team Role";
-                    })()
-                  )}
-                </div>
-              </div>
-            ));
+                  return filteredIndexes.map((index) => {
+                    const founderNumber = index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve';
+                    
+                    const founderName = storeCustomizationSetting?.about_us?.[`founder_${founderNumber}_name`];
+                    const founderPosition = storeCustomizationSetting?.about_us?.[`founder_${founderNumber}_position`];
+                    const founderImg = storeCustomizationSetting?.about_us?.[`founder_${founderNumber}_img`];
+                    
+                    return (
+                      <div key={index} className="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-emerald-300 hover:scale-105">
+                        <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                          {founderImg ? (
+                            <Image
+                              src={founderImg}
+                              alt={`Team member ${index}`}
+                              width={80}
+                              height={80}
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            loading ? (
+                              <CMSkeleton count={1} height={30} loading={loading} />
+                            ) : (
+                              `T${index}`
+                            )
+                          )}
+                        </div>
+                        <h3 className="text-base md:text-lg font-bold text-emerald-800 mb-1 font-noor">
+                          {loading ? (
+                            <CMSkeleton count={1} height={25} loading={loading} />
+                          ) : (
+                            showingTranslateValue(founderName) || `Team Member ${index}`
+                          )}
+                        </h3>
+                        <div className="text-emerald-600 font-semibold text-xs md:text-sm font-noor">
+                          {loading ? (
+                            <CMSkeleton count={1} height={20} loading={loading} />
+                          ) : (
+                            showingTranslateValue(founderPosition) || "Team Role"
+                          )}
+                        </div>
+                      </div>
+                    );
+                  });
                 })()}
           </div>
             </SectionBox>
