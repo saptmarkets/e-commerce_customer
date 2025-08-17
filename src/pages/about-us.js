@@ -40,7 +40,39 @@ const AboutUs = () => {
         founderTwoName: storeCustomizationSetting?.about_us?.founder_two_name,
         founderThreeName: storeCustomizationSetting?.about_us?.founder_three_name,
         founderFourName: storeCustomizationSetting?.about_us?.founder_four_name,
-        totalFounders: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.includes('founder_') && key.includes('_name')).length
+        totalFounders: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.includes('founder_') && key.includes('_name')).length,
+        // Add detailed founder data
+        founderOneData: {
+          name: storeCustomizationSetting?.about_us?.founder_one_name,
+          position: storeCustomizationSetting?.about_us?.founder_one_position,
+          sub: storeCustomizationSetting?.about_us?.founder_one_sub,
+          img: storeCustomizationSetting?.about_us?.founder_one_img
+        },
+        founderTwoData: {
+          name: storeCustomizationSetting?.about_us?.founder_two_name,
+          position: storeCustomizationSetting?.about_us?.founder_two_position,
+          sub: storeCustomizationSetting?.about_us?.founder_two_sub,
+          img: storeCustomizationSetting?.about_us?.founder_two_img
+        },
+        founderThreeData: {
+          name: storeCustomizationSetting?.about_us?.founder_three_name,
+          position: storeCustomizationSetting?.about_us?.founder_three_position,
+          sub: storeCustomizationSetting?.about_us?.founder_three_sub,
+          img: storeCustomizationSetting?.about_us?.founder_three_img
+        },
+        founderFourData: {
+          name: storeCustomizationSetting?.about_us?.founder_four_name,
+          position: storeCustomizationSetting?.about_us?.founder_four_position,
+          sub: storeCustomizationSetting?.about_us?.founder_four_sub,
+          img: storeCustomizationSetting?.about_us?.founder_four_img
+        },
+        // Check if data exists but is empty
+        hasFounderOneName: !!storeCustomizationSetting?.about_us?.founder_one_name?.trim(),
+        hasFounderTwoName: !!storeCustomizationSetting?.about_us?.founder_two_name?.trim(),
+        hasFounderThreeName: !!storeCustomizationSetting?.about_us?.founder_three_name?.trim(),
+        hasFounderFourName: !!storeCustomizationSetting?.about_us?.founder_four_name?.trim(),
+        // Raw data for debugging
+        rawAboutUs: storeCustomizationSetting?.about_us
       });
     }
   }, [storeCustomizationSetting, loading]);
@@ -271,13 +303,34 @@ const AboutUs = () => {
               </div>
 
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-                {[...Array(12)]
-                  .map((_, idx) => idx + 1)
-                  .filter((index) => {
+                {(() => {
+                  // Debug the filtering process
+                  const allIndexes = [...Array(12)].map((_, idx) => idx + 1);
+                  console.log("🔍 Filtering team members:", {
+                    allIndexes,
+                    totalToCheck: allIndexes.length
+                  });
+                  
+                  const filteredIndexes = allIndexes.filter((index) => {
                     const indexWord = index === 1 ? "one" : index === 2 ? "two" : index === 3 ? "three" : index === 4 ? "four" : index === 5 ? "five" : index === 6 ? "six" : index === 7 ? "seven" : index === 8 ? "eight" : index === 9 ? "nine" : index === 10 ? "ten" : index === 11 ? "eleven" : "twelve";
-                    return hasContent(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_name`]);
-                  })
-                  .map((index) => (
+                    const fieldName = `founder_${indexWord}_name`;
+                    const fieldValue = storeCustomizationSetting?.about_us?.[fieldName];
+                    const hasContentResult = hasContent(fieldValue);
+                    
+                    console.log(`🔍 Team Member ${index} (${indexWord}):`, {
+                      fieldName,
+                      fieldValue,
+                      hasContentResult,
+                      rawValue: fieldValue,
+                      translatedValue: showingTranslateValue(fieldValue)
+                    });
+                    
+                    return hasContentResult;
+                  });
+                  
+                  console.log("🔍 Final filtered indexes:", filteredIndexes);
+                  
+                  return filteredIndexes.map((index) => (
               <div key={index} className="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-emerald-300 hover:scale-105">
                 <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                       {storeCustomizationSetting?.about_us?.[`founder_${index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve'}_img`] ? (
@@ -345,7 +398,8 @@ const AboutUs = () => {
                   )}
                 </div>
               </div>
-            ))}
+            ));
+                })()}
           </div>
             </SectionBox>
         </div>
