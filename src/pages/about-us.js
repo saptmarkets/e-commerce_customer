@@ -278,15 +278,34 @@ const AboutUs = () => {
                   ) : (
                     (() => {
                       const indexWord = index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve';
-                      const position = showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`]);
+                      
+                      // Try to get position from both possible field names
+                      const positionFromSub = showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`]);
+                      const positionFromPosition = showingTranslateValue(storeCustomizationSetting?.about_us?.[`founder_${indexWord}_position`]);
+                      
+                      // Use whichever field has content, preferring 'position' field
+                      const position = positionFromPosition || positionFromSub;
                       
                       // Debug logging to understand the data structure
                       if (index <= 4) { // Only log first 4 to avoid spam
                         console.log(`Team Member ${index} (${indexWord}):`, {
-                          rawField: `founder_${indexWord}_sub`,
-                          rawValue: storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`],
-                          translatedValue: position,
-                          hasContent: position && position.trim()
+                          rawFieldSub: `founder_${indexWord}_sub`,
+                          rawValueSub: storeCustomizationSetting?.about_us?.[`founder_${indexWord}_sub`],
+                          rawFieldPosition: `founder_${indexWord}_position`,
+                          rawValuePosition: storeCustomizationSetting?.about_us?.[`founder_${indexWord}_position`],
+                          positionFromSub,
+                          positionFromPosition,
+                          finalPosition: position,
+                          hasContent: position && position.trim(),
+                          fullAboutUs: storeCustomizationSetting?.about_us,
+                          language: lang,
+                          // Check if the fields exist
+                          fieldSubExists: storeCustomizationSetting?.about_us?.hasOwnProperty(`founder_${indexWord}_sub`),
+                          fieldPositionExists: storeCustomizationSetting?.about_us?.hasOwnProperty(`founder_${indexWord}_position`),
+                          // Check all founder fields
+                          allFounderFields: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.startsWith('founder_')),
+                          // Check if there are any position-like fields
+                          positionFields: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.includes('position'))
                         });
                       }
                       
