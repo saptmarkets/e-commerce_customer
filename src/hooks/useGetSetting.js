@@ -26,8 +26,10 @@ const useGetSetting = () => {
   } = useQuery({
     queryKey: ["storeCustomization"],
     queryFn: async () => await SettingServices.getStoreCustomizationSetting(),
-    staleTime: 20 * 60 * 1000, //cache for 20 minutes,
-    gcTime: 25 * 60 * 1000,
+    staleTime: 2 * 60 * 1000, //cache for 2 minutes instead of 20 minutes
+    gcTime: 5 * 60 * 1000, //garbage collection after 5 minutes
+    refetchOnWindowFocus: true, //refetch when window gains focus
+    refetchOnMount: true, //refetch when component mounts
   });
 
   // Debug error if any

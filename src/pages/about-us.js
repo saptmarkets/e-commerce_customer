@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { LocationMarkerIcon, OfficeBuildingIcon, ShoppingCartIcon, StarIcon, ClockIcon, CalendarIcon } from "@heroicons/react/solid";
 
@@ -19,18 +19,36 @@ const SectionBox = ({ children, className = "" }) => (
 const AboutUs = () => {
   const { showingTranslateValue, lang } = useUtilsFunction();
   const { storeCustomizationSetting, loading } = useGetSetting();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Force refresh function
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+    // Force refetch by updating the key
+    window.location.reload();
+  };
+
+  // Debug logging to see what data we're getting
+  useEffect(() => {
+    if (storeCustomizationSetting && !loading) {
+      console.log("🔍 Customer App - About Us Data:", {
+        hasData: !!storeCustomizationSetting,
+        aboutUsExists: !!storeCustomizationSetting?.about_us,
+        aboutUsKeys: Object.keys(storeCustomizationSetting?.about_us || {}),
+        founderFields: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.startsWith('founder_')),
+        founderOneName: storeCustomizationSetting?.about_us?.founder_one_name,
+        founderTwoName: storeCustomizationSetting?.about_us?.founder_two_name,
+        founderThreeName: storeCustomizationSetting?.about_us?.founder_three_name,
+        founderFourName: storeCustomizationSetting?.about_us?.founder_four_name,
+        totalFounders: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.includes('founder_') && key.includes('_name')).length
+      });
+    }
+  }, [storeCustomizationSetting, loading]);
 
   // Helper to test if a translation field actually contains visible text
   const hasContent = (field) => {
     return (showingTranslateValue(field) || "").toString().trim().length > 0;
   };
-
-  // Single debug log to check data structure
-  React.useEffect(() => {
-    if (storeCustomizationSetting && !loading) {
-      // About Us Data Check logged
-    }
-  }, [storeCustomizationSetting, loading]);
 
   // Derive brand color (fallback to emerald brand)
   const brandColor = useMemo(() => {
@@ -238,6 +256,19 @@ const AboutUs = () => {
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.leadership_title)}
                 </h3>
               )}
+
+              {/* Debug and Refresh Section */}
+              <div className="mt-4 flex justify-center items-center space-x-4">
+                <button
+                  onClick={handleRefresh}
+                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-noor"
+                >
+                  {lang === 'ar' ? 'تحديث البيانات' : 'Refresh Data'}
+                </button>
+                <div className="text-sm text-gray-500 font-noor">
+                  {lang === 'ar' ? 'آخر تحديث:' : 'Last updated:'} {new Date().toLocaleTimeString()}
+                </div>
+              </div>
 
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
                 {[...Array(12)]
