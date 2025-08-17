@@ -171,15 +171,22 @@ const AboutUs = () => {
 
   // Helper to test if a translation field actually contains visible text
   const hasContent = (field) => {
+    if (!field) return false;
+    
     // Handle new object structure with language keys
-    if (field && typeof field === 'object' && (field.en || field.ar)) {
-      return !!(field.en || field.ar);
+    if (typeof field === 'object') {
+      // Check if any language has content
+      const hasEnglish = field.en && typeof field.en === 'string' && field.en.trim().length > 0;
+      const hasArabic = field.ar && typeof field.ar === 'string' && field.ar.trim().length > 0;
+      return hasEnglish || hasArabic;
     }
+    
     // Handle old string structure for backward compatibility
-    if (!field || typeof field !== 'string') {
-      return false;
+    if (typeof field === 'string') {
+      return field.trim().length > 0;
     }
-    return field.trim().length > 0;
+    
+    return false;
   };
 
   // Derive brand color (fallback to emerald brand)
@@ -481,25 +488,15 @@ const AboutUs = () => {
                     const fieldName = `founder_${indexWord}_name`;
                     const fieldValue = storeCustomizationSetting?.about_us?.[fieldName];
                     
-                    // More strict filtering - only show if we have REAL content
+                    // More lenient filtering - show if we have content in ANY language
                     const hasRealContent = hasContent(fieldValue) && 
                       showingTranslateValue(fieldValue) && 
                       showingTranslateValue(fieldValue).trim().length > 0;
                     
-                    console.log(`🔍 Team Member ${index} (${indexWord}):`, {
-                      fieldName,
-                      fieldValue,
-                      hasContentResult: hasContent(fieldValue),
-                      hasRealContent,
-                      rawValue: fieldValue,
-                      translatedValue: showingTranslateValue(fieldValue),
-                      translatedLength: showingTranslateValue(fieldValue)?.length || 0,
-                      fieldType: typeof fieldValue,
-                      isNull: fieldValue === null,
-                      isUndefined: fieldValue === undefined,
-                      isEmptyString: fieldValue === "",
-                      hasLength: fieldValue ? fieldValue.length : 'N/A'
-                    });
+                    // Debug logging (can be removed in production)
+                    if (hasRealContent) {
+                      console.log(`✅ Team Member ${index} (${indexWord}): ${showingTranslateValue(fieldValue)}`);
+                    }
                     
                     return hasRealContent;
                   });
