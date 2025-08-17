@@ -446,6 +446,26 @@ const AboutUs = () => {
                   {lang === 'ar' ? 'آخر تحديث:' : 'Last updated:'} {new Date().toLocaleTimeString()}
                 </div>
               </div>
+              
+              {/* Team Member Count */}
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
+                  <span className="mr-2">👥</span>
+                  {(() => {
+                    const allIndexes = [...Array(12)].map((_, idx) => idx + 1);
+                    const filteredIndexes = allIndexes.filter((index) => {
+                      const indexWord = index === 1 ? "one" : index === 2 ? "two" : index === 3 ? "three" : index === 4 ? "four" : index === 5 ? "five" : index === 6 ? "six" : index === 7 ? "seven" : index === 8 ? "eight" : index === 9 ? "nine" : index === 10 ? "ten" : index === 11 ? "eleven" : "twelve";
+                      const fieldName = `founder_${indexWord}_name`;
+                      const fieldValue = storeCustomizationSetting?.about_us?.[fieldName];
+                      const hasRealContent = hasContent(fieldValue) && 
+                        showingTranslateValue(fieldValue) && 
+                        showingTranslateValue(fieldValue).trim().length > 0;
+                      return hasRealContent;
+                    });
+                    return `${filteredIndexes.length} ${lang === 'ar' ? 'عضو فريق' : 'Team Members'} ${lang === 'ar' ? 'متاح' : 'Available'}`;
+                  })()}
+                </div>
+              </div>
 
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
                 {(() => {
@@ -460,14 +480,20 @@ const AboutUs = () => {
                     const indexWord = index === 1 ? "one" : index === 2 ? "two" : index === 3 ? "three" : index === 4 ? "four" : index === 5 ? "five" : index === 6 ? "six" : index === 7 ? "seven" : index === 8 ? "eight" : index === 9 ? "nine" : index === 10 ? "ten" : index === 11 ? "eleven" : "twelve";
                     const fieldName = `founder_${indexWord}_name`;
                     const fieldValue = storeCustomizationSetting?.about_us?.[fieldName];
-                    const hasContentResult = hasContent(fieldValue);
+                    
+                    // More strict filtering - only show if we have REAL content
+                    const hasRealContent = hasContent(fieldValue) && 
+                      showingTranslateValue(fieldValue) && 
+                      showingTranslateValue(fieldValue).trim().length > 0;
                     
                     console.log(`🔍 Team Member ${index} (${indexWord}):`, {
                       fieldName,
                       fieldValue,
-                      hasContentResult,
+                      hasContentResult: hasContent(fieldValue),
+                      hasRealContent,
                       rawValue: fieldValue,
                       translatedValue: showingTranslateValue(fieldValue),
+                      translatedLength: showingTranslateValue(fieldValue)?.length || 0,
                       fieldType: typeof fieldValue,
                       isNull: fieldValue === null,
                       isUndefined: fieldValue === undefined,
@@ -475,10 +501,27 @@ const AboutUs = () => {
                       hasLength: fieldValue ? fieldValue.length : 'N/A'
                     });
                     
-                    return hasContentResult;
+                    return hasRealContent;
                   });
                   
                   console.log("🔍 Final filtered indexes:", filteredIndexes);
+                  
+                  // If no team members have data, show a message
+                  if (filteredIndexes.length === 0) {
+                    return (
+                      <div className="col-span-full text-center py-12">
+                        <div className="text-gray-500">
+                          <div className="text-6xl mb-4">👥</div>
+                          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                            {lang === 'ar' ? 'لا يوجد أعضاء فريق حالياً' : 'No Team Members Available'}
+                          </h3>
+                          <p className="text-gray-600">
+                            {lang === 'ar' ? 'سيتم إضافة معلومات الفريق قريباً' : 'Team information will be added soon'}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
                   
                   return filteredIndexes.map((index) => {
                     const founderNumber = index === 1 ? 'one' : index === 2 ? 'two' : index === 3 ? 'three' : index === 4 ? 'four' : index === 5 ? 'five' : index === 6 ? 'six' : index === 7 ? 'seven' : index === 8 ? 'eight' : index === 9 ? 'nine' : index === 10 ? 'ten' : index === 11 ? 'eleven' : 'twelve';
@@ -502,7 +545,10 @@ const AboutUs = () => {
                             loading ? (
                               <CMSkeleton count={1} height={30} loading={loading} />
                             ) : (
-                              `T${index}`
+                              // Show first letter of name if available, otherwise show a generic icon
+                              founderName && showingTranslateValue(founderName) ? 
+                                showingTranslateValue(founderName).charAt(0).toUpperCase() : 
+                                "👤"
                             )
                           )}
                         </div>
@@ -510,14 +556,14 @@ const AboutUs = () => {
                           {loading ? (
                             <CMSkeleton count={1} height={25} loading={loading} />
                           ) : (
-                            showingTranslateValue(founderName) || `Team Member ${index}`
+                            showingTranslateValue(founderName)
                           )}
                         </h3>
                         <div className="text-emerald-600 font-semibold text-xs md:text-sm font-noor">
                           {loading ? (
                             <CMSkeleton count={1} height={20} loading={loading} />
                           ) : (
-                            showingTranslateValue(founderPosition) || "Team Role"
+                            showingTranslateValue(founderPosition)
                           )}
                         </div>
                       </div>
@@ -544,60 +590,92 @@ const AboutUs = () => {
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.values_description) || 
                   "These fundamental principles guide every decision we make and every interaction we have with our customers and community."}
               </p>
+              
+              {/* Core Values Count */}
+              <div className="mt-6">
+                <div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
+                  <span className="mr-2">💎</span>
+                  {(() => {
+                    const values = [
+                      storeCustomizationSetting?.about_us?.value_one_title,
+                      storeCustomizationSetting?.about_us?.value_two_title,
+                      storeCustomizationSetting?.about_us?.value_three_title,
+                      storeCustomizationSetting?.about_us?.value_four_title
+                    ];
+                    const validValues = values.filter(value => 
+                      hasContent(value) && 
+                      showingTranslateValue(value) && 
+                      showingTranslateValue(value).trim().length > 0
+                    );
+                    return `${validValues.length} ${lang === 'ar' ? 'قيمة أساسية' : 'Core Values'} ${lang === 'ar' ? 'متاحة' : 'Available'}`;
+                  })()}
+                </div>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
-                  <span className="text-2xl">🎯</span>
-                </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_one_title) || "Quality First"}
-                </h3>
-                <p className="text-gray-600 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_one_description) || 
-                    "We never compromise on the quality of our products, ensuring every item meets our high standards."}
-                </p>
-              </div>
+              {(() => {
+                const values = [
+                  {
+                    icon: "🎯",
+                    title: storeCustomizationSetting?.about_us?.value_one_title,
+                    description: storeCustomizationSetting?.about_us?.value_one_description
+                  },
+                  {
+                    icon: "❤️",
+                    title: storeCustomizationSetting?.about_us?.value_two_title,
+                    description: storeCustomizationSetting?.about_us?.value_two_description
+                  },
+                  {
+                    icon: "🤝",
+                    title: storeCustomizationSetting?.about_us?.value_three_title,
+                    description: storeCustomizationSetting?.about_us?.value_three_description
+                  },
+                  {
+                    icon: "🚀",
+                    title: storeCustomizationSetting?.about_us?.value_four_title,
+                    description: storeCustomizationSetting?.about_us?.value_four_description
+                  }
+                ];
 
-              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
-                  <span className="text-2xl">❤️</span>
-                </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_two_title) || "Customer Care"}
-                </h3>
-                <p className="text-gray-600 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_two_description) || 
-                    "Every customer is valued and deserves exceptional service, respect, and attention to their needs."}
-                </p>
-              </div>
-              
-              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
-                  <span className="text-2xl">🤝</span>
-                </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_three_title) || "Community Focus"}
-                </h3>
-                <p className="text-gray-600 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_three_description) || 
-                    "We're not just a store; we're part of the Qassim community, supporting local families and traditions."}
-            </p>
-          </div>
-          
-              <div className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
-                  <span className="text-2xl">🚀</span>
-                </div>
-                <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_four_title) || "Innovation"}
-                </h3>
-                <p className="text-gray-600 font-noor">
-                  {showingTranslateValue(storeCustomizationSetting?.about_us?.value_four_description) || 
-                    "We continuously evolve to meet changing customer needs and embrace new technologies."}
-                </p>
-              </div>
+                // Filter out values that don't have real content
+                const validValues = values.filter(value => 
+                  hasContent(value.title) && 
+                  showingTranslateValue(value.title) && 
+                  showingTranslateValue(value.title).trim().length > 0
+                );
+
+                // If no values have content, show a message
+                if (validValues.length === 0) {
+                  return (
+                    <div className="col-span-full text-center py-12">
+                      <div className="text-gray-500">
+                        <div className="text-6xl mb-4">💎</div>
+                        <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                          {lang === 'ar' ? 'لا توجد قيم أساسية حالياً' : 'No Core Values Available'}
+                        </h3>
+                        <p className="text-gray-600">
+                          {lang === 'ar' ? 'سيتم إضافة القيم الأساسية قريباً' : 'Core values will be added soon'}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return validValues.map((value, index) => (
+                  <div key={index} className="bg-emerald-50 p-8 rounded-xl shadow-lg hover:shadow-2xl text-center border border-emerald-200 hover:border-emerald-400 hover:scale-105 transition-all duration-300">
+                    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                      <span className="text-2xl">{value.icon}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
+                      {showingTranslateValue(value.title)}
+                    </h3>
+                    <p className="text-gray-600 font-noor">
+                      {showingTranslateValue(value.description)}
+                    </p>
+                  </div>
+                ));
+              })()}
             </div>
           </div>
         </SectionBox>
