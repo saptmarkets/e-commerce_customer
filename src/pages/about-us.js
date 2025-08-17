@@ -191,8 +191,53 @@ const AboutUs = () => {
     );
   }, [storeCustomizationSetting]);
 
+  // Safety check: Don't render if we don't have real data
+  if (!storeCustomizationSetting || !storeCustomizationSetting.about_us) {
+    return (
+      <Layout title="About Us" description="This is about us page">
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            {loading ? (
+              <div className="space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+                <p className="text-gray-600">Loading About Us content...</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="text-6xl">⚠️</div>
+                <h1 className="text-2xl font-bold text-gray-800">No Content Available</h1>
+                <p className="text-gray-600">The About Us content is not loaded. Please refresh the page.</p>
+                <button 
+                  onClick={handleRefresh}
+                  className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  Refresh Page
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout title="About Us" description="This is about us page">
+      {/* Debug Header */}
+      <div className="bg-yellow-50 border-b border-yellow-200 p-4 mb-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="text-sm text-yellow-800">
+            <strong>Debug Mode:</strong> Data loaded from API
+          </div>
+          <button 
+            onClick={handleRefresh}
+            className="px-4 py-2 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700 transition-colors"
+          >
+            🔄 Refresh Data
+          </button>
+        </div>
+      </div>
+
       {/* Hero Section */}
       {(() => {
         const ab = storeCustomizationSetting?.about_us || {};
