@@ -18,45 +18,56 @@ const useGetSetting = () => {
     gcTime: 15 * 60 * 1000,
   });
 
+  // Fetch base store customization
   const {
-    data,
-    error,
-    isFetched,
+    data: baseCustomization,
+    error: baseError,
+    isFetched: baseFetched,
     isLoading: loading,
-    refetch,
   } = useQuery({
     queryKey: ["storeCustomization"],
     queryFn: async () => await SettingServices.getStoreCustomizationSetting(),
-    staleTime: 2 * 60 * 1000, //cache for 2 minutes instead of 20 minutes
-    gcTime: 5 * 60 * 1000, //garbage collection after 5 minutes
-    refetchOnWindowFocus: true, //refetch when window gains focus
-    refetchOnMount: true, //refetch when component mounts
-    retry: 3, // Retry failed requests up to 3 times
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
-  // Debug error if any
+  // Fetch About Us from new collection
+  const {
+    data: aboutUsData,
+    error: aboutUsError,
+    isFetched: aboutUsFetched,
+  } = useQuery({
+    queryKey: ["aboutUs"],
+    queryFn: async () => await SettingServices.getAboutUs(),
+    enabled: !!baseCustomization, // fetch after base is available
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+
+  // Debug errors if any
   useEffect(() => {
-    if (error) {
-      console.error("🚨 API Error in useGetSetting:", error);
-      console.error("🔍 Error details:", {
-        message: error.message,
-        status: error.status,
-        data: error.data
-      });
+    if (baseError) {
+      console.error("🚨 API Error (base customization):", baseError);
     }
-  }, [error]);
+    if (aboutUsError) {
+      console.error("🚨 API Error (About Us):", aboutUsError);
+    }
+  }, [baseError, aboutUsError]);
 
-  // console.log("data", Object.keys(data)?.length > 0, "isFetched", isFetched);
-
+  // Merge logic: put about_us from dedicated collection into the base structure
   useEffect(() => {
-    if (isFetched && data) {
-      console.log("✅ API data received, updating state");
-      setStoreCustomizationSetting(data);
-    } else if (isFetched && !data && !loading) {
-      // Only log when API fails and we're not loading
-      console.log("⚠️ API returned no data - keeping previous state to prevent data loss");
-      // Don't set fallback data - it would override real database content
+    if (baseFetched && baseCustomization) {
+      const merged = {
+        ...baseCustomization,
+        about_us: aboutUsFetched && aboutUsData ? aboutUsData : baseCustomization?.about_us,
+      };
+      setStoreCustomizationSetting(merged);
     }
 
     if (!lang) {
@@ -65,15 +76,14 @@ const useGetSetting = () => {
         secure: true,
       });
     }
-  }, [data, isFetched, lang, loading]);
+  }, [baseCustomization, baseFetched, aboutUsFetched, aboutUsData, lang]);
 
   return {
     lang,
-    error,
+    error: baseError || aboutUsError,
     loading,
     globalSetting,
     storeCustomizationSetting,
-    refetch, // Expose refetch function for manual refresh
   };
 };
 

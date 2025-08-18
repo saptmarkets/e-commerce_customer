@@ -14,6 +14,11 @@ const SettingServices = {
     return requests.get("/setting/store/customization/all");
   },
 
+  // New: get About Us content from dedicated collection
+  getAboutUs: async () => {
+    return requests.get("/setting/store/customization/about-us");
+  },
+
   getShowingLanguage: async () => {
     return requests.get(`/language/show`);
   },

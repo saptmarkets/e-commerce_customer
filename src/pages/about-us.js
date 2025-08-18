@@ -183,7 +183,7 @@ const AboutUs = () => {
     
     // Handle old string structure for backward compatibility
     if (typeof field === 'string') {
-      return field.trim().length > 0;
+    return field.trim().length > 0;
     }
     
     return false;
