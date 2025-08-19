@@ -384,26 +384,7 @@ const AboutUs = () => {
                   "These fundamental principles guide every decision we make and every interaction we have with our customers and community."}
               </p>
               
-              {/* Core Values Count */}
-              <div className="mt-6">
-                <div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
-                  <span className="mr-2">💎</span>
-                  {(() => {
-                    const values = [
-                      storeCustomizationSetting?.about_us?.value_one_title,
-                      storeCustomizationSetting?.about_us?.value_two_title,
-                      storeCustomizationSetting?.about_us?.value_three_title,
-                      storeCustomizationSetting?.about_us?.value_four_title
-                    ];
-                    const validValues = values.filter(value => 
-                      hasContent(value) && 
-                      showingTranslateValue(value) && 
-                      showingTranslateValue(value).trim().length > 0
-                    );
-                    return `${validValues.length} ${lang === 'ar' ? 'قيمة أساسية' : 'Core Values'} ${lang === 'ar' ? 'متاحة' : 'Available'}`;
-                  })()}
-                </div>
-              </div>
+
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
