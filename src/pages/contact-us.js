@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
-import { FiMail, FiMapPin, FiBell, FiPhone, FiClock, FiSend } from "react-icons/fi";
+import { FiMail, FiMapPin, FiBell, FiPhone, FiSend } from "react-icons/fi";
 
 //internal import
 import Layout from "@layout/Layout";
@@ -166,32 +166,7 @@ const ContactUs = () => {
                 </div>
               </div>
 
-              {/* Quick Info Cards */}
-              <div className="space-y-4">
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center">
-                      <FiClock className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{t("common:contact-page-business-hours-title")}</h4>
-                      <p className="text-gray-600 text-sm">{t("common:contact-page-business-hours-text")}</p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center">
-                      <FiBell className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{t("common:contact-page-response-time-title")}</h4>
-                      <p className="text-gray-600 text-sm">{t("common:contact-page-response-time-text")}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Right Side - Contact Form */}
