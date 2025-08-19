@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { LocationMarkerIcon, OfficeBuildingIcon, ShoppingCartIcon, StarIcon, ClockIcon, CalendarIcon } from "@heroicons/react/solid";
 
@@ -19,155 +19,6 @@ const SectionBox = ({ children, className = "" }) => (
 const AboutUs = () => {
   const { showingTranslateValue, lang } = useUtilsFunction();
   const { storeCustomizationSetting, loading } = useGetSetting();
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  // Force refresh function
-  const handleRefresh = () => {
-    setRefreshKey(prev => prev + 1);
-    // Force refetch by updating the key
-    window.location.reload();
-  };
-
-  // Debug logging to see what data we're getting
-  useEffect(() => {
-    if (storeCustomizationSetting && !loading) {
-      console.log("🔍 Customer App - About Us Data:", {
-        hasData: !!storeCustomizationSetting,
-        aboutUsExists: !!storeCustomizationSetting?.about_us,
-        aboutUsKeys: Object.keys(storeCustomizationSetting?.about_us || {}),
-        founderFields: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.startsWith('founder_')),
-        founderOneName: storeCustomizationSetting?.about_us?.founder_one_name,
-        founderTwoName: storeCustomizationSetting?.about_us?.founder_two_name,
-        founderThreeName: storeCustomizationSetting?.about_us?.founder_three_name,
-        founderFourName: storeCustomizationSetting?.about_us?.founder_four_name,
-        totalFounders: Object.keys(storeCustomizationSetting?.about_us || {}).filter(key => key.includes('founder_') && key.includes('_name')).length,
-        // Add detailed founder data
-        founderOneData: {
-          name: storeCustomizationSetting?.about_us?.founder_one_name,
-          position: storeCustomizationSetting?.about_us?.founder_one_position,
-          sub: storeCustomizationSetting?.about_us?.founder_one_sub,
-          img: storeCustomizationSetting?.about_us?.founder_one_img
-        },
-        founderTwoData: {
-          name: storeCustomizationSetting?.about_us?.founder_two_name,
-          position: storeCustomizationSetting?.about_us?.founder_two_position,
-          sub: storeCustomizationSetting?.about_us?.founder_two_sub,
-          img: storeCustomizationSetting?.about_us?.founder_two_img
-        },
-        founderThreeData: {
-          name: storeCustomizationSetting?.about_us?.founder_three_name,
-          position: storeCustomizationSetting?.about_us?.founder_three_position,
-          sub: storeCustomizationSetting?.about_us?.founder_three_sub,
-          img: storeCustomizationSetting?.about_us?.founder_three_img
-        },
-        founderFourData: {
-          name: storeCustomizationSetting?.about_us?.founder_four_name,
-          position: storeCustomizationSetting?.about_us?.founder_four_position,
-          sub: storeCustomizationSetting?.about_us?.founder_four_sub,
-          img: storeCustomizationSetting?.about_us?.founder_four_img
-        },
-        founderFiveData: {
-          name: storeCustomizationSetting?.about_us?.founder_five_name,
-          position: storeCustomizationSetting?.about_us?.founder_five_position,
-          sub: storeCustomizationSetting?.about_us?.founder_five_sub,
-          img: storeCustomizationSetting?.about_us?.founder_five_img
-        },
-        founderSixData: {
-          name: storeCustomizationSetting?.about_us?.founder_six_name,
-          position: storeCustomizationSetting?.about_us?.founder_six_position,
-          sub: storeCustomizationSetting?.about_us?.founder_six_sub,
-          img: storeCustomizationSetting?.about_us?.founder_six_img
-        },
-        founderSevenData: {
-          name: storeCustomizationSetting?.about_us?.founder_seven_name,
-          position: storeCustomizationSetting?.about_us?.founder_seven_position,
-          sub: storeCustomizationSetting?.about_us?.founder_seven_sub,
-          img: storeCustomizationSetting?.about_us?.founder_seven_img
-        },
-        founderEightData: {
-          name: storeCustomizationSetting?.about_us?.founder_eight_name,
-          position: storeCustomizationSetting?.about_us?.founder_eight_position,
-          sub: storeCustomizationSetting?.about_us?.founder_eight_sub,
-          img: storeCustomizationSetting?.about_us?.founder_eight_img
-        },
-        founderNineData: {
-          name: storeCustomizationSetting?.about_us?.founder_nine_name,
-          position: storeCustomizationSetting?.about_us?.founder_nine_position,
-          sub: storeCustomizationSetting?.about_us?.founder_nine_sub,
-          img: storeCustomizationSetting?.about_us?.founder_nine_img
-        },
-        founderTenData: {
-          name: storeCustomizationSetting?.about_us?.founder_ten_name,
-          position: storeCustomizationSetting?.about_us?.founder_ten_position,
-          sub: storeCustomizationSetting?.about_us?.founder_ten_sub,
-          img: storeCustomizationSetting?.about_us?.founder_ten_img
-        },
-        founderElevenData: {
-          name: storeCustomizationSetting?.about_us?.founder_eleven_name,
-          position: storeCustomizationSetting?.about_us?.founder_eleven_position,
-          sub: storeCustomizationSetting?.about_us?.founder_eleven_sub,
-          img: storeCustomizationSetting?.about_us?.founder_eleven_img
-        },
-        founderTwelveData: {
-          name: storeCustomizationSetting?.about_us?.founder_twelve_name,
-          position: storeCustomizationSetting?.about_us?.founder_twelve_position,
-          sub: storeCustomizationSetting?.about_us?.founder_twelve_sub,
-          img: storeCustomizationSetting?.about_us?.founder_twelve_img
-        },
-        // Check if data exists but is empty - now handles new object structure with language keys
-        hasFounderOneName: !!storeCustomizationSetting?.about_us?.founder_one_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_one_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_one_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_one_name?.en || storeCustomizationSetting?.about_us?.founder_one_name?.ar)),
-        hasFounderTwoName: !!storeCustomizationSetting?.about_us?.founder_two_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_two_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_two_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_two_name?.en || storeCustomizationSetting?.about_us?.founder_two_name?.ar)),
-        hasFounderThreeName: !!storeCustomizationSetting?.about_us?.founder_three_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_three_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_three_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_three_name?.en || storeCustomizationSetting?.about_us?.founder_three_name?.ar)),
-        hasFounderFourName: !!storeCustomizationSetting?.about_us?.founder_four_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_four_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_four_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_four_name?.en || storeCustomizationSetting?.about_us?.founder_four_name?.ar)),
-        hasFounderFiveName: !!storeCustomizationSetting?.about_us?.founder_five_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_five_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_five_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_five_name?.en || storeCustomizationSetting?.about_us?.founder_five_name?.ar)),
-        hasFounderSixName: !!storeCustomizationSetting?.about_us?.founder_six_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_six_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_six_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_six_name?.en || storeCustomizationSetting?.about_us?.founder_six_name?.ar)),
-        hasFounderSevenName: !!storeCustomizationSetting?.about_us?.founder_seven_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_seven_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_seven_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_seven_name?.en || storeCustomizationSetting?.about_us?.founder_seven_name?.ar)),
-        hasFounderEightName: !!storeCustomizationSetting?.about_us?.founder_eight_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_eight_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_eight_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_eight_name?.en || storeCustomizationSetting?.about_us?.founder_eight_name?.ar)),
-        hasFounderNineName: !!storeCustomizationSetting?.about_us?.founder_nine_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_nine_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_nine_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_nine_name?.en || storeCustomizationSetting?.about_us?.founder_nine_name?.ar)),
-        hasFounderTenName: !!storeCustomizationSetting?.about_us?.founder_ten_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_ten_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_ten_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_ten_name?.en || storeCustomizationSetting?.about_us?.founder_ten_name?.ar)),
-        hasFounderElevenName: !!storeCustomizationSetting?.about_us?.founder_eleven_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_eleven_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_eleven_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_eleven_name?.en || storeCustomizationSetting?.about_us?.founder_eleven_name?.ar)),
-        hasFounderTwelveName: !!storeCustomizationSetting?.about_us?.founder_twelve_name && 
-          (typeof storeCustomizationSetting?.about_us?.founder_twelve_name === 'string' ? 
-            storeCustomizationSetting?.about_us?.founder_twelve_name.trim().length > 0 : 
-            (storeCustomizationSetting?.about_us?.founder_twelve_name?.en || storeCustomizationSetting?.about_us?.founder_twelve_name?.ar)),
-        // Raw data for debugging
-        rawAboutUs: storeCustomizationSetting?.about_us
-      });
-    }
-  }, [storeCustomizationSetting, loading]);
 
   // Helper to test if a translation field actually contains visible text
   const hasContent = (field) => {
@@ -215,7 +66,7 @@ const AboutUs = () => {
                 <h1 className="text-2xl font-bold text-gray-800">No Content Available</h1>
                 <p className="text-gray-600">The About Us content is not loaded. Please refresh the page.</p>
                 <button 
-                  onClick={handleRefresh}
+                  onClick={() => window.location.reload()}
                   className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                 >
                   Refresh Page
@@ -230,20 +81,7 @@ const AboutUs = () => {
 
   return (
     <Layout title="About Us" description="This is about us page">
-      {/* Debug Header */}
-      <div className="bg-yellow-50 border-b border-yellow-200 p-4 mb-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="text-sm text-yellow-800">
-            <strong>Debug Mode:</strong> Data loaded from API
-          </div>
-          <button 
-            onClick={handleRefresh}
-            className="px-4 py-2 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700 transition-colors"
-          >
-            🔄 Refresh Data
-          </button>
-        </div>
-      </div>
+
 
       {/* Hero Section */}
       {(() => {
@@ -441,67 +279,25 @@ const AboutUs = () => {
                 </h3>
               )}
 
-              {/* Debug and Refresh Section */}
-              <div className="mt-4 flex justify-center items-center space-x-4">
-                <button
-                  onClick={handleRefresh}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-noor"
-                >
-                  {lang === 'ar' ? 'تحديث البيانات' : 'Refresh Data'}
-                </button>
-                <div className="text-sm text-gray-500 font-noor">
-                  {lang === 'ar' ? 'آخر تحديث:' : 'Last updated:'} {new Date().toLocaleTimeString()}
-                </div>
-              </div>
+
               
-              {/* Team Member Count */}
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
-                  <span className="mr-2">👥</span>
-                  {(() => {
-                    const allIndexes = [...Array(12)].map((_, idx) => idx + 1);
-                    const filteredIndexes = allIndexes.filter((index) => {
-                      const indexWord = index === 1 ? "one" : index === 2 ? "two" : index === 3 ? "three" : index === 4 ? "four" : index === 5 ? "five" : index === 6 ? "six" : index === 7 ? "seven" : index === 8 ? "eight" : index === 9 ? "nine" : index === 10 ? "ten" : index === 11 ? "eleven" : "twelve";
-                      const fieldName = `founder_${indexWord}_name`;
-                      const fieldValue = storeCustomizationSetting?.about_us?.[fieldName];
-                      const hasRealContent = hasContent(fieldValue) && 
-                        showingTranslateValue(fieldValue) && 
-                        showingTranslateValue(fieldValue).trim().length > 0;
-                      return hasRealContent;
-                    });
-                    return `${filteredIndexes.length} ${lang === 'ar' ? 'عضو فريق' : 'Team Members'} ${lang === 'ar' ? 'متاح' : 'Available'}`;
-                  })()}
-                </div>
-              </div>
+
 
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
                 {(() => {
-                  // Debug the filtering process
                   const allIndexes = [...Array(12)].map((_, idx) => idx + 1);
-                  console.log("🔍 Filtering team members:", {
-                    allIndexes,
-                    totalToCheck: allIndexes.length
-                  });
                   
                   const filteredIndexes = allIndexes.filter((index) => {
                     const indexWord = index === 1 ? "one" : index === 2 ? "two" : index === 3 ? "three" : index === 4 ? "four" : index === 5 ? "five" : index === 6 ? "six" : index === 7 ? "seven" : index === 8 ? "eight" : index === 9 ? "nine" : index === 10 ? "ten" : index === 11 ? "eleven" : "twelve";
                     const fieldName = `founder_${indexWord}_name`;
                     const fieldValue = storeCustomizationSetting?.about_us?.[fieldName];
                     
-                    // More lenient filtering - show if we have content in ANY language
                     const hasRealContent = hasContent(fieldValue) && 
                       showingTranslateValue(fieldValue) && 
                       showingTranslateValue(fieldValue).trim().length > 0;
                     
-                    // Debug logging (can be removed in production)
-                    if (hasRealContent) {
-                      console.log(`✅ Team Member ${index} (${indexWord}): ${showingTranslateValue(fieldValue)}`);
-                    }
-                    
                     return hasRealContent;
                   });
-                  
-                  console.log("🔍 Final filtered indexes:", filteredIndexes);
                   
                   // If no team members have data, show a message
                   if (filteredIndexes.length === 0) {
