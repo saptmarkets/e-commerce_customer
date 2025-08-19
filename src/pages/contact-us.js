@@ -55,13 +55,13 @@ const ContactUs = () => {
                   {showingTranslateValue(cu.title) || "Contact Us"}
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  We'd love to hear from you. Get in touch with our team for any questions or support.
+                  {t("common:contact-page-hero-description")}
                 </p>
                 <div className="mt-8 flex items-center justify-center space-x-2 text-gray-500">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-sm font-medium">We respond within 24 hours</span>
+                  <span className="text-sm font-medium">{t("common:contact-page-response-time")}</span>
                 </div>
               </div>
             </div>
@@ -174,8 +174,8 @@ const ContactUs = () => {
                       <FiClock className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Business Hours</h4>
-                      <p className="text-gray-600 text-sm">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                      <h4 className="font-semibold text-gray-900">{t("common:contact-page-business-hours-title")}</h4>
+                      <p className="text-gray-600 text-sm">{t("common:contact-page-business-hours-text")}</p>
                     </div>
                   </div>
                 </div>
@@ -186,8 +186,8 @@ const ContactUs = () => {
                       <FiBell className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Response Time</h4>
-                      <p className="text-gray-600 text-sm">We typically respond within 2-4 hours</p>
+                      <h4 className="font-semibold text-gray-900">{t("common:contact-page-response-time-title")}</h4>
+                      <p className="text-gray-600 text-sm">{t("common:contact-page-response-time-text")}</p>
                     </div>
                   </div>
                 </div>
@@ -223,7 +223,7 @@ const ContactUs = () => {
                       register={register}
                       name="name"
                       type="text"
-                      placeholder={t("common:contact-page-form-input-name")}
+                      placeholder={t("common:contact-page-form-plaholder-name")}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                     />
                     <Error errorName={errors.name} />
@@ -234,7 +234,7 @@ const ContactUs = () => {
                       register={register}
                       name="email"
                       type="email"
-                      placeholder={t("common:contact-page-form-input-email")}
+                      placeholder={t("common:contact-page-form-plaholder-email")}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                     />
                     <Error errorName={errors.email} />
@@ -247,7 +247,7 @@ const ContactUs = () => {
                     register={register}
                     name="subject"
                     type="text"
-                    placeholder={t("common:contact-page-form-input-subject")}
+                    placeholder={t("common:contact-page-form-plaholder-subject")}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   />
                   <Error errorName={errors.subject} />
@@ -260,7 +260,7 @@ const ContactUs = () => {
                       required: `${t("common:contact-page-form-input-message")} is required!`,
                     })}
                     name="message"
-                    placeholder={t("common:contact-page-form-input-message")}
+                    placeholder={t("common:contact-page-form-plaholder-message")}
                     rows={6}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
                   />
@@ -272,7 +272,7 @@ const ContactUs = () => {
                   className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-teal-700 hover:to-cyan-700 transition-all duration-200 transform hover:scale-105 inline-flex items-center justify-center"
                 >
                   <FiSend className="w-5 h-5 mr-2" />
-                  {t("common:contact-page-form-button-send")}
+                  {t("common:contact-page-form-send-btn")}
                 </button>
               </form>
             </div>
@@ -281,10 +281,10 @@ const ContactUs = () => {
           {/* Additional Support CTA */}
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-8 lg:p-12 mt-20 text-center">
             <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-              Need Immediate Assistance?
+              {t("common:contact-page-cta-title")}
             </h3>
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Our customer support team is available to help you with urgent matters and provide immediate assistance.
+              {t("common:contact-page-cta-description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
@@ -294,7 +294,7 @@ const ContactUs = () => {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Check FAQ
+                {t("common:contact-page-cta-faq-button")}
               </a>
               <a
                 href="#chat"
@@ -303,7 +303,7 @@ const ContactUs = () => {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                Live Chat
+                {t("common:contact-page-cta-chat-button")}
               </a>
             </div>
           </div>
