@@ -114,6 +114,16 @@ const AllProducts = ({ initialProducts, attributes }) => {
   const totalPages = Math.ceil(totalProducts / productsPerPage);
   const currentProductsDisplay = products; // products state now holds the current page's products
 
+  // Debug logging for pagination
+  console.log('Pagination Debug:', {
+    totalProducts,
+    productsPerPage,
+    totalPages,
+    currentPage,
+    productsLength: products.length,
+    loading
+  });
+
   return (
     <>
       <Head>
@@ -170,6 +180,18 @@ const AllProducts = ({ initialProducts, attributes }) => {
                 )}
               </div>
             )}
+
+            {/* Debug Section - Remove this after fixing pagination */}
+            <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+              <h3 className="font-semibold mb-2">Debug Info:</h3>
+              <p>Total Products: {totalProducts}</p>
+              <p>Products Per Page: {productsPerPage}</p>
+              <p>Total Pages: {totalPages}</p>
+              <p>Current Page: {currentPage}</p>
+              <p>Current Products: {products.length}</p>
+              <p>Loading: {loading ? 'Yes' : 'No'}</p>
+              <p>Should Show Pagination: {!loading && totalPages > 1 ? 'Yes' : 'No'}</p>
+            </div>
 
             {/* Pagination */}
             {!loading && totalPages > 1 && (
