@@ -112,7 +112,7 @@ const AboutUs = () => {
                   showingTranslateValue(ab.title) || 'About Us'
                 )}
               </h1>
-              <p className="text-lg lg:text-2xl opacity-90 max-w-3xl mx-auto">
+              <p className="text-lg lg:text-2xl opacity-90 max-w-3xl mx-auto font-noor">
                 {loading ? (
                   <CMSkeleton count={2} height={30} loading={loading} />
                 ) : (
@@ -141,7 +141,7 @@ const AboutUs = () => {
                   showingTranslateValue(storeCustomizationSetting?.about_us?.top_section_title) || "A Trusted Name in Qassim Retail"
                 )}
               </h2>
-              <p className="text-lg text-gray-600 leading-relaxed mb-4">
+              <p className="text-lg text-gray-600 leading-relaxed mb-4 font-noor">
                 {loading ? (
                   <CMSkeleton count={3} height={25} loading={loading} />
                 ) : (
@@ -161,12 +161,12 @@ const AboutUs = () => {
                 const BadgeLine = ({ pill, text }) => (
                   <div className="flex items-center space-x-2 mb-2">
                     {pill && (
-                      <span className="inline-block bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">
+                      <span className="inline-block bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full font-noor">
                         {pill}
                       </span>
                     )}
                     {text && (
-                      <span className="text-sm text-gray-600 font-medium">
+                      <span className="text-sm text-gray-600 font-medium font-noor">
                         {text}
                       </span>
                     )}
@@ -200,7 +200,7 @@ const AboutUs = () => {
                       <span>🥕</span>
                       <span>🍅</span>
                     </div>
-                    <p className="text-lg font-semibold text-emerald-800">Fresh Local Produce</p>
+                    <p className="text-lg font-semibold text-emerald-800 font-noor">Fresh Local Produce</p>
                   </div>
                 )}
               </div>
@@ -218,7 +218,7 @@ const AboutUs = () => {
                 <h2 className="text-4xl font-bold text-emerald-800 mb-8 font-noor">
                   {showingTranslateValue(storeCustomizationSetting?.about_us?.heritage_title) || "Our Heritage & Vision"}
               </h2>
-                <div className="space-y-6 text-gray-700 leading-relaxed">
+                <div className="space-y-6 text-gray-700 leading-relaxed font-noor">
                   <p>
                     {showingTranslateValue(storeCustomizationSetting?.about_us?.heritage_description_one) || 
                       "SAPT Markets is proudly part of the Al-Muhaysini Holding family, a trusted name in the Qassim region with deep roots in our community. Our journey began with a simple vision: to provide families with convenient access to quality products at competitive prices."}
@@ -261,7 +261,7 @@ const AboutUs = () => {
 
             {/* Optional short description placed above card container */}
             {hasContent(storeCustomizationSetting?.about_us?.team_description) && (
-              <p className="text-center text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="text-center text-lg text-gray-600 mb-8 max-w-3xl mx-auto font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.team_description)}
               </p>
             )}
@@ -352,7 +352,7 @@ const AboutUs = () => {
                             showingTranslateValue(founderName)
                           )}
                         </h3>
-                        <div className="text-emerald-600 font-semibold text-xs md:text-sm">
+                        <div className="text-emerald-600 font-semibold text-xs md:text-sm font-noor">
                           {loading ? (
                             <CMSkeleton count={1} height={20} loading={loading} />
                           ) : (
@@ -379,7 +379,7 @@ const AboutUs = () => {
               <h2 className="text-4xl font-bold text-emerald-800 mb-6 font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.values_title) || "Our Core Values"}
             </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.values_description) || 
                   "These fundamental principles guide every decision we make and every interaction we have with our customers and community."}
               </p>
@@ -444,7 +444,7 @@ const AboutUs = () => {
                     <h3 className="text-xl font-bold text-emerald-800 mb-4 font-noor">
                       {showingTranslateValue(value.title)}
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 font-noor">
                       {showingTranslateValue(value.description)}
                     </p>
                   </div>
@@ -466,7 +466,7 @@ const AboutUs = () => {
               <h2 className="text-4xl font-bold text-emerald-800 mb-6 font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.branches_title) || "Our Locations"}
             </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-noor">
                 {showingTranslateValue(storeCustomizationSetting?.about_us?.branches_description) || 
                   "Visit any of our convenient locations throughout Buraidah. Each store is designed to provide you with a comfortable and efficient shopping experience."}
             </p>
@@ -547,7 +547,7 @@ const AboutUs = () => {
                             {name}
                 </h3>
                           {subtitle && (
-                            <span className="text-sm font-medium text-emerald-600">
+                            <span className="text-sm font-medium text-emerald-600 font-noor">
                               {subtitle}
                             </span>
                           )}
@@ -557,31 +557,31 @@ const AboutUs = () => {
                       {/* Address & Hours */}
                       <div className="space-y-2 text-sm mb-4">
                         {address && (
-                          <p className="flex items-center text-emerald-800 font-medium">
+                          <p className="flex items-center text-emerald-800 font-medium font-noor">
                             <LocationMarkerIcon className="w-4 h-4 mr-1" /> {address}
                           </p>
                         )}
                         {hours && (
-                          <p className="flex items-center text-emerald-600">
+                          <p className="flex items-center text-emerald-600 font-noor">
                             <ClockIcon className="w-4 h-4 mr-1" /> {hours}
                           </p>
                         )}
                         {phone && (
-                          <p className="text-gray-600">📞 {phone}</p>
+                          <p className="text-gray-600 font-noor">📞 {phone}</p>
                         )}
                       </div>
 
                       {/* Services */}
                       {services.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="font-semibold text-emerald-800 text-sm mb-1">
+                          <h4 className="font-semibold text-emerald-800 text-sm mb-1 font-noor">
                             Available Services:
                           </h4>
                           <div className="flex flex-wrap gap-2">
                             {services.map((svc, i) => (
                               <span
                                 key={i}
-                                className="bg-white border border-emerald-200 text-emerald-700 text-xs px-2 py-0.5 rounded-full"
+                                className="bg-white border border-emerald-200 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-noor"
                               >
                                 {svc}
                               </span>
@@ -596,7 +596,7 @@ const AboutUs = () => {
                           href={directions}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block w-full text-center bg-gradient-to-r from-emerald-500 to-emerald-700 text-white py-2 rounded-lg font-semibold hover:shadow-md hover:scale-[1.02] transition-transform"
+                          className="block w-full text-center bg-gradient-to-r from-emerald-500 to-emerald-700 text-white py-2 rounded-lg font-semibold hover:shadow-md hover:scale-[1.02] transition-transform font-noor"
                         >
                           {lang === 'ar' ? 'عرض الاتجاهات' : 'View Directions'}
                         </a>
@@ -616,14 +616,14 @@ const AboutUs = () => {
                 showingTranslateValue(storeCustomizationSetting?.about_us?.branches_cta_title) || "Can't Find Us?"
               )}
             </h3>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 font-noor">
               {loading ? (
                 <CMSkeleton count={1} height={22} loading={loading} />
               ) : (
                 showingTranslateValue(storeCustomizationSetting?.about_us?.branches_cta_description) || "We're expanding! New locations opening soon."
               )}
             </p>
-            <button className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all">
+            <button className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all font-noor">
               {lang === 'ar' ? 'احصل على الاتجاهات' : 'Get Directions'}
             </button>
           </div>
@@ -672,7 +672,7 @@ const AboutUs = () => {
                           <div key={idx} className="relative bg-amber-50/60 border border-amber-100 p-8 rounded-2xl shadow hover:shadow-lg transition-all">
                             {/* Quarter badge */}
                             {quarter && (
-                              <span className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                              <span className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full font-noor">
                                 {quarter}
                               </span>
                             )}
@@ -682,7 +682,7 @@ const AboutUs = () => {
                               <span className="text-4xl">{emoji}</span>
                               <div>
                                 <h3 className="text-xl font-bold text-amber-900 font-noor">{name}</h3>
-                                <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded mt-1">
+                                <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded mt-1 font-noor">
                                   {lang === 'ar' ? 'قريباً' : 'Coming Soon'}
                                 </span>
                               </div>
@@ -690,7 +690,7 @@ const AboutUs = () => {
 
                             {/* Address */}
                             {address && (
-                              <p className="flex items-center text-amber-900 font-medium mb-4 text-sm">
+                              <p className="flex items-center text-amber-900 font-medium mb-4 text-sm font-noor">
                                 <LocationMarkerIcon className="w-4 h-4 mr-1" /> {address}
                               </p>
                             )}
@@ -698,18 +698,18 @@ const AboutUs = () => {
                             {/* Planned features */}
                             {features.length > 0 && (
                               <div className="mb-6">
-                                <h4 className="font-semibold text-amber-900 text-sm mb-2">
+                                <h4 className="font-semibold text-amber-900 text-sm mb-2 font-noor">
                                   {lang === 'ar' ? 'الميزات المخططة:' : 'Planned Features:'}
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
                                   {features.map((ft,i)=>(
-                                    <span key={i} className="bg-white border border-amber-300 text-amber-700 text-xs px-2 py-0.5 rounded-full">{ft}</span>
+                                    <span key={i} className="bg-white border border-amber-300 text-amber-700 text-xs px-2 py-0.5 rounded-full font-noor">{ft}</span>
                                   ))}
                                 </div>
                               </div>
                             )}
 
-                            <button className="block w-full text-center border border-amber-300 text-amber-700 py-2 rounded-lg font-semibold hover:bg-amber-100 transition-colors text-sm">
+                            <button className="block w-full text-center border border-amber-300 text-amber-700 py-2 rounded-lg font-semibold hover:bg-amber-100 transition-colors text-sm font-noor">
                               {lang === 'ar' ? 'احصل على إشعار' : 'Get Notified'}
                             </button>
                           </div>
