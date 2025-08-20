@@ -144,14 +144,14 @@ const PrivacyPolicy = () => {
           {/* ribbons */}
           <div className="grid md:grid-cols-3 gap-4 mb-6 text-sm font-medium">
             <div className="col-span-1 flex items-center space-x-2 px-4 py-2 rounded-md text-indigo-900" style={{ background: brandColor + "1A" }}>
-              <span className="font-semibold">Effective Date:</span>
+              <span className="font-semibold">{getEn(pp.effective_date_label)}</span>
               <span>{getEn(pp.effective_date)}</span>
             </div>
             <div className="col-span-1 md:col-span-1 flex items-center justify-center px-4 py-2 rounded-md text-indigo-900 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
               {getEn(pp.tagline)}
             </div>
             <div className="col-span-1 flex items-center space-x-2 px-4 py-2 rounded-md text-indigo-900 md:justify-end" style={{ background: brandColor + "1A" }}>
-              <span className="font-semibold">Last Updated:</span>
+              <span className="font-semibold">{getEn(pp.last_updated_label)}</span>
               <span>{getEn(pp.last_updated)}</span>
             </div>
           </div>

@@ -130,11 +130,11 @@ const TermsAndConditions = () => {
           {/* ribbons */}
           <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
             <div className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-emerald-900" style={{ background: brandColor + "1A" }}>
-              <span className="font-semibold">Effective Date:</span>
+              <span className="font-semibold">{getEn(tc.effective_date_label)}</span>
               <span>{getEn(tc.effective_date)}</span>
             </div>
             <div className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-emerald-900" style={{ background: brandColor + "1A" }}>
-              <span className="font-semibold">Last Updated:</span>
+              <span className="font-semibold">{getEn(tc.last_updated_label)}</span>
               <span>{getEn(tc.last_updated)}</span>
             </div>
           </div>
