@@ -35,7 +35,7 @@ const Faq = () => {
             <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-10">
               <div className="text-center max-w-4xl mx-auto">
                 <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                  {showingTranslateValue(faq.title) || "Frequently Asked Questions"}
+                  الأسئلة الشائعة
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
                   ابحث عن إجابات للأسئلة الشائعة حول منتجاتنا وخدماتنا.
@@ -132,14 +132,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_one)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_one) || "كيف أطلب منتجات من موقع أسواق سبت؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_one)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_one) || "يمكنك طلب المنتجات بسهولة من خلال تصفح فئات المنتجات، إضافة المنتجات المطلوبة إلى سلة التسوق، ثم إكمال عملية الدفع."}
                     </Disclosure.Panel>
                     </div>
                 )}
@@ -151,14 +151,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_two)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_two) || "ما هي أوقات التوصيل المتاحة؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_two)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_two) || "نقدم خدمة التوصيل على مدار الساعة طوال أيام الأسبوع. يمكنك اختيار الوقت المناسب لك عند إتمام الطلب."}
                     </Disclosure.Panel>
                     </div>
                 )}
@@ -170,14 +170,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_three)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_three) || "هل يمكنني إلغاء الطلب بعد تقديمه؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_three)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_three) || "نعم، يمكنك إلغاء الطلب خلال ساعة من تقديمه. بعد ذلك، قد يتم تطبيق رسوم إلغاء حسب سياساتنا."}
                     </Disclosure.Panel>
                     </div>
                 )}
@@ -189,14 +189,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_four)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_four) || "ما هي طرق الدفع المتاحة؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_four)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_four) || "نقبل جميع طرق الدفع الرئيسية: البطاقات الائتمانية، الدفع عند الاستلام، والدفع الإلكتروني عبر منصات آمنة."}
                     </Disclosure.Panel>
                     </div>
                 )}
@@ -208,14 +208,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_five)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_five) || "هل تقدمون خدمة التوصيل المجاني؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_five)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_five) || "نعم، نقدم التوصيل المجاني للطلبات التي تزيد قيمتها عن 200 ريال. للطلبات الأقل، تبلغ رسوم التوصيل 15 ريال."}
                     </Disclosure.Panel>
                     </div>
                 )}
@@ -227,14 +227,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_six)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_six) || "كيف يمكنني تتبع طلبي؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_six)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_six) || "يمكنك تتبع طلبك من خلال حسابك الشخصي أو عبر الرابط المرسل إليك في رسالة تأكيد الطلب."}
                     </Disclosure.Panel>
                     </div>
                 )}
@@ -246,14 +246,14 @@ const Faq = () => {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                       <Disclosure.Button className="flex justify-between w-full px-6 py-4 text-left text-gray-900 hover:bg-gray-50 rounded-2xl focus:outline-none">
                         <span className="font-medium text-base">
-                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_seven)}
+                          {showingTranslateValue(storeCustomizationSetting?.faq?.faq_seven) || "ما هي سياسة الاسترجاع والاستبدال؟"}
                       </span>
                       <ChevronUpIcon
                           className={`${open ? "transform rotate-180 text-purple-600" : "text-gray-500"} w-5 h-5 transition-transform`}
                       />
                     </Disclosure.Button>
                       <Disclosure.Panel className="px-6 pb-4 text-gray-600 leading-relaxed">
-                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_seven)}
+                        {showingTranslateValue(storeCustomizationSetting?.faq?.description_seven) || "يمكنك إرجاع أو استبدال المنتجات خلال 7 أيام من الاستلام إذا كانت بحالتها الأصلية وفي العبوة الأصلية."}
                     </Disclosure.Panel>
                     </div>
                 )}
