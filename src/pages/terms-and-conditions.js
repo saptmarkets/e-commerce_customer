@@ -14,12 +14,21 @@ import {
 // internal
 import Layout from "@layout/Layout";
 import useGetSetting from "@hooks/useGetSetting";
-import CMSkeleton from "@components/preloader/CMSkeleton";
-import useUtilsFunction from "@hooks/useUtilsFunction";
 
 const SectionBox = ({ children, className = "" }) => (
   <div className={`bg-white rounded-2xl shadow p-6 md:p-8 ${className}`}>{children}</div>
 );
+
+// Always show English content helper
+const getEn = (value) => {
+  if (value && typeof value === "object" && Object.prototype.hasOwnProperty.call(value, "en")) {
+    return value.en || "";
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  return "";
+};
 
 const icons = [
   ShieldCheckIcon,
@@ -63,18 +72,17 @@ const words = [
 
 const TermsAndConditions = () => {
   const { storeCustomizationSetting, loading } = useGetSetting();
-  const { showingTranslateValue } = useUtilsFunction();
   const tc = storeCustomizationSetting?.term_and_condition || {};
 
   const sections = useMemo(() => {
     return words
       .map((w, i) => {
-        const title = showingTranslateValue(tc[`section_${w}_title`]);
-        const body = showingTranslateValue(tc[`section_${w}_body`]);
+        const title = getEn(tc[`section_${w}_title`]);
+        const body = getEn(tc[`section_${w}_body`]);
         return title ? { title, body, idx: i } : null;
       })
       .filter(Boolean);
-  }, [tc, showingTranslateValue]);
+  }, [tc]);
 
   const brandColor =
     storeCustomizationSetting?.brand_color ||
@@ -106,10 +114,10 @@ const TermsAndConditions = () => {
             )}
             <div className="relative">
               <h1 className="text-4xl md:text-6xl font-bold text-emerald-900 mb-4">
-                {showingTranslateValue(tc.title) || "Terms & Conditions"}
+                {getEn(tc.title) || "Terms & Conditions"}
               </h1>
               <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                {showingTranslateValue(tc.subtitle) || "SAPT Markets – Legal Information"}
+                {getEn(tc.subtitle) || "SAPT Markets – Legal Information"}
               </p>
             </div>
           </div>
@@ -123,11 +131,11 @@ const TermsAndConditions = () => {
           <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
             <div className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-emerald-900" style={{ background: brandColor + "1A" }}>
               <span className="font-semibold">Effective Date:</span>
-              <span>{showingTranslateValue(tc.effective_date) || "—"}</span>
+              <span>{getEn(tc.effective_date) || "—"}</span>
             </div>
             <div className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-emerald-900" style={{ background: brandColor + "1A" }}>
               <span className="font-semibold">Last Updated:</span>
-              <span>{showingTranslateValue(tc.last_updated) || "—"}</span>
+              <span>{getEn(tc.last_updated) || "—"}</span>
             </div>
           </div>
 
@@ -151,26 +159,26 @@ const TermsAndConditions = () => {
           </div>
 
           {/* rich description */}
-          {showingTranslateValue(tc.description) && (
-            <div className="prose max-w-none mt-10" dangerouslySetInnerHTML={{ __html: showingTranslateValue(tc.description) }} />
+          {getEn(tc.description) && (
+            <div className="prose max-w-none mt-10" dangerouslySetInnerHTML={{ __html: getEn(tc.description) }} />
           )}
         </SectionBox>
 
         {/* CTA */}
-        {(showingTranslateValue(tc.cta_title) || showingTranslateValue(tc.cta_desc)) && (
+        {(getEn(tc.cta_title) || getEn(tc.cta_desc)) && (
           <div className="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-3xl p-10 md:p-14 mt-16 text-center max-w-screen-2xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              {showingTranslateValue(tc.cta_title) || "Questions About Our Terms?"}
+              {getEn(tc.cta_title) || "Questions About Our Terms?"}
             </h3>
             <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto">
-              {showingTranslateValue(tc.cta_desc) || "Our team is here to help clarify any concerns you may have."}
+              {getEn(tc.cta_desc) || "Our team is here to help clarify any concerns you may have."}
             </p>
-            {showingTranslateValue(tc.cta_btn_text) && (
+            {getEn(tc.cta_btn_text) && (
               <a
-                href={showingTranslateValue(tc.cta_btn_link) || "#"}
+                href={getEn(tc.cta_btn_link) || "#"}
                 className="inline-block bg-white text-emerald-800 font-semibold px-10 py-4 rounded-xl shadow hover:shadow-lg transition"
               >
-                {showingTranslateValue(tc.cta_btn_text)}
+                {getEn(tc.cta_btn_text)}
               </a>
             )}
           </div>
