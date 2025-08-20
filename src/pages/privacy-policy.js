@@ -128,10 +128,10 @@ const PrivacyPolicy = () => {
               <div className="absolute inset-0 bg-white/60 backdrop-brightness-95"></div>
             )}
             <div className="relative">
-              <h1 className="text-4xl md:text-6xl font-bold text-indigo-900 mb-4">
+              <h1 className="text-4xl md:text-6xl font-bold text-indigo-900 mb-4 font-noor">
                 {getEn(pp.title)}
               </h1>
-              <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-700 max-w-2xl mx-auto font-noor">
                 {getEn(pp.subtitle)}
               </p>
             </div>
@@ -178,18 +178,18 @@ const PrivacyPolicy = () => {
           {/* rights badge section */}
           {rights.length > 0 && (
             <div className="bg-gradient-to-br from-sky-50 to-indigo-50 border border-indigo-100 rounded-2xl p-8 mt-12">
-              <h3 className="text-xl md:text-2xl font-bold text-indigo-800 text-center mb-6">
+              <h3 className="text-xl md:text-2xl font-bold text-indigo-800 text-center mb-6 font-noor">
                 {getEn(pp.rights_title)}
               </h3>
-              <p className="text-center text-gray-600 mb-8 max-w-xl mx-auto">
+              <p className="text-center text-gray-600 mb-8 max-w-xl mx-auto font-noor">
                 {getEn(pp.rights_desc)}
               </p>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {rights.map((r, i) => (
                   <div key={i} className="bg-white rounded-xl border border-gray-200 flex flex-col items-center justify-center py-6 text-center shadow-sm">
                     <span className="text-3xl mb-2">{r.emoji || "🛡️"}</span>
-                    <h4 className="font-semibold text-indigo-800">{r.name}</h4>
-                    <p className="text-gray-500 text-xs mt-1 max-w-[200px]">{r.desc}</p>
+                    <h4 className="font-semibold text-indigo-800 font-noor">{r.name}</h4>
+                    <p className="text-gray-500 text-xs mt-1 max-w-[200px] font-noor">{r.desc}</p>
                   </div>
                 ))}
               </div>
@@ -205,10 +205,10 @@ const PrivacyPolicy = () => {
         {/* CTA */}
         {(getEn(pp.cta_title) || getEn(pp.cta_desc)) && (
           <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-3xl p-10 md:p-14 mt-16 text-center max-w-screen-2xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 font-noor">
               {getEn(pp.cta_title)}
             </h3>
-            <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto font-noor">
               {getEn(pp.cta_desc)}
             </p>
             {getEn(pp.cta_btn_text) && (

@@ -113,10 +113,10 @@ const TermsAndConditions = () => {
               <div className="absolute inset-0 bg-white/60 backdrop-brightness-95"></div>
             )}
             <div className="relative">
-              <h1 className="text-4xl md:text-6xl font-bold text-emerald-900 mb-4">
+              <h1 className="text-4xl md:text-6xl font-bold text-emerald-900 mb-4 font-noor">
                 {getEn(tc.title)}
               </h1>
-              <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-700 max-w-2xl mx-auto font-noor">
                 {getEn(tc.subtitle)}
               </p>
             </div>
@@ -167,10 +167,10 @@ const TermsAndConditions = () => {
         {/* CTA */}
         {(getEn(tc.cta_title) || getEn(tc.cta_desc)) && (
           <div className="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-3xl p-10 md:p-14 mt-16 text-center max-w-screen-2xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 font-noor">
               {getEn(tc.cta_title)}
             </h3>
-            <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto font-noor">
               {getEn(tc.cta_desc)}
             </p>
             {getEn(tc.cta_btn_text) && (
