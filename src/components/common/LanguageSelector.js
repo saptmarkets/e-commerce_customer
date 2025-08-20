@@ -67,7 +67,7 @@ const LanguageSelector = ({ iconOnly = false }) => {
   // For iconOnly mode, directly toggle between languages
   const handleIconClick = () => {
     // Always directly switch languages (both mobile and desktop)
-    handleLanguageChange(otherLanguage);
+      handleLanguageChange(otherLanguage);
   };
   
   return (
