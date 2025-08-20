@@ -1,5 +1,12 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FiMail, FiArrowLeft, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+
+//internal import
+import CustomerServices from '@services/CustomerServices';
 
 const EmailVerification = () => {
   const router = useRouter();
@@ -49,20 +56,12 @@ const EmailVerification = () => {
     setMessage('');
     
     try {
-      const response = await fetch('/api/customer/verify-email-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: registrationData.email,
-          code: verificationCode,
-        }),
+      const response = await CustomerServices.verifyEmailCode({
+        email: registrationData.email,
+        code: verificationCode,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.success) {
         setMessage('Account created successfully! You can now login.');
         // Clear session storage
         sessionStorage.removeItem('emailRegistrationData');
@@ -71,7 +70,7 @@ const EmailVerification = () => {
           router.replace('/auth/login');
         }, 2000);
       } else {
-        setMessage(data.message || 'Verification failed!');
+        setMessage(response.message || 'Verification failed!');
       }
     } catch (error) {
       console.error('Verification error:', error);
@@ -91,24 +90,16 @@ const EmailVerification = () => {
     setMessage('');
     
     try {
-      const response = await fetch('/api/customer/verify-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: registrationData.name,
-          email: registrationData.email,
-          password: registrationData.password,
-        }),
+      const response = await CustomerServices.verifyEmailAddress({
+        name: registrationData.name,
+        email: registrationData.email,
+        password: registrationData.password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.success) {
         setMessage('Verification code resent to your email!');
       } else {
-        setMessage(data.message || 'Failed to resend code!');
+        setMessage(response.message || 'Failed to resend code!');
       }
     } catch (error) {
       console.error('Resend error:', error);

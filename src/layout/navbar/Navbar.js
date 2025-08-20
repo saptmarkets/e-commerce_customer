@@ -26,9 +26,7 @@ import { useNotificationTranslation } from "@utils/notificationTranslator";
 const Navbar = () => {
   const { t, lang } = useTranslation("common");
   const [searchText, setSearchText] = useState("");
-  const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+  const [searchValue, setSearchValue] = useState(searchText);
   const { toggleCartDrawer } = useContext(SidebarContext);
   const { totalItems } = useCart();
   const router = useRouter();
@@ -41,7 +39,6 @@ const Navbar = () => {
   const { translateNotificationMessage } = useNotificationTranslation();
 
   const [imageUrl, setImageUrl] = useState("");
-  const [searchValue, setSearchValue] = useState(searchText);
 
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -58,36 +55,6 @@ const Navbar = () => {
       setSearchText("");
     }
   }, [router.pathname, router.query.query]);
-
-  // Debounced search for live suggestions
-  useEffect(() => {
-    const delayedSearch = setTimeout(() => {
-      if (searchText.length >= 2) {
-        fetchSearchSuggestions(searchText);
-      } else {
-        setSearchSuggestions([]);
-        setShowSuggestions(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(delayedSearch);
-  }, [searchText]);
-
-  const fetchSearchSuggestions = async (query) => {
-    try {
-      setIsSearching(true);
-      const response = await fetch(`/api/search-suggestions?q=${encodeURIComponent(query)}`);
-      if (response.ok) {
-        const data = await response.json();
-        setSearchSuggestions(data.suggestions || []);
-        setShowSuggestions(true);
-      }
-    } catch (error) {
-      console.error('Error fetching search suggestions:', error);
-    } finally {
-      setIsSearching(false);
-    }
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -224,8 +191,6 @@ const Navbar = () => {
                   <div className="relative flex items-center">
                     <input
                       onChange={handleSearchChange}
-                      onFocus={() => searchSuggestions.length > 0 && setShowSuggestions(true)}
-                      onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                       value={searchValue}
                       className="w-full input-responsive pl-3 sm:pl-6 pr-3 sm:pr-14 text-gray-700 placeholder-gray-400 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-400 focus:bg-white transition-all duration-300 text-responsive-sm font-medium h-8 sm:h-12 max-w-[140px] xs:max-w-[180px] sm:max-w-none focus:max-w-[180px] xs:focus:max-w-[220px] sm:focus:max-w-none ease-in-out"
                       placeholder={window.innerWidth < 640 ? t("common:Top-Search") : t("common:search-placeholder")}
@@ -239,28 +204,6 @@ const Navbar = () => {
                     </button>
                   </div>
                 </form>
-
-                {/* Enhanced Search Suggestions */}
-                {showSuggestions && searchSuggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl z-50 mt-2 max-h-48 sm:max-h-64 overflow-y-auto">
-                    <div className="p-2">
-                      {searchSuggestions.map((suggestion, index) => (
-                        <div
-                          key={index}
-                          onClick={() => {
-                            setSearchValue(suggestion);
-                            setShowSuggestions(false);
-                            router.push(`/search?query=${encodeURIComponent(suggestion)}`);
-                          }}
-                          className="flex items-center px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors text-responsive-sm text-gray-700 border-b border-gray-100 last:border-b-0 touch-target"
-                        >
-                          <IoSearchOutline className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 mr-2 sm:mr-3" />
-                          {suggestion}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
