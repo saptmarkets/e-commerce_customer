@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 
 const LanguageSelector = ({ iconOnly = false }) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   
   // Language configurations with native script names
@@ -63,53 +62,27 @@ const LanguageSelector = ({ iconOnly = false }) => {
     
     // Reload the page with the new language
     router.push(router.asPath, router.asPath, { locale: lang.code });
-    
-    // Close the dropdown
-    setIsOpen(false);
   };
 
   // For iconOnly mode, directly toggle between languages
   const handleIconClick = () => {
-    if (iconOnly) {
-      handleLanguageChange(otherLanguage);
-    } else {
-      setIsOpen(!isOpen);
-    }
+    // Always directly switch languages (both mobile and desktop)
+    handleLanguageChange(otherLanguage);
   };
   
   return (
     <div className="relative">
       <button 
-        className={`flex items-center justify-center text-gray-600 hover:text-purple-600 focus:outline-none transition-all duration-200 ${
-          iconOnly 
-            ? 'p-1.5 text-gray-600 hover:text-purple-600 transition-all duration-200 rounded-xl hover:bg-gray-50 group touch-target flex items-center justify-center' 
-            : 'text-sm font-medium hover:bg-gray-50 px-2 py-1.5 rounded-lg'
-        }`}
+        className="flex items-center justify-center text-gray-600 hover:text-purple-600 focus:outline-none transition-all duration-200 p-1.5 text-gray-600 hover:text-purple-600 transition-all duration-200 rounded-xl hover:bg-gray-50 group touch-target flex items-center justify-center"
         onClick={handleIconClick}
       >
         {/* Always show the other language name */}
-        <span className={`font-medium ${iconOnly ? 'text-xs' : 'text-sm'}`}>
+        <span className="font-medium text-xs">
           {otherLanguage.nativeName}
         </span>
       </button>
       
-      {!iconOnly && isOpen && (
-        <div className="absolute right-0 mt-2 py-2 w-36 bg-white rounded-xl shadow-lg z-50 border border-gray-100">
-          {languages.map((language) => (
-            <button
-              key={language.code}
-              className={`flex items-center w-full px-4 py-2 text-sm transition-colors ${
-                selectedLanguage === language.code
-                  ? 'bg-purple-50 text-purple-600 font-medium'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-purple-600'
-              }`}
-              onClick={() => handleLanguageChange(language)}
-            >
-              <span>{language.nativeName}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      {/* The dropdown div is removed as per the edit hint */}
     </div>
   );
 };
