@@ -18,7 +18,7 @@ const useGetSetting = () => {
     gcTime: 15 * 60 * 1000,
   });
 
-  // Fetch base store customization
+  // Fetch store customization
   const {
     data: baseCustomization,
     error: baseError,
@@ -35,39 +35,17 @@ const useGetSetting = () => {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
-  // Fetch About Us from new collection
-  const {
-    data: aboutUsData,
-    error: aboutUsError,
-    isFetched: aboutUsFetched,
-  } = useQuery({
-    queryKey: ["aboutUs"],
-    queryFn: async () => await SettingServices.getAboutUs(),
-    enabled: !!baseCustomization, // fetch after base is available
-    staleTime: 2 * 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-  });
-
   // Debug errors if any
   useEffect(() => {
     if (baseError) {
-      console.error("🚨 API Error (base customization):", baseError);
+      console.error("🚨 API Error (store customization):", baseError);
     }
-    if (aboutUsError) {
-      console.error("🚨 API Error (About Us):", aboutUsError);
-    }
-  }, [baseError, aboutUsError]);
+  }, [baseError]);
 
-  // Merge logic: put about_us from dedicated collection into the base structure
+  // Set store customization data
   useEffect(() => {
     if (baseFetched && baseCustomization) {
-      const merged = {
-        ...baseCustomization,
-        about_us: aboutUsFetched && aboutUsData ? aboutUsData : baseCustomization?.about_us,
-      };
-      setStoreCustomizationSetting(merged);
+      setStoreCustomizationSetting(baseCustomization);
     }
 
     if (!lang) {
@@ -76,11 +54,11 @@ const useGetSetting = () => {
         secure: true,
       });
     }
-  }, [baseCustomization, baseFetched, aboutUsFetched, aboutUsData, lang]);
+  }, [baseCustomization, baseFetched, lang]);
 
   return {
     lang,
-    error: baseError || aboutUsError,
+    error: baseError,
     loading,
     globalSetting,
     storeCustomizationSetting,
