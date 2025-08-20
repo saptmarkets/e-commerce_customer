@@ -157,13 +157,13 @@ const ContactUs = () => {
             {/* Left Side - Image and Info */}
             <div className="flex flex-col">
               <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-3xl p-8 h-full flex items-center justify-center">
-                <div className="max-w-md mx-auto">
+                <div className="w-full h-full flex items-center justify-center">
                   <Image
                     width={400}
                     height={400}
                     src={storeCustomizationSetting?.contact_us?.left_col_img || "/contact-us.png"}
                     alt="Contact Us Illustration"
-                    className="w-full h-auto"
+                    className="w-full h-full object-cover rounded-2xl"
                   />
                 </div>
               </div>
