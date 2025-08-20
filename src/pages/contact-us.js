@@ -122,7 +122,9 @@ const ContactUs = () => {
                   className="inline-flex items-center text-green-600 font-semibold hover:text-green-700 transition-colors"
                 >
                   <FiPhone className="w-4 h-4 mr-2" />
-                  {showingTranslateValue(storeCustomizationSetting?.contact_us?.call_box_phone)}
+                  <span dir="ltr" className="inline-block">
+                    {showingTranslateValue(storeCustomizationSetting?.contact_us?.call_box_phone)}
+                  </span>
                 </a>
               </div>
             )}

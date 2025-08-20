@@ -227,7 +227,7 @@ const NavbarPromo = () => {
                   className="flex items-center space-x-2 hover:text-emerald-600 transition-colors"
                 >
                   <FiPhoneIncoming className="w-4 h-4" />
-                  <span>{t("common:Call Us")}: {storeCustomizationSetting?.navbar?.call_us_phone}</span>
+                  <span>{t("common:Call Us")}: <span dir="ltr" className="inline-block">{storeCustomizationSetting?.navbar?.call_us_phone}</span></span>
                 </a>
               )}
               

@@ -567,7 +567,7 @@ const AboutUs = () => {
                           </p>
                         )}
                         {phone && (
-                          <p className="text-gray-600 font-noor">📞 {phone}</p>
+                          <p className="text-gray-600 font-noor">📞 <span dir="ltr" className="inline-block">{phone}</span></p>
                         )}
                       </div>
 

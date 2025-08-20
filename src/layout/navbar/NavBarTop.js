@@ -71,8 +71,11 @@ const NavBarTop = () => {
                   href={`tel:${storeCustomizationSetting?.navbar?.phone || "+099949343"}`}
                   className={`font-semibold hover:underline transition-colors ${isRTL ? 'mr-1' : 'ml-1'}`}
                   style={{ color: "#74338c" }}
+                  dir="ltr"
                 >
-                  {storeCustomizationSetting?.navbar?.phone || "+099949343"}
+                  <span dir="ltr" className="inline-block">
+                    {storeCustomizationSetting?.navbar?.phone || "+099949343"}
+                  </span>
                 </a>
               </div>
             </div>
