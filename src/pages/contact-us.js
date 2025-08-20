@@ -161,7 +161,7 @@ const ContactUs = () => {
                   <Image
                     width={400}
                     height={400}
-                    src={storeCustomizationSetting?.contact_us?.midLeftImage || "/contact-us.png"}
+                    src={storeCustomizationSetting?.contact_us?.left_col_img || "/contact-us.png"}
                     alt="Contact Us Illustration"
                     className="w-full h-auto"
                   />
