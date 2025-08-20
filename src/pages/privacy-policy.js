@@ -129,11 +129,10 @@ const PrivacyPolicy = () => {
             )}
             <div className="relative">
               <h1 className="text-4xl md:text-6xl font-bold text-indigo-900 mb-4">
-                {getEn(pp.title) || "Privacy Policy"}
+                {getEn(pp.title)}
               </h1>
               <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                {getEn(pp.subtitle) ||
-                  "SAPT Markets – Data Protection & Privacy"}
+                {getEn(pp.subtitle)}
               </p>
             </div>
           </div>
@@ -146,14 +145,14 @@ const PrivacyPolicy = () => {
           <div className="grid md:grid-cols-3 gap-4 mb-6 text-sm font-medium">
             <div className="col-span-1 flex items-center space-x-2 px-4 py-2 rounded-md text-indigo-900" style={{ background: brandColor + "1A" }}>
               <span className="font-semibold">Effective Date:</span>
-              <span>{getEn(pp.effective_date) || "—"}</span>
+              <span>{getEn(pp.effective_date)}</span>
             </div>
             <div className="col-span-1 md:col-span-1 flex items-center justify-center px-4 py-2 rounded-md text-indigo-900 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-              {getEn(pp.tagline) || "Your privacy is our priority. Learn how we protect and handle your data."}
+              {getEn(pp.tagline)}
             </div>
             <div className="col-span-1 flex items-center space-x-2 px-4 py-2 rounded-md text-indigo-900 md:justify-end" style={{ background: brandColor + "1A" }}>
               <span className="font-semibold">Last Updated:</span>
-              <span>{getEn(pp.last_updated) || "—"}</span>
+              <span>{getEn(pp.last_updated)}</span>
             </div>
           </div>
 
@@ -180,10 +179,10 @@ const PrivacyPolicy = () => {
           {rights.length > 0 && (
             <div className="bg-gradient-to-br from-sky-50 to-indigo-50 border border-indigo-100 rounded-2xl p-8 mt-12">
               <h3 className="text-xl md:text-2xl font-bold text-indigo-800 text-center mb-6">
-                {getEn(pp.rights_title) || "Your Data Rights"}
+                {getEn(pp.rights_title)}
               </h3>
               <p className="text-center text-gray-600 mb-8 max-w-xl mx-auto">
-                {getEn(pp.rights_desc) || "Under Saudi PDPL, you have comprehensive rights over your personal data"}
+                {getEn(pp.rights_desc)}
               </p>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {rights.map((r, i) => (
@@ -207,10 +206,10 @@ const PrivacyPolicy = () => {
         {(getEn(pp.cta_title) || getEn(pp.cta_desc)) && (
           <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-3xl p-10 md:p-14 mt-16 text-center max-w-screen-2xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              {getEn(pp.cta_title) || "Questions About Your Privacy?"}
+              {getEn(pp.cta_title)}
             </h3>
             <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto">
-              {getEn(pp.cta_desc) || "Our privacy team is here to help you understand and exercise your data rights."}
+              {getEn(pp.cta_desc)}
             </p>
             {getEn(pp.cta_btn_text) && (
               <a

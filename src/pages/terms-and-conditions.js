@@ -114,10 +114,10 @@ const TermsAndConditions = () => {
             )}
             <div className="relative">
               <h1 className="text-4xl md:text-6xl font-bold text-emerald-900 mb-4">
-                {getEn(tc.title) || "Terms & Conditions"}
+                {getEn(tc.title)}
               </h1>
               <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                {getEn(tc.subtitle) || "SAPT Markets – Legal Information"}
+                {getEn(tc.subtitle)}
               </p>
             </div>
           </div>
@@ -131,11 +131,11 @@ const TermsAndConditions = () => {
           <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
             <div className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-emerald-900" style={{ background: brandColor + "1A" }}>
               <span className="font-semibold">Effective Date:</span>
-              <span>{getEn(tc.effective_date) || "—"}</span>
+              <span>{getEn(tc.effective_date)}</span>
             </div>
             <div className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-emerald-900" style={{ background: brandColor + "1A" }}>
               <span className="font-semibold">Last Updated:</span>
-              <span>{getEn(tc.last_updated) || "—"}</span>
+              <span>{getEn(tc.last_updated)}</span>
             </div>
           </div>
 
@@ -168,10 +168,10 @@ const TermsAndConditions = () => {
         {(getEn(tc.cta_title) || getEn(tc.cta_desc)) && (
           <div className="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-3xl p-10 md:p-14 mt-16 text-center max-w-screen-2xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              {getEn(tc.cta_title) || "Questions About Our Terms?"}
+              {getEn(tc.cta_title)}
             </h3>
             <p className="text-gray-200 text-lg mb-8 max-w-2xl mx-auto">
-              {getEn(tc.cta_desc) || "Our team is here to help clarify any concerns you may have."}
+              {getEn(tc.cta_desc)}
             </p>
             {getEn(tc.cta_btn_text) && (
               <a
