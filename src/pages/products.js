@@ -43,6 +43,9 @@ const AllProducts = ({ initialProducts, attributes }) => {
         const data = await ProductServices.getShowingStoreProducts({ page: currentPage, limit: productsPerPage });
         // API response received for page
         
+        console.log('Backend API Response:', data);
+        console.log('Backend Response Keys:', Object.keys(data || {}));
+        
         let productsData = [];
         let totalDocCount = 0;
 
@@ -54,7 +57,7 @@ const AllProducts = ({ initialProducts, attributes }) => {
           } else if (Array.isArray(data)) {
             productsData = data;
           }
-          totalDocCount = data.totalDoc || productsData.length;
+          totalDocCount = data.totalProducts || data.totalDoc || productsData.length;
         }
         
         const activePromotions = await PromotionServices.getActivePromotions();
@@ -280,6 +283,8 @@ export const getServerSideProps = async (context) => {
     ]);
     
     // Products API response (SSR) logged
+    console.log('SSR Backend API Response:', productsDataResponse);
+    console.log('SSR Backend Response Keys:', Object.keys(productsDataResponse || {}));
     
     let products = [];
     let totalDoc = 0; // Initialize totalDoc
@@ -292,7 +297,7 @@ export const getServerSideProps = async (context) => {
       } else if (Array.isArray(productsDataResponse)) {
         products = productsDataResponse;
       }
-      totalDoc = productsDataResponse.totalDoc || products.length; // Capture totalDoc from response
+      totalDoc = productsDataResponse.totalProducts || productsDataResponse.totalDoc || products.length; // Capture totalDoc from response
     }
     
     const productsWithPromotions = new Set();
