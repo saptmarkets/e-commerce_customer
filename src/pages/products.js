@@ -43,9 +43,6 @@ const AllProducts = ({ initialProducts, attributes }) => {
         const data = await ProductServices.getShowingStoreProducts({ page: currentPage, limit: productsPerPage });
         // API response received for page
         
-        console.log('Backend API Response:', data);
-        console.log('Backend Response Keys:', Object.keys(data || {}));
-        
         let productsData = [];
         let totalDocCount = 0;
 
@@ -61,7 +58,6 @@ const AllProducts = ({ initialProducts, attributes }) => {
         }
         
         const activePromotions = await PromotionServices.getActivePromotions();
-        console.log("Active promotions:", activePromotions);
         
         const productsWithPromotions = new Set();
         
@@ -78,13 +74,9 @@ const AllProducts = ({ initialProducts, attributes }) => {
           }
         });
         
-        console.log("Products with promotions:", Array.from(productsWithPromotions));
-        
         const regularProducts = productsData.filter(product => 
           !productsWithPromotions.has(product._id)
         );
-        
-        console.log(`Found ${productsData.length} total products, ${regularProducts.length} regular products (excluding ${productsData.length - regularProducts.length} promotional products)`);
         
         setProducts(regularProducts);
         setTotalProducts(totalDocCount);
@@ -116,16 +108,6 @@ const AllProducts = ({ initialProducts, attributes }) => {
   // Calculate pagination based on totalProducts
   const totalPages = Math.ceil(totalProducts / productsPerPage);
   const currentProductsDisplay = products; // products state now holds the current page's products
-
-  // Debug logging for pagination
-  console.log('Pagination Debug:', {
-    totalProducts,
-    productsPerPage,
-    totalPages,
-    currentPage,
-    productsLength: products.length,
-    loading
-  });
 
   return (
     <>
@@ -183,18 +165,6 @@ const AllProducts = ({ initialProducts, attributes }) => {
                 )}
               </div>
             )}
-
-            {/* Debug Section - Remove this after fixing pagination */}
-            <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-              <h3 className="font-semibold mb-2">Debug Info:</h3>
-              <p>Total Products: {totalProducts}</p>
-              <p>Products Per Page: {productsPerPage}</p>
-              <p>Total Pages: {totalPages}</p>
-              <p>Current Page: {currentPage}</p>
-              <p>Current Products: {products.length}</p>
-              <p>Loading: {loading ? 'Yes' : 'No'}</p>
-              <p>Should Show Pagination: {!loading && totalPages > 1 ? 'Yes' : 'No'}</p>
-            </div>
 
             {/* Pagination */}
             {!loading && totalPages > 1 && (
@@ -275,16 +245,11 @@ export const getServerSideProps = async (context) => {
   const page = parseInt(query.page) || 1;
   const limit = 16; // Set to 16 for SSR initial load consistent with frontend
   try {
-    console.log(`Fetching products in getServerSideProps for page ${page}, limit ${limit}`);
     const [productsDataResponse, attributes, activePromotions] = await Promise.all([
       ProductServices.getShowingStoreProducts({ page, limit }), // Pass page and limit here
       AttributeServices.getShowingAttributes(),
       PromotionServices.getActivePromotions(),
     ]);
-    
-    // Products API response (SSR) logged
-    console.log('SSR Backend API Response:', productsDataResponse);
-    console.log('SSR Backend Response Keys:', Object.keys(productsDataResponse || {}));
     
     let products = [];
     let totalDoc = 0; // Initialize totalDoc
@@ -320,8 +285,6 @@ export const getServerSideProps = async (context) => {
     const regularProducts = products.filter(product => 
       !productsWithPromotions.has(product._id)
     );
-    
-    console.log(`Found ${products.length} total products from API, ${regularProducts.length} regular products (SSR)`);
     
     return {
       props: {
