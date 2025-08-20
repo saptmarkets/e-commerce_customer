@@ -46,9 +46,9 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
       case 'footer':
         return {
           container: 'flex',
-          icon: 'w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10',
-          iconSize: 'w-2.5 h-2.5 sm:w-3 h-3 md:w-3.5 h-3.5 lg:w-4 h-4 xl:w-5 xl:h-5',
-          spacing: 'ml-2 sm:ml-3 md:ml-4 lg:ml-5 xl:ml-6',
+          icon: 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8',
+          iconSize: 'w-2 h-2 sm:w-2.5 h-2.5 md:w-3 h-3 lg:w-3.5 h-3.5 xl:w-4 xl:h-4',
+          spacing: 'ml-1.5 sm:ml-2 md:ml-3 lg:ml-4 xl:ml-5',
         };
       default:
         return {
