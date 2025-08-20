@@ -38,13 +38,13 @@ const Faq = () => {
                   {showingTranslateValue(faq.title) || "Frequently Asked Questions"}
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  Find answers to common questions about our products and services.
+                  ابحث عن إجابات للأسئلة الشائعة حول منتجاتنا وخدماتنا.
                 </p>
                 <div className="mt-8 flex items-center justify-center space-x-2 text-gray-500">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-sm font-medium">Updated regularly</span>
+                  <span className="text-sm font-medium">يتم التحديث بانتظام</span>
                 </div>
               </div>
             </div>
@@ -81,8 +81,8 @@ const Faq = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Live Chat Support</h3>
-                      <p className="text-gray-600 text-sm">Available 24/7 for instant help</p>
+                      <h3 className="text-lg font-semibold text-gray-900">الدردشة المباشرة</h3>
+                      <p className="text-gray-600 text-sm">متاحة 24/7 للمساعدة الفورية</p>
                     </div>
                   </div>
                 </div>
@@ -95,8 +95,8 @@ const Faq = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Email Support</h3>
-                      <p className="text-gray-600 text-sm">We'll respond within 24 hours</p>
+                      <h3 className="text-lg font-semibold text-gray-900">الدعم عبر البريد الإلكتروني</h3>
+                      <p className="text-gray-600 text-sm">سنرد خلال 24 ساعة</p>
                     </div>
                   </div>
                 </div>
@@ -109,8 +109,8 @@ const Faq = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Help Center</h3>
-                      <p className="text-gray-600 text-sm">Comprehensive guides and tutorials</p>
+                      <h3 className="text-lg font-semibold text-gray-900">مركز المساعدة</h3>
+                      <p className="text-gray-600 text-sm">أدلة شاملة ودروس تعليمية</p>
                     </div>
                   </div>
                 </div>
@@ -120,8 +120,8 @@ const Faq = () => {
             {/* Right Side - FAQ Accordion */}
             <div className="space-y-4">
               <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Common Questions</h2>
-                <p className="text-gray-600">Can't find what you're looking for? Contact our support team.</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">الأسئلة الشائعة</h2>
+                <p className="text-gray-600">لا تجد ما تبحث عنه؟ اتصل بفريق الدعم لدينا.</p>
               </div>
 
               {/* FAQ Items */}
@@ -265,10 +265,10 @@ const Faq = () => {
           {/* Contact Support CTA */}
           <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-8 lg:p-12 mt-16 text-center">
             <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-              Still Need Help?
+              هل ما زلت تحتاج المساعدة؟
             </h3>
             <p className="text-purple-100 text-lg mb-8 max-w-2xl mx-auto">
-              Our support team is here to help you with any questions or concerns you may have.
+              فريق الدعم لدينا هنا لمساعدتك في أي أسئلة أو استفسارات قد تكون لديك.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
@@ -278,7 +278,7 @@ const Faq = () => {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                Contact Support
+                اتصل بالدعم
               </a>
               <a
                 href="/chat"
@@ -287,7 +287,7 @@ const Faq = () => {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                Live Chat
+                الدردشة المباشرة
               </a>
             </div>
           </div>

@@ -201,7 +201,7 @@ const Footer = () => {
       <div className="border-t border-gray-700 w-full">
         <div className="mx-auto max-w-screen-2xl px-3 sm:px-4 md:px-6 lg:px-10 flex justify-center py-2 sm:py-3 md:py-4">
           <p className="text-xs sm:text-sm text-gray-400 leading-4 sm:leading-5 md:leading-6">
-            © 2024 <span className="brand-name-arabic">SAPT Markets</span>. {t('allRightsReserved')}.
+            © 2025 <span className="brand-name-arabic">SAPT Markets</span>. {t('allRightsReserved')}.
           </p>
         </div>
       </div>
