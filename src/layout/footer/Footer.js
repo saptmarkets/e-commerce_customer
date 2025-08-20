@@ -26,10 +26,10 @@ const Footer = () => {
   return (
     <div className="pb-16 lg:pb-0 xl:pb-0 bg-gray-800 text-white">
       <div className="mx-auto max-w-screen-2xl px-3 sm:px-4 md:px-6 lg:px-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 xl:grid-cols-12 gap-3 sm:gap-4 md:gap-5 lg:gap-9 xl:gap-7 py-6 sm:py-8 md:py-10 lg:py-16 justify-between">
-          <div className="pb-2 sm:pb-3 md:pb-3.5 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-3">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-7 xl:grid-cols-12 gap-2 sm:gap-4 md:gap-5 lg:gap-9 xl:gap-7 py-4 sm:py-8 md:py-10 lg:py-16 justify-between">
+          <div className="pb-1 sm:pb-3 md:pb-3.5 col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3">
             <Link href="/" className="mr-3 lg:mr-12 xl:mr-12" rel="noreferrer">
-              <div className="relative w-16 h-10 sm:w-18 sm:h-11 md:w-20 md:h-12 mb-1 sm:mb-2">
+              <div className="relative w-14 h-8 sm:w-18 sm:h-11 md:w-20 md:h-12 mb-1 sm:mb-2">
                 <Image
                   width="0"
                   height="0"
@@ -41,16 +41,16 @@ const Footer = () => {
                 />
               </div>
             </Link>
-            <p className="leading-5 sm:leading-6 md:leading-7 font-sans text-xs sm:text-sm mt-2 sm:mt-3 md:mt-4">
+            <p className="leading-4 sm:leading-6 md:leading-7 font-sans text-xs sm:text-sm mt-1 sm:mt-3 md:mt-4">
               {tr('Your go-to supermarket in Qassim for fresh deals every day.','متجرك المفضل في القصيم لصفقات طازجة كل يوم.')}
             </p>
-            <div className="mt-3 sm:mt-4 md:mt-6">
+            <div className="mt-2 sm:mt-4 md:mt-6">
               <SocialLinks variant="footer" />
             </div>
           </div>
 
-          <div className="pb-2 sm:pb-3 md:pb-3.5 col-span-1 md:col-span-1 lg:col-span-2">
-            <h3 className="text-sm sm:text-md lg:leading-7 font-medium mb-2 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
+          <div className="pb-1 sm:pb-3 md:pb-3.5 col-span-1 md:col-span-1 lg:col-span-2">
+            <h3 className="text-xs sm:text-md lg:leading-7 font-medium mb-1 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
               <CMSkeleton
                 count={1}
                 height={20}
@@ -58,7 +58,7 @@ const Footer = () => {
                 data={lang === 'ar' ? 'الشركة' : 'Company'}
               />
             </h3>
-            <ul className="text-xs sm:text-sm flex flex-col space-y-1.5 sm:space-y-2 md:space-y-3">
+            <ul className="text-xs sm:text-sm flex flex-col space-y-1 sm:space-y-2 md:space-y-3">
               <li className="flex items-baseline">
                 <Link
                   href="/about-us"
@@ -94,8 +94,8 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="pb-2 sm:pb-3 md:pb-3.5 col-span-1 md:col-span-1 lg:col-span-2">
-            <h3 className="text-sm sm:text-md lg:leading-7 font-medium mb-2 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
+          <div className="pb-1 sm:pb-3 md:pb-3.5 col-span-1 md:col-span-1 lg:col-span-2">
+            <h3 className="text-xs sm:text-md lg:leading-7 font-medium mb-1 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
               <CMSkeleton
                 count={1}
                 height={20}
@@ -103,7 +103,7 @@ const Footer = () => {
                 data={lang === 'ar' ? 'خدمة العملاء' : 'Customer Service'}
               />
             </h3>
-            <ul className="text-xs sm:text-sm lg:text-15px flex flex-col space-y-1.5 sm:space-y-2 md:space-y-3">
+            <ul className="text-xs sm:text-sm lg:text-15px flex flex-col space-y-1 sm:space-y-2 md:space-y-3">
               <li className="flex items-baseline">
                 <Link
                   href="/help"
@@ -139,8 +139,8 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="pb-2 sm:pb-3 md:pb-3.5 col-span-1 md:col-span-1 lg:col-span-2">
-            <h3 className="text-sm sm:text-md lg:leading-7 font-medium mb-2 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
+          <div className="pb-1 sm:pb-3 md:pb-3.5 col-span-1 md:col-span-1 lg:col-span-2">
+            <h3 className="text-xs sm:text-md lg:leading-7 font-medium mb-1 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
               <CMSkeleton
                 count={1}
                 height={20}
@@ -148,7 +148,7 @@ const Footer = () => {
                 data={lang === 'ar' ? 'روابط سريعة' : 'Quick Links'}
               />
             </h3>
-            <ul className="text-xs sm:text-sm lg:text-15px flex flex-col space-y-1.5 sm:space-y-2 md:space-y-3">
+            <ul className="text-xs sm:text-sm lg:text-15px flex flex-col space-y-1 sm:space-y-2 md:space-y-3">
               <li className="flex items-baseline">
                 <Link
                   href="/user/dashboard"
@@ -184,11 +184,11 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="pb-2 sm:pb-3 md:pb-3.5 col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-3">
-            <h3 className="text-sm sm:text-md lg:leading-7 font-medium mb-2 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
+          <div className="pb-1 sm:pb-3 md:pb-3.5 col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-3">
+            <h3 className="text-xs sm:text-md lg:leading-7 font-medium mb-1 sm:mb-3 md:mb-4 lg:mb-6 pb-0.5">
               {tr('Store Information','معلومات المتجر')}
             </h3>
-            <ul className="text-xs sm:text-sm lg:text-15px flex flex-col space-y-1.5 sm:space-y-2 md:space-y-3 text-gray-300">
+            <ul className="text-xs sm:text-sm lg:text-15px flex flex-col space-y-1 sm:space-y-2 md:space-y-3 text-gray-300">
               {contact.address?.en && <li>{tr('Address','العنوان')}: {contact.address.en}</li>}
               {contact.phone && <li>{tr('Phone','الهاتف')}: {contact.phone}</li>}
               {contact.email && <li>{tr('Email','البريد الإلكتروني')}: {contact.email}</li>}
