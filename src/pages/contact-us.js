@@ -152,27 +152,25 @@ const ContactUs = () => {
           </div>
 
           {/* Contact Form Section */}
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-16 items-stretch">
             
             {/* Left Side - Image and Info */}
-            <div className="space-y-8">
-              <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-3xl p-8">
+            <div className="flex flex-col">
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-3xl p-8 h-full flex items-center justify-center">
                 <div className="max-w-md mx-auto">
                   <Image
                     width={400}
                     height={400}
-                    src={storeCustomizationSetting?.contact_us?.midLeft_col_img || "/contact-us.png"}
+                    src={storeCustomizationSetting?.contact_us?.midLeftImage || "/contact-us.png"}
                     alt="Contact Us Illustration"
                     className="w-full h-auto"
                   />
                 </div>
               </div>
-
-
             </div>
 
             {/* Right Side - Contact Form */}
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 lg:p-12">
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 lg:p-12 flex flex-col justify-center">
               <div className="mb-8">
                 <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
                   <CMSkeleton
