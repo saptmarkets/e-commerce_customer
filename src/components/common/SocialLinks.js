@@ -48,7 +48,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           container: 'flex',
           icon: 'w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
           iconSize: 'w-1.5 h-1.5 sm:w-2 h-2 md:w-2.5 h-2.5 lg:w-3 h-3 xl:w-3.5 xl:h-3.5',
-          spacing: 'ml-1 sm:ml-1.5 md:ml-2 lg:ml-3 xl:ml-4',
+          spacing: 'ml-3 sm:ml-2 md:ml-3 lg:ml-4 xl:ml-5',
         };
       default:
         return {
