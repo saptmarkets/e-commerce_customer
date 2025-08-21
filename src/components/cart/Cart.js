@@ -1,20 +1,21 @@
+import React, { useContext } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext, useMemo } from "react";
+import { useRouter } from "next/router";
 import { IoBagCheckOutline, IoClose } from "react-icons/io5";
 import { useCart } from "react-use-cart";
 import useTranslation from "next-translate/useTranslation";
 
 //internal import
-import CartItem from "@components/cart/CartItem";
-import useUtilsFunction from "@hooks/useUtilsFunction";
+import CartItem from "./CartItem";
 import { SidebarContext } from "@context/SidebarContext";
+import { getUserSession } from "@lib/auth";
+import useUtilsFunction from "@hooks/useUtilsFunction";
 
 const Cart = () => {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const { closeCartDrawer } = useContext(SidebarContext);
-  const { isEmpty, items } = useCart();
+  const { isEmpty, items, cartTotal } = useCart();
   const { currency, lang } = useUtilsFunction();
 
   const formatPrice = (val) => {
@@ -33,29 +34,19 @@ const Cart = () => {
     );
   };
 
-  // Calculate the correct cart total with promotional prices
-  const cartTotal = useMemo(() => {
-    return items.reduce((total, item) => {
-      // If no promotion
-      if (!item.promotion) {
-        return total + ((item.price || 0) * item.quantity);
-      }
-
-      // If within max quantity or no max quantity defined
-      if (item.quantity <= item.maxQty || !item.maxQty) {
-        return total + ((item.price || 0) * item.quantity);
-      } else {
-        // Apply promotional price up to maxQty, then regular price for the rest
-        const promotionSubtotal = (item.price || 0) * item.maxQty;
-        const regularSubtotal = (item.basePrice || 0) * (item.quantity - item.maxQty);
-        return total + promotionSubtotal + regularSubtotal;
-      }
-    }, 0);
-  }, [items]);
-
   const handleCheckout = () => {
     closeCartDrawer();
-    router.push("/checkout");
+    
+    // Check if user is logged in
+    const userInfo = getUserSession();
+    
+    if (!userInfo || !userInfo.token) {
+      // User not logged in, redirect to login with checkout redirect
+      router.push(`/auth/login?redirectUrl=checkout`);
+    } else {
+      // User logged in, go directly to checkout
+      router.push("/checkout");
+    }
   };
 
   return (
@@ -65,7 +56,7 @@ const Cart = () => {
           <span className="text-xl mr-2 mb-1">
             <IoBagCheckOutline />
           </span>
-          {t("common:shoppingCartDrawerTitle")}
+          {t("shoppingCartDrawerTitle")}
         </h2>
         <button
           onClick={closeCartDrawer}
@@ -81,7 +72,7 @@ const Cart = () => {
             <div className="flex flex-col items-center">
               <div className="text-center">
                 <p className="text-gray-500 text-sm">
-                  {t("common:cartEmptyText")}
+                  {t("cartEmptyText")}
                 </p>
               </div>
             </div>
@@ -98,7 +89,7 @@ const Cart = () => {
         {!isEmpty && (
           <div className="flex items-center justify-between">
             <div className="font-medium">
-              <p>{t("common:subtotal")}:</p>
+              <p>{t("subtotal")}:</p>
             </div>
             <div className="font-bold text-lg">{formatPrice(cartTotal)}</div>
           </div>
@@ -110,13 +101,13 @@ const Cart = () => {
                 onClick={handleCheckout}
                 className="w-full py-3 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white focus:outline-none transition-all"
               >
-                {t("common:proceedToCheckoutBtn")}
+                {t("proceedToCheckoutBtn")}
               </button>
             )}
             {isEmpty && (
               <Link href="/">
                 <button className="w-full py-3 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white focus:outline-none transition-all">
-                  {t("common:continueShoppingBtn")}
+                  {t("continueShoppingBtn")}
                 </button>
               </Link>
             )}

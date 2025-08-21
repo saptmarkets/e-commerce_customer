@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { FiLock, FiMail } from "react-icons/fi";
 import useTranslation from "next-translate/useTranslation";
 
@@ -10,11 +10,33 @@ import Error from "@components/form/Error";
 import useLoginSubmit from "@hooks/useLoginSubmit";
 import InputArea from "@components/form/InputArea";
 import BottomNavigation from "@components/login/BottomNavigation";
+import { UserContext } from "@context/UserContext";
+import { getUserSession } from "@lib/auth";
 
 const Login = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const { handleSubmit, submitHandler, register, errors, loading } = useLoginSubmit();
+  const { state } = useContext(UserContext);
+
+  // Check if user is already logged in and redirect accordingly
+  useEffect(() => {
+    const userInfo = getUserSession();
+    
+    if (userInfo && userInfo.token) {
+      // User is already logged in
+      const { redirectUrl } = router.query;
+      
+      if (redirectUrl && redirectUrl !== "undefined") {
+        // Redirect to the intended page
+        const cleanRedirectUrl = redirectUrl.startsWith('/') ? redirectUrl.substring(1) : redirectUrl;
+        router.replace(`/${cleanRedirectUrl}`);
+      } else {
+        // Redirect to home page
+        router.replace("/");
+      }
+    }
+  }, [router, state.userInfo]);
 
   // Handle error from URL
   useEffect(() => {

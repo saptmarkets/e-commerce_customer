@@ -77,12 +77,18 @@ const useLoginSubmit = () => {
               console.log("Redirecting to:", `/${cleanRedirectUrl}`);
               
               // Use router.push instead of replace for more reliable navigation
-              router.push(`/${cleanRedirectUrl}`);
+              // Also add a fallback in case the redirect fails
+              try {
+                router.push(`/${cleanRedirectUrl}`);
+              } catch (error) {
+                console.error("Router redirect failed, using window.location:", error);
+                window.location.href = `/${cleanRedirectUrl}`;
+              }
             } else {
               console.log("No redirect URL, going to home");
               router.push("/");
             }
-          }, 100); // Small delay to ensure context update
+          }, 150); // Increased delay to ensure context update
           
           // Set loading to false after redirect is initiated
           setLoading(false);
