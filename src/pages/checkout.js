@@ -1134,7 +1134,7 @@ const Checkout = () => {
                           </div>
                           <div className="text-xs text-emerald-600">
                             <div className="font-medium mb-1">{tr('Formula: Base + (Distance × Rate)', 'الصيغة: التكلفة الأساسية + (المسافة × السعر')}</div>
-                            <div>{tr('Example:', 'مثال:')} {storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10} SAR + (5 × {storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2} SAR) = {SAR}{(storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10) + (5 * (storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2))}</div>
+                            <div>{tr('Example:', 'مثال:')} {storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10} SAR + (5 × {storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2} SAR) = SAR {(storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10) + (5 * (storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2))}</div>
                         </div>
                       </div>
                       </div>
