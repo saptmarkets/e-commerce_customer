@@ -35,7 +35,9 @@ export async function middleware(request) {
     if (!userInfoCookie || !userInfoCookie.value) {
       const url = new URL('/auth/login', request.url);
       url.searchParams.set('error', 'Please login to continue');
-      url.searchParams.set('redirectUrl', encodeURIComponent(currentPath));
+      // Ensure proper encoding of the redirect URL
+      const cleanPath = currentPath.startsWith('/') ? currentPath : `/${currentPath}`;
+      url.searchParams.set('redirectUrl', cleanPath);
       return NextResponse.redirect(url);
     }
 
@@ -62,7 +64,9 @@ export async function middleware(request) {
       console.error('Authentication error:', e);
       const url = new URL('/auth/login', request.url);
       url.searchParams.set('error', e.message || 'Authentication failed');
-      url.searchParams.set('redirectUrl', encodeURIComponent(currentPath));
+      // Ensure proper encoding of the redirect URL
+      const cleanPath = currentPath.startsWith('/') ? currentPath : `/${currentPath}`;
+      url.searchParams.set('redirectUrl', cleanPath);
       return NextResponse.redirect(url);
     }
   } catch (error) {

@@ -65,13 +65,24 @@ const useLoginSubmit = () => {
           
           notifySuccess("Login Successful!");
           
-          // Handle redirect immediately without delay
-          const redirectUrl = router.query.redirectUrl;
-          if (redirectUrl && redirectUrl !== "undefined") {
-            router.replace(`/${decodeURIComponent(redirectUrl)}`);
-          } else {
-            router.replace("/");
-          }
+          // Small delay to ensure context is updated before redirect
+          setTimeout(() => {
+            // Handle redirect immediately without delay
+            const redirectUrl = router.query.redirectUrl;
+            console.log("Redirect URL from query:", redirectUrl);
+            
+            if (redirectUrl && redirectUrl !== "undefined") {
+              // Remove leading slash if present to avoid double slashes
+              const cleanRedirectUrl = redirectUrl.startsWith('/') ? redirectUrl.substring(1) : redirectUrl;
+              console.log("Redirecting to:", `/${cleanRedirectUrl}`);
+              
+              // Use router.push instead of replace for more reliable navigation
+              router.push(`/${cleanRedirectUrl}`);
+            } else {
+              console.log("No redirect URL, going to home");
+              router.push("/");
+            }
+          }, 100); // Small delay to ensure context update
           
           // Set loading to false after redirect is initiated
           setLoading(false);
