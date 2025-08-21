@@ -47,10 +47,10 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
       case 'footer':
         return {
           container: 'flex',
-          icon: 'w-4 h-4 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
-          iconSize: 'w-2 h-2 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 h-6 xl:w-6 xl:h-6',
-          anchor: 'w-4 h-4 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
-          spacing: 'ml-2 sm:ml-4 md:ml-4 lg:ml-5 xl:ml-6',
+          icon: 'w-4 h-4 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 xl:w-11 xl:h-11',
+          iconSize: 'w-2 h-2 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 lg:w-5 lg:h-5 xl:w-5.5 xl:h-5.5',
+          anchor: 'w-4 h-4 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 xl:w-11 xl:h-11',
+          spacing: 'ml-2 sm:ml-3 md:ml-4 lg:ml-4 xl:ml-5',
         };
       default:
         return {
@@ -78,7 +78,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               aria-label={showingTranslateValue(item.label) || item.iconType} 
-              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0`}
+              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0 mobile-no-bg`}
               style={{
                 backgroundColor: '#74338c'
               }}

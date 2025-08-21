@@ -617,6 +617,16 @@ html[lang="ar"] .slogan-arabic {
     width: 2rem !important; /* 32px */
     height: 2rem !important;
   }
+  
+  /* Remove purple background for mobile */
+  .social-links-container .mobile-no-bg {
+    background-color: transparent !important;
+  }
+  
+  /* Change icon color to purple for mobile (no background) */
+  .social-links-container .mobile-no-bg svg {
+    color: #74338c !important;
+  }
 }
 
 [type="radio"]:checked {
