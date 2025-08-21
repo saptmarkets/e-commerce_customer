@@ -47,10 +47,10 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
       case 'footer':
         return {
           container: 'flex',
-          icon: 'w-[10px] h-[10px] sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
-          iconSize: 'w-[6px] h-[6px] sm:w-2 h-2 md:w-2.5 h-2.5 lg:w-3 h-3 xl:w-3.5 xl:h-3.5',
-          anchor: 'w-[10px] h-[10px] sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
-          spacing: 'ml-3 sm:ml-2 md:ml-3 lg:ml-4 xl:ml-5',
+          icon: 'w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
+          iconSize: 'w-2.5 h-2.5 sm:w-2.5 h-2.5 md:w-2.5 md:h-2.5 lg:w-3 h-3 xl:w-3.5 xl:h-3.5',
+          anchor: 'w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
+          spacing: 'ml-4 sm:ml-4 md:ml-4 lg:ml-4 xl:ml-5',
         };
       default:
         return {
