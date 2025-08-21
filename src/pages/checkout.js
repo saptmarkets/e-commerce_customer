@@ -169,7 +169,7 @@ const Checkout = () => {
       // Calculate max redeemable points (up to 50% of order total)
       const maxPoints = Math.min(
         loyaltySummary.customer.loyaltyPoints.current,
-        Math.floor((cartTotal + shippingCost) * 0.5 / 0.01) // 50% of total, considering 1 point = 0.01 <span className="font-saudi_riyal">{currency}</span>
+        Math.floor((cartTotal + shippingCost) * 0.5 / 0.01) // 50% of total, considering 1 point = 0.01 SAR
       );
       setMaxRedeemablePoints(maxPoints);
     }
@@ -205,10 +205,10 @@ const Checkout = () => {
     
     if (points <= maxPoints) {
       setPointsToRedeem(points);
-      const discount = points * 0.01; // 1 point = 0.01 <span className="font-saudi_riyal">{currency}</span>
-      setLoyaltyDiscount(discount);
+      const discount = points * 0.01; // 1 point = 0.01 SAR
+      // Call the hook function to update the discount amount
       if (handleLoyaltyPointsRedemption) {
-        handleLoyaltyPointsRedemption(points, discount);
+        handleLoyaltyPointsRedemption(discount);
       }
     }
   };
@@ -218,9 +218,9 @@ const Checkout = () => {
     const maxPoints = Math.min(maxRedeemablePoints, loyaltyPoints);
     setPointsToRedeem(maxPoints);
     const discount = maxPoints * 0.01;
-    setLoyaltyDiscount(discount);
+    // Call the hook function to update the discount amount
     if (handleLoyaltyPointsRedemption) {
-      handleLoyaltyPointsRedemption(maxPoints, discount);
+      handleLoyaltyPointsRedemption(discount);
     }
   };
 
@@ -1124,17 +1124,17 @@ const Checkout = () => {
                         <h4 className="text-sm font-semibold text-emerald-800 mb-2">💰 {tr('Delivery Cost Calculation', 'حساب تكلفة التوصيل')}</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-xs text-emerald-700 space-y-1">
-                            <div><strong>{tr('Base Cost:', 'التكلفة الأساسية:')}</strong> {storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10} {lang === 'ar' ? 'ريال' : currency}</div>
-                            <div><strong>{tr('Per KM:', 'لكل كيلومتر:')}</strong> {storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2} {lang === 'ar' ? 'ريال' : currency}</div>
+                            <div><strong>{tr('Base Cost:', 'التكلفة الأساسية:')}</strong> {storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10} SAR</div>
+                            <div><strong>{tr('Per KM:', 'لكل كيلومتر:')}</strong> {storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2} SAR</div>
                           {storeCustomizationSetting?.distanceBasedShipping?.enable_free_shipping !== false && (
                               <>
-                                <div><strong>{tr('Free over:', 'توصيل مجاني لأكثر من:')}</strong> {storeCustomizationSetting?.distanceBasedShipping?.min_order_free_delivery || 100} {lang === 'ar' ? 'ريال' : currency}</div>
+                                <div><strong>{tr('Free over:', 'توصيل مجاني لأكثر من:')}</strong> {storeCustomizationSetting?.distanceBasedShipping?.min_order_free_delivery || 100} SAR</div>
                               </>
                           )}
                           </div>
                           <div className="text-xs text-emerald-600">
                             <div className="font-medium mb-1">{tr('Formula: Base + (Distance × Rate)', 'الصيغة: التكلفة الأساسية + (المسافة × السعر')}</div>
-                            <div>{tr('Example:', 'مثال:')} {storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10} {lang === 'ar' ? 'ريال' : currency} + (5 × {storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2} {lang === 'ar' ? 'ريال' : currency}) = {lang === 'ar' ? 'ريال' : currency}{(storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10) + (5 * (storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2))}</div>
+                            <div>{tr('Example:', 'مثال:')} {storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10} SAR + (5 × {storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2} SAR) = {SAR}{(storeCustomizationSetting?.distanceBasedShipping?.base_shipping_cost || 10) + (5 * (storeCustomizationSetting?.distanceBasedShipping?.cost_per_km || 2))}</div>
                         </div>
                       </div>
                       </div>
@@ -1383,6 +1383,18 @@ const Checkout = () => {
                               <div className="text-xs text-purple-600 mt-1">
                                 {tr('Remaining', 'المتبقي')}: {loyaltyPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
                               </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPointsToRedeem(0);
+                                  if (handleLoyaltyPointsRedemption) {
+                                    handleLoyaltyPointsRedemption(0);
+                                  }
+                                }}
+                                className="mt-2 text-xs text-red-600 hover:text-red-800 underline"
+                              >
+                                {tr('Clear points', 'مسح النقاط')}
+                              </button>
                             </div>
                           )}
                           
@@ -1720,6 +1732,18 @@ const Checkout = () => {
                           <div className="text-xs text-purple-600 mt-1">
                             {tr('Remaining', 'المتبقي')}: {loyaltyPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPointsToRedeem(0);
+                              if (handleLoyaltyPointsRedemption) {
+                                handleLoyaltyPointsRedemption(0);
+                              }
+                            }}
+                            className="mt-2 text-xs text-red-600 hover:text-red-800 underline"
+                          >
+                            {tr('Clear points', 'مسح النقاط')}
+                          </button>
                         </div>
                       )}
                       

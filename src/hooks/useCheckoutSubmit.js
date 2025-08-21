@@ -78,13 +78,25 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
 
   // Calculate total with proper loyalty points discount
   useEffect(() => {
+    // Calculate subtotal from actual cart items to ensure accuracy
+    const cartSubtotal = items?.reduce(
+      (total, item) => {
+        const itemPrice = item.price || 0;
+        const itemQuantity = item.quantity || 1;
+        return total + (itemPrice * itemQuantity);
+      },
+      0
+    ) || 0;
+
+    let totalValue = 0;
+    const subTotal = parseFloat(cartSubtotal + Number(shippingCost)).toFixed(2);
+    
+    // Calculate coupon discount
     const discountProductTotal = items?.reduce(
       (preValue, currentValue) => preValue + (currentValue.itemTotal || 0),
       0
     );
 
-    let totalValue = 0;
-    const subTotal = parseFloat(cartTotal + Number(shippingCost)).toFixed(2);
     const discountAmount =
       discountPercentage?.type === "fixed"
         ? discountPercentage?.value
@@ -95,12 +107,39 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     // Include loyalty points discount in total calculation
     totalValue = Number(subTotal) - discountAmountTotal - loyaltyDiscountAmount;
 
+    // Debug logging
+    console.log('Total calculation debug:', {
+      cartTotal,
+      cartSubtotal,
+      shippingCost,
+      subTotal,
+      discountAmountTotal,
+      loyaltyDiscountAmount,
+      totalValue,
+      items: items?.length,
+      itemsDetails: items?.map(item => ({
+        id: item.id,
+        price: item.price,
+        quantity: item.quantity,
+        itemTotal: item.price * item.quantity
+      }))
+    });
+
     setDiscountAmount(discountAmountTotal);
     setTotal(Math.max(0, totalValue));
   }, [cartTotal, shippingCost, discountPercentage, loyaltyDiscountAmount, items]);
 
-  const handleLoyaltyPointsRedemption = (value) => {
-    setLoyaltyDiscountAmount(value || 0);
+  const handleLoyaltyPointsRedemption = (discount) => {
+    // Calculate points from discount (1 point = 0.01 SAR)
+    const points = Math.round(discount / 0.01);
+    setLoyaltyDiscountAmount(discount || 0);
+    setPointsToRedeem(points);
+  };
+
+  // Clear loyalty points
+  const clearLoyaltyPoints = () => {
+    setLoyaltyDiscountAmount(0);
+    setPointsToRedeem(0);
   };
 
   const submitHandler = async (data) => {
@@ -357,6 +396,7 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     hasShippingAddress,
     isCouponAvailable,
     handleDefaultShippingAddress,
+    clearLoyaltyPoints,
   };
 };
 
