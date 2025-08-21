@@ -51,6 +51,9 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           iconSize: 'w-2 h-2 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 h-6 xl:w-6 xl:h-6',
           anchor: 'w-4 h-4 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
           spacing: 'ml-2 sm:ml-4 md:ml-4 lg:ml-5 xl:ml-6',
+          // Mobile: no background, larger icons. Desktop: purple background
+          mobileStyle: 'bg-transparent',
+          desktopStyle: 'bg-purple-600',
         };
       default:
         return {
@@ -71,6 +74,13 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
         const Icon = iconMap[item.iconType] || FaLink;
         // Add explicit margin to each icon except the first one
         const marginClass = idx === 0 ? '' : styles.spacing;
+        
+        // For footer variant: mobile has no background, desktop has purple background
+        const isFooterVariant = variant === 'footer';
+        const mobileBackground = isFooterVariant ? 'bg-transparent' : 'bg-purple-600';
+        const desktopBackground = isFooterVariant ? 'sm:bg-purple-600' : 'bg-purple-600';
+        const mobileIconSize = isFooterVariant ? 'w-3 h-3 sm:w-2 h-2' : styles.iconSize;
+        
         return (
           <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group ${marginClass}`}>
             <a 
@@ -78,22 +88,28 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               aria-label={showingTranslateValue(item.label) || item.iconType} 
-              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0`}
+              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0 ${mobileBackground} ${desktopBackground}`}
               style={{
-                backgroundColor: '#74338c'
+                backgroundColor: variant === 'footer' ? 'transparent' : '#74338c'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#ffffff';
-                e.currentTarget.querySelector('svg').style.color = '#74338c';
+                if (variant !== 'footer') {
+                  e.currentTarget.style.backgroundColor = '#ffffff';
+                  e.currentTarget.querySelector('svg').style.color = '#74338c';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#74338c';
-                e.currentTarget.querySelector('svg').style.color = '#ffffff';
+                if (variant !== 'footer') {
+                  e.currentTarget.style.backgroundColor = '#74338c';
+                  e.currentTarget.querySelector('svg').style.color = '#ffffff';
+                }
               }}
             >
               <Icon 
-                className={`${styles.iconSize}`}
-                style={{ color: '#ffffff' }}
+                className={`${mobileIconSize} sm:${styles.iconSize}`}
+                style={{ 
+                  color: variant === 'footer' ? '#74338c' : '#ffffff'
+                }}
               />
             </a>
           </li>
