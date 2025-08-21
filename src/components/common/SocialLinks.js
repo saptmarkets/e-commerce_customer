@@ -66,7 +66,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
   const styles = getVariantStyles();
 
   return (
-    <ul className={`${styles.container} flex-row ${className}`} style={{ direction: 'ltr' }}>
+    <ul className={`${styles.container} flex-row social-links-container ${className}`} style={{ direction: 'ltr' }}>
       {links.map((item, idx) => {
         const Icon = iconMap[item.iconType] || FaLink;
         // Add explicit margin to each icon except the first one
