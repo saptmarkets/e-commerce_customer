@@ -47,10 +47,10 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
       case 'footer':
         return {
           container: 'flex',
-          icon: 'w-6 h-6 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
-          iconSize: 'w-3 h-3 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 h-6 xl:w-6 xl:h-6',
-          anchor: 'w-6 h-6 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
-          spacing: 'ml-3 sm:ml-4 md:ml-4 lg:ml-5 xl:ml-6',
+          icon: 'w-4 h-4 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
+          iconSize: 'w-2 h-2 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 h-6 xl:w-6 xl:h-6',
+          anchor: 'w-4 h-4 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12',
+          spacing: 'ml-2 sm:ml-4 md:ml-4 lg:ml-5 xl:ml-6',
         };
       default:
         return {
@@ -72,13 +72,13 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
         // Add explicit margin to each icon except the first one
         const marginClass = idx === 0 ? '' : styles.spacing;
         return (
-          <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group transition-all duration-200 hover:scale-105 ${marginClass}`}>
+          <li key={idx} className={`${styles.icon} rounded-full flex items-center justify-center group ${marginClass}`}>
             <a 
               href={formatUrl(item.url)} 
               target="_blank" 
               rel="noopener noreferrer" 
               aria-label={showingTranslateValue(item.label) || item.iconType} 
-              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0 transition-all duration-200`}
+              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0`}
               style={{
                 backgroundColor: '#74338c'
               }}
@@ -92,7 +92,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
               }}
             >
               <Icon 
-                className={`${styles.iconSize} transition-colors duration-200`}
+                className={`${styles.iconSize}`}
                 style={{ color: '#ffffff' }}
               />
             </a>
