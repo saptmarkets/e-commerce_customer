@@ -202,6 +202,16 @@ const Invoice = ({ data, printRef, globalSetting, currency }) => {
                   {formatPrice(data.discount)}
                 </td>
               </tr>
+              {data.loyaltyDiscount > 0 && (
+                <tr className="border-b border-gray-100 last:border-b-0 text-sm">
+                  <td className="px-4 py-1 font-semibold text-gray-500 font-serif uppercase tracking-wide">
+                    {tr('Loyalty Points Discount', 'خصم نقاط الولاء')}
+                  </td>
+                  <td className="px-4 py-1 text-gray-500 font-DejaVu tracking-widest">
+                    {formatPrice(data.loyaltyDiscount)}
+                  </td>
+                </tr>
+              )}
               <tr className="border-b-2 border-gray-300 bg-gray-50 text-sm">
                 <td className="px-4 py-2 font-bold text-black font-serif uppercase tracking-wide">
                   {tr('Total', 'الإجمالي')}

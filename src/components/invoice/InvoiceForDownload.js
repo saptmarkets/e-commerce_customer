@@ -541,6 +541,16 @@ export const InvoiceForDownload = ({
               </Text>
             </View>
 
+            {data.loyaltyDiscount > 0 && (
+              <View>
+                <Text style={styles.title}>{tLabel('Loyalty Points Discount', 'خصم نقاط الولاء')}</Text>
+                <Text style={styles.info}>
+                  {" "}
+                  {formatPrice(data.loyaltyDiscount ?? 0)}
+                </Text>
+              </View>
+            )}
+
             <View>
               <Text style={styles.title}>{tLabel('Total Amount', 'المبلغ الإجمالي')}</Text>
               <Text style={styles.amount}>

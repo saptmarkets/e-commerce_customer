@@ -1443,6 +1443,16 @@ const Checkout = () => {
                         </span>
                       </div>
                     )}
+                    {(discountAmount > 0 || loyaltyDiscountAmount > 0) && (
+                      <div className="flex items-center py-2 text-sm w-full font-semibold text-gray-500 last:border-b-0 last:text-base last:pb-0 border-t border-gray-200 pt-3">
+                        <span className="flex items-center">
+                          {tr('Total Savings', 'إجمالي التوفير')}
+                        </span>
+                        <span className="ml-auto flex-shrink-0 font-bold text-green-600">
+                          {formatPrice(discountAmount + loyaltyDiscountAmount)}
+                        </span>
+                      </div>
+                    )}
                     <div className="border-t mt-4">
                       <div className="flex items-center font-bold font-serif justify-between pt-5 text-sm uppercase">
                         {showingTranslateValue(
@@ -1789,6 +1799,16 @@ const Checkout = () => {
                     </span>
                     <span className="ml-auto flex-shrink-0 font-bold text-purple-600">
                       {formatPrice(loyaltyDiscountAmount)}
+                    </span>
+                  </div>
+                )}
+                {(discountAmount > 0 || loyaltyDiscountAmount > 0) && (
+                  <div className="flex items-center py-2 text-sm w-full font-semibold text-gray-500 last:border-b-0 last:text-base last:pb-0 border-t border-gray-200 pt-3">
+                    <span className="flex items-center">
+                      {tr('Total Savings', 'إجمالي التوفير')}
+                    </span>
+                    <span className="ml-auto flex-shrink-0 font-bold text-green-600">
+                      {formatPrice(discountAmount + loyaltyDiscountAmount)}
                     </span>
                   </div>
                 )}

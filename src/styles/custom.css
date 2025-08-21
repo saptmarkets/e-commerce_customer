@@ -580,55 +580,6 @@ html[lang="ar"] .slogan-arabic {
   .m-6 { margin: 1.35rem; }
 }
 
-/* Fix for social icons - override global font-size reduction */
-.social-links-container,
-.social-links-container *,
-.social-links-container svg,
-.social-links-container .icon,
-.social-links-container .anchor {
-  font-size: 100% !important; /* Reset to 100% for social icons */
-}
-
-/* Ensure social icons maintain their intended size */
-.social-links-container .w-4,
-.social-links-container .w-6,
-.social-links-container .w-8,
-.social-links-container .w-9,
-.social-links-container .w-10,
-.social-links-container .w-11,
-.social-links-container .w-12 {
-  width: var(--tw-w) !important;
-  height: var(--tw-h) !important;
-}
-
-/* Mobile-specific social icon sizing fixes */
-@media (max-width: 640px) {
-  .social-links-container .w-4 {
-    width: 1rem !important; /* 16px */
-    height: 1rem !important;
-  }
-  
-  .social-links-container .w-6 {
-    width: 1.5rem !important; /* 24px */
-    height: 1.5rem !important;
-  }
-  
-  .social-links-container .w-8 {
-    width: 2rem !important; /* 32px */
-    height: 2rem !important;
-  }
-  
-  /* Remove purple background for mobile */
-  .social-links-container .mobile-no-bg {
-    background-color: transparent !important;
-  }
-  
-  /* Change icon color to purple for mobile (no background) */
-  .social-links-container .mobile-no-bg svg {
-    color: #74338c !important;
-  }
-}
-
 [type="radio"]:checked {
   background-image: none;
 }

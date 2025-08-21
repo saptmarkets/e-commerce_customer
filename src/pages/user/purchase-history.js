@@ -224,6 +224,12 @@ const PurchaseHistory = () => {
                                       <span className="font-medium text-green-600">-{getNumberTwo(order.discount)} <span className="icon-saudi_riyal">&#xE900;</span></span>
                                     </div>
                                   )}
+                                  {order.loyaltyDiscount > 0 && (
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-600">Loyalty Points Discount:</span>
+                                      <span className="font-medium text-purple-600">-{getNumberTwo(order.loyaltyDiscount)} <span className="icon-saudi_riyal">&#xE900;</span></span>
+                                    </div>
+                                  )}
                                   <div className="flex justify-between">
                                     <span className="text-gray-600">Shipping:</span>
                                     <span className="font-medium">{getNumberTwo(order.shippingCost || 0)} <span className="icon-saudi_riyal">&#xE900;</span></span>
