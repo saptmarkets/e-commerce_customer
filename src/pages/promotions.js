@@ -31,99 +31,62 @@ const Promotions = ({ attributes }) => {
 
   // Filter and prepare products with fixed price promotions
   const normalizedProductsWithFixedPrices = useMemo(() => {
-    if (!activePromotions || !Array.isArray(activePromotions)) return [];
+    console.log('🔍 Processing promotions for fixed prices...');
+    console.log('📊 Active promotions received:', activePromotions);
     
-    console.log('Promotions: Active promotions received:', activePromotions);
+    if (!activePromotions || !Array.isArray(activePromotions)) {
+      console.warn('⚠️ No active promotions or invalid format');
+      return [];
+    }
     
-    // Filter for fixed price promotions and extract products
-    const fixedPricePromotions = activePromotions.filter(promotion => {
-      const isFixedPrice = promotion.type === 'fixed_price';
-      const isActive = promotion.isActive !== false;
+    // Filter for fixed price promotions
+    const fixedPricePromotions = activePromotions.filter(promo => {
+      const isFixedPrice = promo.type === 'fixed_price';
+      const isActive = promo.isActive !== false;
+      const hasProductUnit = promo.productUnit && promo.productUnit.product;
       
-      // Check if promotion is connected to "fixed price" promotion list
-      const hasFixedPriceList = promotion.promotionList && 
-                               promotion.promotionList.name && 
-                               promotion.promotionList.name.toLowerCase().includes('fixed price');
-      
-      console.log(`Promotions: Checking promotion ${promotion._id}:`, {
-        type: promotion.type,
+      console.log(`🔍 Promotion ${promo._id}:`, {
+        type: promo.type,
         isFixedPrice,
         isActive,
-        promotionListName: promotion.promotionList?.name,
-        hasFixedPriceList,
-        hasProductUnit: !!promotion.productUnit,
-        productUnitDetails: promotion.productUnit
+        hasProductUnit,
+        productUnit: promo.productUnit,
+        startDate: promo.startDate,
+        endDate: promo.endDate
       });
       
-      return isFixedPrice && isActive;
+      return isFixedPrice && isActive && hasProductUnit;
     });
     
-    console.log('Promotions: Fixed price promotions found:', fixedPricePromotions.length);
+    console.log(`✅ Found ${fixedPricePromotions.length} fixed price promotions`);
     
-    // Convert promotions to product objects with promotion data
-    const productsWithPromotions = [];
-    
-    // Group promotions by product to handle multiple units per product
-    const productPromotionMap = new Map();
-    
-    fixedPricePromotions.forEach(promotion => {
-      if (promotion.productUnit && promotion.productUnit.product) {
-        const product = promotion.productUnit.product;
-        const productId = product._id || product.id;
-        
-        if (!productPromotionMap.has(productId)) {
-          productPromotionMap.set(productId, {
-            product: product,
-            promotions: []
-          });
-        }
-        
-        productPromotionMap.get(productId).promotions.push(promotion);
-      }
-    });
-    
-    // For each product, create a complete product object with all units
-    productPromotionMap.forEach(({ product, promotions }) => {
-      // Use the first promotion as the primary one
-      const primaryPromotion = promotions[0];
-      const promotionalUnit = primaryPromotion.productUnit;
+    // Transform to product format
+    const productsWithPromotions = fixedPricePromotions.map(promo => {
+      const product = promo.productUnit.product;
+      const productUnit = promo.productUnit;
       
-      // Create a product object with embedded promotion data
-      const productWithPromotion = {
-        ...product,
-        _id: product._id || product.id,
+      console.log(`🔄 Processing product ${product._id}:`, {
         title: product.title,
-        slug: product.slug,
-        image: product.image,
-        price: promotionalUnit.price,
-        hasMultiUnits: true,
-        // Add promotion data for the ProductCardModern component
-        promotion: {
-          ...primaryPromotion,
-          originalPrice: promotionalUnit.price,
-          promotionalPrice: primaryPromotion.value,
-          savings: promotionalUnit.price - primaryPromotion.value,
-          savingsPercent: promotionalUnit.price > 0 ? ((promotionalUnit.price - primaryPromotion.value) / promotionalUnit.price) * 100 : 0,
-          unit: promotionalUnit,
-          productUnit: promotionalUnit
-        }
-        // Note: ProductCardModern will fetch all units for this product automatically
-      };
-      
-      productsWithPromotions.push(productWithPromotion);
-      
-      console.log('Promotions: Added product with promotion:', {
-        productId: product._id,
-        productTitle: product.title,
-        originalPrice: promotionalUnit.price,
-        promotionalPrice: primaryPromotion.value,
-        savings: promotionalUnit.price - primaryPromotion.value,
-        promotionsCount: promotions.length
+        originalPrice: productUnit.price,
+        promotionalPrice: promo.value
       });
+      
+      return {
+        ...product,
+        price: promo.value,
+        promotion: {
+          ...promo,
+          originalPrice: productUnit.price,
+          offerPrice: promo.value,
+          promotionalPrice: promo.value,
+          savings: productUnit.price - promo.value,
+          savingsPercent: ((productUnit.price - promo.value) / productUnit.price) * 100,
+          unit: productUnit.unit
+        }
+      };
     });
     
-    console.log('Promotions: Final products with promotions:', productsWithPromotions.length);
-    
+    console.log(`🎯 Final products with promotions: ${productsWithPromotions.length}`);
     return productsWithPromotions;
   }, [activePromotions]);
   

@@ -4,10 +4,35 @@ const PromotionServices = {
   // Get all active promotions
   getActivePromotions: async (forceRefresh = false) => {
     try {
+      console.log('🔄 Fetching active promotions...');
       const url = forceRefresh ? `/promotions/active?_=${Date.now()}` : '/promotions/active';
-      return await requests.get(url);
+      console.log('📡 API URL:', url);
+      
+      const response = await requests.get(url);
+      console.log('📊 Promotions response:', {
+        type: typeof response,
+        isArray: Array.isArray(response),
+        length: Array.isArray(response) ? response.length : 'N/A',
+        data: response
+      });
+      
+      if (Array.isArray(response)) {
+        console.log(`✅ Found ${response.length} promotions`);
+        response.forEach((promo, index) => {
+          console.log(`  ${index + 1}. ID: ${promo._id}, Type: ${promo.type}, Active: ${promo.isActive}, Start: ${promo.startDate}, End: ${promo.endDate}`);
+        });
+      } else {
+        console.warn('⚠️ Response is not an array:', response);
+      }
+      
+      return response;
     } catch (error) {
-      console.error('Error fetching active promotions:', error);
+      console.error('❌ Error fetching active promotions:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       return []; // Return empty array on error to prevent crashes
     }
   },
