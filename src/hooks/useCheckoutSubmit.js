@@ -76,10 +76,28 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     }
   }, []);
 
+  // Calculate total with proper loyalty points discount
   useEffect(() => {
-    const getTotal = (cartTotal + shippingCost - (discountAmount || 0)).toFixed(2);
-    setTotal(getTotal);
-  }, [cartTotal, shippingCost, discountAmount]);
+    const discountProductTotal = items?.reduce(
+      (preValue, currentValue) => preValue + (currentValue.itemTotal || 0),
+      0
+    );
+
+    let totalValue = 0;
+    const subTotal = parseFloat(cartTotal + Number(shippingCost)).toFixed(2);
+    const discountAmount =
+      discountPercentage?.type === "fixed"
+        ? discountPercentage?.value
+        : discountProductTotal * (discountPercentage?.value / 100);
+
+    const discountAmountTotal = discountAmount ? discountAmount : 0;
+
+    // Include loyalty points discount in total calculation
+    totalValue = Number(subTotal) - discountAmountTotal - loyaltyDiscountAmount;
+
+    setDiscountAmount(discountAmountTotal);
+    setTotal(Math.max(0, totalValue));
+  }, [cartTotal, shippingCost, discountPercentage, loyaltyDiscountAmount, items]);
 
   const handleLoyaltyPointsRedemption = (value) => {
     setLoyaltyDiscountAmount(value || 0);

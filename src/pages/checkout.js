@@ -1378,7 +1378,7 @@ const Checkout = () => {
                                   <FiInfo className="inline mr-1" />
                                   {tr('Redeem points', 'استبدال النقاط')} {pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
                                 </span>
-                                <span className="text-purple-700 font-bold">-{formatPrice(loyaltyDiscount)}</span>
+                                <span className="text-purple-700 font-bold">-{formatPrice(loyaltyDiscountAmount)}</span>
                               </div>
                               <div className="text-xs text-purple-600 mt-1">
                                 {tr('Remaining', 'المتبقي')}: {loyaltyPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
@@ -1420,14 +1420,14 @@ const Checkout = () => {
                         {formatPrice(discountAmount)}
                       </span>
                     </div>
-                    {loyaltyDiscount > 0 && (
+                    {loyaltyDiscountAmount > 0 && (
                       <div className="flex items-center py-2 text-sm w-full font-semibold text-gray-500 last:border-b-0 last:text-base last:pb-0">
                         <span className="flex items-center">
                           <FiStar className="text-purple-600 mr-2" />
                           {t("loyaltyDiscount")}
                         </span>
                         <span className="ml-auto flex-shrink-0 font-bold text-purple-600">
-                          {formatPrice(loyaltyDiscount)}
+                          {formatPrice(loyaltyDiscountAmount)}
                         </span>
                       </div>
                     )}
@@ -1437,7 +1437,7 @@ const Checkout = () => {
                           storeCustomizationSetting?.checkout?.total_cost
                         ) || tr('TOTAL COST', 'التكلفة الإجمالية')}
                         <span className="font-serif font-extrabold text-lg">
-                          {formatPrice(Math.max(0, parseFloat(total) - loyaltyDiscount))}
+                          {formatPrice(total)}
                         </span>
                       </div>
                     </div>
@@ -1715,7 +1715,7 @@ const Checkout = () => {
                               <FiInfo className="inline mr-1" />
                               {tr('Redeem points', 'استبدال النقاط')} {pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
                             </span>
-                            <span className="text-purple-700 font-bold">-{formatPrice(loyaltyDiscount)}</span>
+                            <span className="text-purple-700 font-bold">-{formatPrice(loyaltyDiscountAmount)}</span>
                           </div>
                           <div className="text-xs text-purple-600 mt-1">
                             {tr('Remaining', 'المتبقي')}: {loyaltyPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
@@ -1757,14 +1757,14 @@ const Checkout = () => {
                     {formatPrice(discountAmount)}
                   </span>
                 </div>
-                {loyaltyDiscount > 0 && (
+                {loyaltyDiscountAmount > 0 && (
                   <div className="flex items-center py-2 text-sm w-full font-semibold text-gray-500 last:border-b-0 last:text-base last:pb-0">
                     <span className="flex items-center">
                       <FiStar className="text-purple-600 mr-2" />
                       {t("loyaltyDiscount")}
                     </span>
                     <span className="ml-auto flex-shrink-0 font-bold text-purple-600">
-                      {formatPrice(loyaltyDiscount)}
+                      {formatPrice(loyaltyDiscountAmount)}
                     </span>
                   </div>
                 )}
@@ -1774,7 +1774,7 @@ const Checkout = () => {
                       storeCustomizationSetting?.checkout?.total_cost
                     ) || tr('TOTAL COST', 'التكلفة الإجمالية')}
                     <span className="font-serif font-extrabold text-lg">
-                      {formatPrice(Math.max(0, parseFloat(total) - loyaltyDiscount))}
+                      {formatPrice(total)}
                     </span>
                   </div>
                 </div>
