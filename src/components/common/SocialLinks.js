@@ -41,6 +41,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           container: 'flex',
           icon: 'w-8 h-8 sm:w-9 sm:h-9',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5',
+          anchor: 'w-8 h-8 sm:w-9 sm:h-9',
           spacing: 'ml-6 sm:ml-8', // More aggressive spacing for navigation
         };
       case 'footer':
@@ -48,6 +49,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           container: 'flex',
           icon: 'w-[10px] h-[10px] sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
           iconSize: 'w-[6px] h-[6px] sm:w-2 h-2 md:w-2.5 h-2.5 lg:w-3 h-3 xl:w-3.5 xl:h-3.5',
+          anchor: 'w-[10px] h-[10px] sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
           spacing: 'ml-3 sm:ml-2 md:ml-3 lg:ml-4 xl:ml-5',
         };
       default:
@@ -55,6 +57,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
           container: 'flex',
           icon: 'w-8 h-8 sm:w-9 sm:h-9',
           iconSize: 'w-4 h-4 sm:w-5 sm:h-5',
+          anchor: 'w-8 h-8 sm:w-9 sm:h-9',
           spacing: 'ml-4 sm:ml-5',
         };
     }
@@ -75,7 +78,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               aria-label={showingTranslateValue(item.label) || item.iconType} 
-              className="flex items-center justify-center w-full h-full rounded-full transition-all duration-200"
+              className={`${styles.anchor} flex items-center justify-center rounded-full shrink-0 transition-all duration-200`}
               style={{
                 backgroundColor: '#74338c'
               }}
