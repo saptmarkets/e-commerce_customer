@@ -48,7 +48,7 @@ const SocialLinks = ({ className = '', variant = 'default' }) => {
         return {
           container: 'flex',
           icon: 'w-3 h-3 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
-          iconSize: 'w-1.5 h-1.5 sm:w-2.5 h-2.5 md:w-2.5 md:h-2.5 lg:w-3 h-3 xl:w-3.5 xl:h-3.5',
+          iconSize: 'w-2 h-2 sm:w-2.5 h-2.5 md:w-2.5 md:h-2.5 lg:w-3 h-3 xl:w-3.5 xl:h-3.5',
           anchor: 'w-3 h-3 sm:w-5 sm:h-5 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7',
           spacing: 'ml-6 sm:ml-4 md:ml-4 lg:ml-4 xl:ml-5',
         };
