@@ -13,7 +13,7 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 const PromotionalOffers = ({ 
   title = "Special Promotions", 
   description = "Amazing deals and offers just for you",
-  maxItems = 6 
+  maxItems = 12 
 }) => {
   const router = useRouter();
   const { showingTranslateValue, getNumberTwo } = useUtilsFunction();
@@ -24,7 +24,14 @@ const PromotionalOffers = ({
   });
 
   // Filter and prepare promotions for display
-  const displayPromotions = promotions?.slice(0, maxItems) || [];
+  // Sort by creation date (newest first) and then limit
+  const sortedPromotions = promotions?.sort((a, b) => {
+    const dateA = new Date(a.createdAt || a.updatedAt || 0);
+    const dateB = new Date(b.createdAt || b.updatedAt || 0);
+    return dateB - dateA; // Newest first
+  }) || [];
+  
+  const displayPromotions = sortedPromotions.slice(0, maxItems) || [];
   
   const getPromotionIcon = (type) => {
     switch (type) {
