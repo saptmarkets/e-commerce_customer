@@ -198,7 +198,23 @@ const ComboOfferCard = ({ promotion }) => {
       title: promotion.name || tr('Mega Combo Deal','صفقة مجمعة كبيرة'),
       price: pricing.pricePerItem,
       quantity: totalSelectedQty,
-      stock: Math.min(...Object.values(selectedProducts).map(qty => qty)), // Use minimum stock as combo stock
+      stock: (() => {
+        const stockCalculations = Object.entries(selectedProducts).map(([productId, qty]) => {
+          const product = availableProducts.find(p => p._id === productId);
+          const availableStock = product ? Math.floor((product.stock || 0) / qty) : 0;
+          console.log('🔍 Stock calculation for product:', {
+            productId,
+            productTitle: product?.title?.en || 'Unknown',
+            productStock: product?.stock || 0,
+            selectedQty: qty,
+            availableStock: availableStock
+          });
+          return availableStock;
+        });
+        const finalStock = Math.min(...stockCalculations);
+        console.log('🔍 Final combo stock calculation:', { stockCalculations, finalStock });
+        return finalStock;
+      })(), // Calculate available stock based on actual product stock and selected quantities
       
       // Enhanced combo tracking
       isCombo: true,
