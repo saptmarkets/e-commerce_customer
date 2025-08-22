@@ -179,11 +179,27 @@ const PromotionServices = {
               return null;
             }
             
-            return {
+            const productWithStock = {
               ...productUnit.product,
               unit: productUnit,
               promotionalPrice: pricePerItem,
+              // Ensure stock information is available from ProductUnit
+              stock: productUnit.stock || productUnit.product.stock || 0,
+              price: productUnit.price || productUnit.product.price || 0,
             };
+            
+            console.log('🔍 Product stock mapping:', {
+              productId: productUnit.product._id,
+              productTitle: productUnit.product.title?.en || 'Unknown',
+              productUnitStock: productUnit.stock,
+              productStock: productUnit.product.stock,
+              finalStock: productWithStock.stock,
+              productUnitPrice: productUnit.price,
+              productPrice: productUnit.product.price,
+              finalPrice: productWithStock.price
+            });
+            
+            return productWithStock;
           }).filter(Boolean); // Remove any null products
           
           if (products.length === 0) {
