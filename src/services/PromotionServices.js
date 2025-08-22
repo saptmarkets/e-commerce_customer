@@ -143,19 +143,25 @@ const PromotionServices = {
   getAssortedPromotionsWithProducts: async () => {
     try {
       const allPromotions = await requests.get('/promotions/active');
+      console.log('🔍 All promotions received in getAssortedPromotionsWithProducts:', allPromotions?.length || 0);
       
       const assortedPromotions = allPromotions.filter(promotion => promotion.type === 'assorted_items');
+      console.log('🔍 Assorted items promotions found:', assortedPromotions.length);
+      console.log('🔍 Assorted promotions:', assortedPromotions.map(p => ({ id: p._id, name: p.name, type: p.type, startDate: p.startDate, endDate: p.endDate })));
       
       // Transform promotions to include detailed product information
       const promotionsWithProducts = [];
       
       for (const promotion of assortedPromotions) {
+        console.log('🔍 Processing promotion:', promotion._id, promotion.name);
+        console.log('🔍 Promotion productUnits:', promotion.productUnits?.length || 0);
         
         if (promotion.productUnits && promotion.productUnits.length > 0) {
           // Filter out productUnits that don't have valid product data
           const validProductUnits = promotion.productUnits.filter(productUnit => 
             productUnit && productUnit.product && productUnit.product._id
           );
+          console.log('🔍 Valid productUnits:', validProductUnits.length);
           
           if (validProductUnits.length === 0) {
             console.log('Assorted promotion has no valid product units:', promotion._id);
