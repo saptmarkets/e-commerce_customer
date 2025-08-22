@@ -31,63 +31,22 @@ const Promotions = ({ attributes }) => {
 
   // Filter and prepare products with fixed price promotions
   const normalizedProductsWithFixedPrices = useMemo(() => {
-    console.log('🔍 Processing promotions for fixed prices...');
-    console.log('📊 Active promotions received:', activePromotions);
+    if (!activePromotions || !Array.isArray(activePromotions)) return [];
     
-    if (!activePromotions || !Array.isArray(activePromotions)) {
-      console.warn('⚠️ No active promotions or invalid format');
-      return [];
-    }
-    
-    // Filter for fixed price promotions
-    const fixedPricePromotions = activePromotions.filter(promo => {
-      const isFixedPrice = promo.type === 'fixed_price';
-      const isActive = promo.isActive !== false;
-      const hasProductUnit = promo.productUnit && promo.productUnit.product;
-      
-      console.log(`🔍 Promotion ${promo._id}:`, {
-        type: promo.type,
-        isFixedPrice,
-        isActive,
-        hasProductUnit,
-        productUnit: promo.productUnit,
+    return activePromotions
+      .filter(promo => promo.type === 'fixed_price' && promo.isActive)
+      .filter(promo => promo.productUnit && promo.productUnit.product)
+      .map(promo => ({
+        ...promo.productUnit.product,
+        originalPrice: promo.productUnit.price,
+        promotionalPrice: promo.value,
+        promotionId: promo._id,
+        promotionType: promo.type,
+        minQty: promo.minQty,
+        maxQty: promo.maxQty,
         startDate: promo.startDate,
         endDate: promo.endDate
-      });
-      
-      return isFixedPrice && isActive && hasProductUnit;
-    });
-    
-    console.log(`✅ Found ${fixedPricePromotions.length} fixed price promotions`);
-    
-    // Transform to product format
-    const productsWithPromotions = fixedPricePromotions.map(promo => {
-      const product = promo.productUnit.product;
-      const productUnit = promo.productUnit;
-      
-      console.log(`🔄 Processing product ${product._id}:`, {
-        title: product.title,
-        originalPrice: productUnit.price,
-        promotionalPrice: promo.value
-      });
-      
-      return {
-        ...product,
-        price: promo.value,
-        promotion: {
-          ...promo,
-          originalPrice: productUnit.price,
-          offerPrice: promo.value,
-          promotionalPrice: promo.value,
-          savings: productUnit.price - promo.value,
-          savingsPercent: ((productUnit.price - promo.value) / productUnit.price) * 100,
-          unit: productUnit.unit
-        }
-      };
-    });
-    
-    console.log(`🎯 Final products with promotions: ${productsWithPromotions.length}`);
-    return productsWithPromotions;
+      }));
   }, [activePromotions]);
   
   // Get tab from URL query

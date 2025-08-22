@@ -26,28 +26,6 @@ const PromotionalOffers = ({
   // Filter and prepare promotions for display
   const displayPromotions = promotions?.slice(0, maxItems) || [];
   
-  console.log('🏠 Home page PromotionalOffers:', {
-    promotionsReceived: promotions,
-    promotionsType: typeof promotions,
-    promotionsLength: Array.isArray(promotions) ? promotions.length : 'N/A',
-    displayPromotions: displayPromotions,
-    maxItems: maxItems
-  });
-  
-  if (Array.isArray(promotions)) {
-    promotions.forEach((promo, index) => {
-      console.log(`  ${index + 1}. Promotion:`, {
-        id: promo._id,
-        type: promo.type,
-        isActive: promo.isActive,
-        hasProductUnit: !!promo.productUnit,
-        hasProduct: !!promo.productUnit?.product,
-        startDate: promo.startDate,
-        endDate: promo.endDate
-      });
-    });
-  }
-
   const getPromotionIcon = (type) => {
     switch (type) {
       case 'fixed_price':
