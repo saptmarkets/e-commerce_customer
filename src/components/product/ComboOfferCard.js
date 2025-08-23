@@ -155,7 +155,7 @@ const ComboOfferCard = ({ promotion }) => {
     });
   };
 
-  // Handle add to cart
+  // Handle add to cart - NEW APPROACH: Add individual products instead of combo object
   const handleAddToCart = () => {
     if (totalSelectedQty < requiredQty) {
       notifyError(`${tr('Please select','الرجاء اختيار')} ${requiredQty - totalSelectedQty} ${tr('more items to complete the combo','عناصر إضافية لإكمال الصفقة')}`);
@@ -178,68 +178,43 @@ const ComboOfferCard = ({ promotion }) => {
 
     const pricing = calculatePricing();
     
-    // Create detailed combo item for cart with enhanced tracking
-    const productBreakdown = Object.entries(selectedProducts).map(([productId, qty]) => {
-      const product = availableProducts.find(p => p._id === productId);
-      return {
-        productId: productId,
-        productTitle: showingTranslateValue(product?.title) || 'Unknown Product',
-        quantity: qty,
-        unitPrice: pricing.pricePerItem,
-        image: product?.image?.[0] || '',
-        unitName: product?.unit?.unit?.shortCode || product?.unit?.unit?.name || 'pcs',
-        originalPrice: product?.price || 0,
-        stock: product?.stock || 0
-      };
-    });
-
-    const comboItem = {
-      id: `combo-${promotion._id}-${Date.now()}`, // Unique ID for each combo instance
-      title: promotion.name || tr('Mega Combo Deal','صفقة مجمعة كبيرة'),
-      price: pricing.pricePerItem,
-      quantity: totalSelectedQty,
-      stock: (() => {
-        const stockCalculations = Object.entries(selectedProducts).map(([productId, qty]) => {
-          const product = availableProducts.find(p => p._id === productId);
-          const availableStock = product ? Math.floor((product.stock || 0) / qty) : 0;
-          console.log('🔍 Stock calculation for product:', {
-            productId,
-            productTitle: product?.title?.en || 'Unknown',
-            productStock: product?.stock || 0,
-            selectedQty: qty,
-            availableStock: availableStock
-          });
-          return availableStock;
-        });
-        const finalStock = Math.min(...stockCalculations);
-        console.log('🔍 Final combo stock calculation:', { stockCalculations, finalStock });
-        return finalStock;
-      })(), // Calculate available stock based on actual product stock and selected quantities
-      
-      // Enhanced combo tracking
-      isCombo: true,
-      promotion: promotion,
-      selectedProducts: selectedProducts,
-      comboPrice: pricing.totalPrice,
-              image: availableProducts[0]?.image?.[0] || '',
-      
-      // Detailed breakdown for orders and invoices
-      comboDetails: {
-        promotionId: promotion._id,
-        promotionName: promotion.name || tr('Mega Combo Deal','صفقة مجمعة كبيرة'),
-        requiredItemCount: requiredQty,
-        totalValue: pricing.totalPrice,
-        pricePerItem: pricing.pricePerItem,
-        totalSelectedQty: totalSelectedQty,
-        productBreakdown: productBreakdown,
-        promotionType: promotion.type || 'assorted_items',
-        originalPromotionValue: promotion.value
-      }
-    };
-
-    handleAddItem(comboItem, totalSelectedQty);
+    // NEW APPROACH: Add each selected product individually to cart
+    // This ensures backend processes them as normal products with proper stock tracking
     
-    console.log('Combo item added to cart:', comboItem);
+    Object.entries(selectedProducts).forEach(([productId, qty]) => {
+      if (qty > 0) {
+        const product = availableProducts.find(p => p._id === productId);
+        if (product) {
+          // Create individual product item (not combo object)
+          const individualProduct = {
+            id: product._id, // Use actual product ID
+            title: showingTranslateValue(product.title),
+            price: pricing.pricePerItem, // Combo price per item
+            quantity: qty,
+            image: product?.image?.[0] || '',
+            unitName: product?.unit?.unit?.shortCode || product?.unit?.unit?.name || 'pcs',
+            stock: product?.stock || 0,
+            
+            // Add combo reference for tracking (but don't mark as combo)
+            comboReference: {
+              promotionId: promotion._id,
+              promotionName: promotion.name || tr('Mega Combo Deal','صفقة مجمعة كبيرة'),
+              isPartOfCombo: true,
+              comboPrice: pricing.totalPrice,
+              originalPrice: product?.price || 0
+            }
+          };
+          
+          // Add each product individually
+          handleAddItem(individualProduct, qty);
+        }
+      }
+    });
+    
+    // Show success message
+    notifySuccess(`${tr('Combo deal added to cart','تمت إضافة الصفقة المجمعة إلى السلة')}`);
+    
+    console.log('Combo products added individually to cart:', selectedProducts);
   };
 
   // Navigate carousel manually with custom loop behavior
