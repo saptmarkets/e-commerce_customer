@@ -2560,5 +2560,55 @@ p:not(:last-of-type) {
   animation: button-pulse 2s ease-in-out infinite;
 }
 
+/* Hero Banner Language-Specific Text Sizing */
+/* English text - smaller to prevent overflow */
+[lang="en"] .hero-title,
+html[lang="en"] .hero-title {
+  font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  line-height: 1.2 !important;
+}
 
+[lang="en"] .hero-description,
+html[lang="en"] .hero-description {
+  font-size: clamp(0.875rem, 2.5vw, 1rem) !important;
+  line-height: 1.4 !important;
+}
 
+[lang="en"] .hero-button,
+html[lang="en"] .hero-button {
+  font-size: 1.125rem !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Arabic text - keep original larger sizes */
+[lang="ar"] .hero-title,
+html[lang="ar"] .hero-title {
+  font-size: clamp(1.875rem, 5vw, 2.25rem) !important;
+  line-height: 1.3 !important;
+}
+
+[lang="ar"] .hero-description,
+html[lang="ar"] .hero-description {
+  font-size: clamp(1rem, 3vw, 1.25rem) !important;
+  line-height: 1.5 !important;
+}
+
+[lang="ar"] .hero-button,
+html[lang="ar"] .hero-button {
+  font-size: 1.5rem !important;
+  margin-top: 0.75rem !important;
+}
+
+/* Ensure text doesn't overflow container */
+.hero-content {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  hyphens: auto !important;
+}
+
+/* Better button positioning */
+.hero-button-container {
+  margin-top: auto !important;
+  padding-top: 1rem !important;
+}

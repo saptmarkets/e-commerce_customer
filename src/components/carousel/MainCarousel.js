@@ -195,22 +195,24 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         />
         <div className="absolute inset-0 bg-black bg-opacity-30">
           <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
-            <div className={`max-w-lg ${getTextAlignment()}`}>
-              <h1 className="text-responsive-4xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+            <div className={`max-w-lg ${getTextAlignment()} hero-content`}>
+              <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
                 {item.title}
               </h1>
-              <p className="text-white text-responsive-lg mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor">
+              <p className={`hero-description text-white mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor`}>
                 {item.info}
               </p>
               {item.url && item.buttonName && (
-                <Link
-                  href={item.url}
-                  target={item.openInNewTab ? "_blank" : "_self"}
-                  rel={item.openInNewTab ? "noopener noreferrer" : ""}
-                  className="inline-block px-8 py-4 text-2xl font-bold bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200 shadow-lg font-noor"
-                >
-                  {item.buttonName}
-                </Link>
+                <div className="hero-button-container">
+                  <Link
+                    href={item.url}
+                    target={item.openInNewTab ? "_blank" : "_self"}
+                    rel={item.openInNewTab ? "noopener noreferrer" : ""}
+                    className={`hero-button inline-block px-8 py-4 font-bold bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200 shadow-lg font-noor`}
+                  >
+                    {item.buttonName}
+                  </Link>
+                </div>
               )}
             </div>
           </div>
@@ -284,22 +286,24 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         />
         <div className={currentAnimation.overlay}>
           <div className="flex flex-col justify-center h-full responsive-padding">
-            <div className={currentAnimation.content}>
-              <h1 className="text-responsive-3xl font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor">
+            <div className={`${currentAnimation.content} hero-content`}>
+              <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
                 {item.title}
               </h1>
-              <p className="text-white text-responsive-base mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor">
+              <p className={`hero-description text-white mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor`}>
                 {item.info}
               </p>
               {item.url && item.buttonName && (
-                <Link
-                  href={item.url}
-                  target={item.openInNewTab ? "_blank" : "_self"}
-                  rel={item.openInNewTab ? "noopener noreferrer" : ""}
-                  className="inline-block px-6 py-3 text-xl font-bold bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200 shadow-lg font-noor"
-                >
-                  {item.buttonName}
-                </Link>
+                <div className="hero-button-container">
+                  <Link
+                    href={item.url}
+                    target={item.openInNewTab ? "_blank" : "_self"}
+                    rel={item.openInNewTab ? "noopener noreferrer" : ""}
+                    className={`hero-button inline-block px-6 py-3 font-bold bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200 shadow-lg font-noor`}
+                  >
+                    {item.buttonName}
+                  </Link>
+                </div>
               )}
             </div>
           </div>
