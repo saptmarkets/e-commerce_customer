@@ -186,7 +186,7 @@ const MainCarousel = ({ animationType = 'fade' }) => {
       <div className="relative w-full h-full">
         <Image 
           src={item.image}
-          alt={item.title}
+          alt={item.title && item.title.trim() ? item.title : 'Banner image'}
           fill
           className="object-cover w-full h-full"
           sizes="100vw" // Add sizes prop for performance
@@ -196,13 +196,17 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className="absolute inset-0 bg-black bg-opacity-30">
           <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
             <div className={`max-w-2xl ${getTextAlignment()} hero-content`}>
-              <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
-                {item.title}
-              </h1>
-              <p className={`hero-description text-white mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor`}>
-                {item.info}
-              </p>
-              {item.url && item.buttonName && (
+              {item.title && item.title.trim() && (
+                <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
+                  {item.title}
+                </h1>
+              )}
+              {item.info && item.info.trim() && (
+                <p className={`hero-description text-white mb-5 sm:mb-7 md:mb-9 max-w-md drop-shadow-md font-noor`}>
+                  {item.info}
+                </p>
+              )}
+              {item.url && item.buttonName && item.buttonName.trim() && (
                 <div className="hero-button-container">
                   <Link
                     href={item.url}
@@ -277,7 +281,7 @@ const MainCarousel = ({ animationType = 'fade' }) => {
       <div className={currentAnimation.container}>
         <Image 
           src={item.image}
-          alt={item.title}
+          alt={item.title && item.title.trim() ? item.title : 'Banner image'}
           fill
           className={currentAnimation.image}
           sizes="100vw"
@@ -287,13 +291,17 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className={currentAnimation.overlay}>
           <div className="flex flex-col justify-center h-full responsive-padding">
             <div className={`${currentAnimation.content} hero-content max-w-2xl`}>
-              <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
-                {item.title}
-              </h1>
-              <p className={`hero-description text-white mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor`}>
-                {item.info}
-              </p>
-              {item.url && item.buttonName && (
+              {item.title && item.title.trim() && (
+                <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
+                  {item.title}
+                </h1>
+              )}
+              {item.info && item.info.trim() && (
+                <p className={`hero-description text-white mb-4 sm:mb-6 md:mb-8 max-w-md drop-shadow-md font-noor`}>
+                  {item.info}
+                </p>
+              )}
+              {item.url && item.buttonName && item.buttonName.trim() && (
                 <div className="hero-button-container">
                   <Link
                     href={item.url}
