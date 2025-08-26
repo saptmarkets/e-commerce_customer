@@ -9,15 +9,23 @@ const BannerSection = () => {
   const { lang } = useUtilsFunction();
 
   // Fetch banner from API
-  const { data: banners } = useQuery({
+  const { data: banners, isLoading, error } = useQuery({
     queryKey: ["home-middle-banner"],
     queryFn: () => BannerServices.getBannersByLocation("home-middle"),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  // Debug logging
+  console.log('🔍 BannerSection - home-middle banners:', banners);
+  console.log('🔍 BannerSection - isLoading:', isLoading);
+  console.log('🔍 BannerSection - error:', error);
+
   // Only use API data, do not render if no banner is returned
   const banner = banners?.banners?.[0];
+  console.log('🔍 BannerSection - selected banner:', banner);
+  
   if (!banner || !banner.imageUrl) {
+    console.log('🔍 BannerSection - No banner to display, returning null');
     return null;
   }
 

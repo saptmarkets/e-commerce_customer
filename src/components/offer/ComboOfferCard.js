@@ -177,21 +177,21 @@ const ComboOfferCard = ({ promotion }) => {
     
     Object.entries(selectedProducts).forEach(([productId, qty]) => {
       if (qty > 0) {
-        const product = availableProducts.find(p => p._id === productId);
+      const product = availableProducts.find(p => p._id === productId);
         if (product) {
           // Create individual product item (not combo object)
           const individualProduct = {
             id: product._id, // Use actual product ID
             title: showingTranslateValue(product.title),
             price: pricing.pricePerItem, // Combo price per item
-            quantity: qty,
-            image: product?.image?.[0] || '',
-            unitName: product?.unit?.unit?.shortCode || product?.unit?.unit?.name || 'pcs',
+        quantity: qty,
+        image: product?.image?.[0] || '',
+        unitName: product?.unit?.unit?.shortCode || product?.unit?.unit?.name || 'pcs',
             
             // Add combo reference for tracking (but don't mark as combo)
             comboReference: {
-              promotionId: promotion._id,
-              promotionName: promotionName,
+        promotionId: promotion._id,
+        promotionName: promotionName,
               isPartOfCombo: true,
               comboPrice: pricing.totalPrice,
               originalPrice: product?.price || 0
@@ -200,7 +200,7 @@ const ComboOfferCard = ({ promotion }) => {
           
           // Add each product individually
           handleAddItem(individualProduct, qty);
-        }
+      }
       }
     });
     

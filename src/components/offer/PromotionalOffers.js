@@ -32,7 +32,7 @@ const PromotionalOffers = ({
   }) || [];
   
   const displayPromotions = sortedPromotions.slice(0, maxItems) || [];
-  
+
   const getPromotionIcon = (type) => {
     switch (type) {
       case 'fixed_price':
