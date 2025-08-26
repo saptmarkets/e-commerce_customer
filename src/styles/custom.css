@@ -2580,23 +2580,23 @@ html[lang="en"] .hero-button {
   margin-top: 0.5rem !important;
 }
 
-/* Arabic text - keep original larger sizes */
+/* Arabic text - adjusted to prevent overflow */
 [lang="ar"] .hero-title,
 html[lang="ar"] .hero-title {
-  font-size: clamp(1.875rem, 5vw, 2.25rem) !important;
-  line-height: 1.3 !important;
+  font-size: clamp(1.5rem, 4.5vw, 2rem) !important;
+  line-height: 1.2 !important;
 }
 
 [lang="ar"] .hero-description,
 html[lang="ar"] .hero-description {
-  font-size: clamp(1rem, 3vw, 1.25rem) !important;
-  line-height: 1.5 !important;
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem) !important;
+  line-height: 1.4 !important;
 }
 
 [lang="ar"] .hero-button,
 html[lang="ar"] .hero-button {
-  font-size: 1.5rem !important;
-  margin-top: 0.75rem !important;
+  font-size: 1.25rem !important;
+  margin-top: 0.5rem !important;
 }
 
 /* Ensure text doesn't overflow container */
@@ -2605,6 +2605,29 @@ html[lang="ar"] .hero-button {
   overflow-wrap: break-word !important;
   word-wrap: break-word !important;
   hyphens: auto !important;
+  padding: 0 1rem !important;
+}
+
+/* Responsive container sizing for different screen sizes */
+@media (max-width: 640px) {
+  .hero-content {
+    max-width: 90% !important;
+    padding: 0 0.5rem !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hero-content {
+    max-width: 85% !important;
+    padding: 0 0.75rem !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .hero-content {
+    max-width: 80% !important;
+    padding: 0 1rem !important;
+  }
 }
 
 /* Better button positioning */
