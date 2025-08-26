@@ -60,7 +60,11 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     enabled: !!userInfo?.id,
   });
 
-  const hasShippingAddress = !isLoading && data && Object.keys(data)?.length > 0;
+  // Check if user has profile data that can be used as shipping address
+  const hasShippingAddress = !isLoading && userInfo && (
+    (data && Object.keys(data)?.length > 0) || 
+    (userInfo.address && userInfo.phone && userInfo.city)
+  );
 
   const {
     register,
@@ -299,9 +303,9 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
 
   const handleDefaultShippingAddress = (value) => {
     setUseExistingAddress(value);
-    if (value && data) {
-      const address = data;
-      const name = (address?.name || '').trim();
+    if (value && userInfo) {
+      // Use user profile data as the default shipping address
+      const name = (userInfo?.name || '').trim();
       let firstName = '';
       let lastName = '';
       if (name) {
@@ -310,15 +314,18 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
         lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
       }
 
-      // Populate form fields from saved address with sensible fallbacks
+      // Populate form fields from user profile data
       setValue('firstName', firstName);
       setValue('lastName', lastName);
-      setValue('address', address.address || '');
-      setValue('contact', address.contact || userInfo?.phone || '');
-      setValue('email', userInfo?.email || address.email || '');
-      setValue('city', address.city || '');
-      setValue('country', address.country || '');
-      setValue('zipCode', address.zipCode || '');
+      setValue('address', userInfo?.address || '');
+      setValue('contact', userInfo?.phone || '');
+      setValue('email', userInfo?.email || '');
+      setValue('city', userInfo?.city || '');
+      setValue('country', userInfo?.country || '');
+      setValue('zipCode', userInfo?.zipCode || '');
+      
+      // Note: Location coordinates are managed in the main checkout component
+      // This hook focuses on form field population
     } else {
       // Clear fields (keep common user defaults where appropriate)
       setValue('firstName', '');
@@ -329,6 +336,8 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
       setValue('city', '');
       setValue('country', '');
       setValue('zipCode', '');
+      
+      // Note: Location data is managed in the main checkout component
     }
   };
 

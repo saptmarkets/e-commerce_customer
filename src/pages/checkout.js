@@ -224,6 +224,40 @@ const Checkout = () => {
     }
   };
 
+  // Custom handler for default shipping address that also handles location data
+  const handleDefaultShippingAddressWithLocation = (value) => {
+    // First call the hook's function to populate form fields
+    handleDefaultShippingAddress(value);
+    
+    if (value && userInfo) {
+      // Also set location data if available from user profile
+      if (userInfo?.latitude && userInfo?.longitude) {
+        setUserLocation({
+          latitude: userInfo.latitude,
+          longitude: userInfo.longitude,
+          address: userInfo.address
+        });
+        
+        // Set manual location data for consistency
+        setManualLocationData({
+          addressComponents: {
+            city: userInfo.city || '',
+            country: userInfo.country || 'Saudi Arabia',
+            streetAddress: userInfo.address || ''
+          },
+          formattedAddress: userInfo.address || ''
+        });
+        
+        // Update location option to manual since we're using profile data
+        setSelectedLocationOption('manual');
+      }
+    } else {
+      // Clear location data when unchecking
+      setUserLocation(null);
+      setManualLocationData(null);
+    }
+  };
+
   // Reverse geocoding function for manual coordinates
   const reverseGeocodeManualCoords = async (lat, lng) => {
     try {
@@ -647,7 +681,7 @@ const Checkout = () => {
                         id="shipping-address"
                         title={tr('Use Default Shipping Address', 'استخدم عنوان الشحن الافتراضي')}
                         processOption={useExistingAddress}
-                        handleProcess={handleDefaultShippingAddress}
+                        handleProcess={handleDefaultShippingAddressWithLocation}
                       />
                     </div>
                   )}
