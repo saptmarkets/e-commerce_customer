@@ -144,7 +144,8 @@ const DynamicHomepage = () => {
             viewAllLink={content?.viewAllLink || "/products"}
             cardVariant={settings?.cardVariant || "simple"}
             gridCols={settings?.gridCols || "lg:grid-cols-5"}
-            excludeProductIds={promoProductIdSet}
+            // 🔥 FIX: Remove exclusion so promotional products show everywhere
+            // excludeProductIds={promoProductIdSet}
           />
         ) : null;
 
@@ -160,7 +161,8 @@ const DynamicHomepage = () => {
             viewAllLink={content?.viewAllLink || "/products"}
             cardVariant={settings?.cardVariant || "simple"}
             gridCols={settings?.gridCols || "lg:grid-cols-5"}
-            excludeProductIds={promoProductIdSet}
+            // 🔥 FIX: Remove exclusion so promotional products show everywhere
+            // excludeProductIds={promoProductIdSet}
           />
         ) : null;
 
@@ -187,7 +189,8 @@ const DynamicHomepage = () => {
             viewAllLink={content?.viewAllLink || "/offer"}
             cardVariant={settings?.cardVariant || "simple"}
             gridCols={settings?.gridCols || "lg:grid-cols-5"}
-            excludeProductIds={promoProductIdSet}
+            // 🔥 FIX: Remove exclusion so promotional products show everywhere
+            // excludeProductIds={promoProductIdSet}
           />
         ) : null;
 

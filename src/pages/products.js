@@ -57,28 +57,32 @@ const AllProducts = ({ initialProducts, attributes }) => {
           totalDocCount = data.totalProducts || data.totalDoc || productsData.length;
         }
         
-        const activePromotions = await PromotionServices.getActivePromotions();
+        // 🔥 FIX: Remove promotion exclusion so promotional products show everywhere
+        // const activePromotions = await PromotionServices.getActivePromotions();
         
-        const productsWithPromotions = new Set();
+        // const productsWithPromotions = new Set();
         
-        activePromotions.forEach(promotion => {
-          if (promotion.productUnit && promotion.productUnit.product) {
-            productsWithPromotions.add(promotion.productUnit.product._id);
-          }
-          if (promotion.productUnits && Array.isArray(promotion.productUnits)) {
-            promotion.productUnits.forEach(productUnit => {
-              if (productUnit.product) {
-                productsWithPromotions.add(productUnit.product._id);
-              }
-            });
-          }
-        });
+        // activePromotions.forEach(promotion => {
+        //   if (promotion.productUnit && promotion.productUnit.product) {
+        //     productsWithPromotions.add(promotion.productUnit.product._id);
+        //   }
+        //   if (promotion.productUnits && Array.isArray(promotion.productUnits)) {
+        //     promotion.productUnits.forEach(productUnit => {
+        //       if (productUnit.product) {
+        //             productsWithPromotions.add(productUnit.product._id);
+        //           }
+        //     });
+        //   }
+        // });
         
-        const regularProducts = productsData.filter(product => 
-          !productsWithPromotions.has(product._id)
-        );
+        // const regularProducts = productsData.filter(product => 
+        //   !productsWithPromotions.has(product._id)
+        // );
         
-        setProducts(regularProducts);
+        // setProducts(regularProducts);
+        
+        // ✅ Show all products including promotional ones
+        setProducts(productsData);
         setTotalProducts(totalDocCount);
         setLoading(false);
       } catch (error) {
