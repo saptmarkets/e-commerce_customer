@@ -23,6 +23,10 @@ const Promotions = ({ attributes }) => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   
+  // 🔥 NEW: Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(20); // Show 20 products per page
+  
   // Fetch active promotions instead of general products
   const { data: activePromotions, isLoading: storeDataLoading } = useQuery({
     queryKey: ["active-promotions-for-promotions-page"],
@@ -45,9 +49,53 @@ const Promotions = ({ attributes }) => {
         minQty: promo.minQty,
         maxQty: promo.maxQty,
         startDate: promo.startDate,
-        endDate: promo.endDate
+        endDate: promo.endDate,
+        // 🔥 FIX: Add multi-unit support properties
+        hasMultiUnits: true,
+        productUnit: promo.productUnit,
+        // Add promotion data for proper display
+        promotion: {
+          ...promo,
+          originalPrice: promo.productUnit.price,
+          promotionalPrice: promo.value,
+          savings: promo.productUnit.price - promo.value,
+          savingsPercent: promo.productUnit.price > 0 ? ((promo.productUnit.price - promo.value) / promo.productUnit.price) * 100 : 0,
+          unit: promo.productUnit,
+          productUnit: promo.productUnit
+        }
       }));
   }, [activePromotions]);
+
+  // 🔥 NEW: Pagination logic for fixed price products
+  const paginatedFixedPriceProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return normalizedProductsWithFixedPrices.slice(startIndex, endIndex);
+  }, [normalizedProductsWithFixedPrices, currentPage, itemsPerPage]);
+
+  // 🔥 NEW: Pagination logic for combo deals
+  const paginatedComboDeals = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return comboPromotions.slice(startIndex, endIndex);
+  }, [comboPromotions, currentPage, itemsPerPage]);
+
+  // 🔥 NEW: Calculate total pages
+  const totalPagesFixedPrice = Math.ceil(normalizedProductsWithFixedPrices.length / itemsPerPage);
+  const totalPagesComboDeals = Math.ceil(comboPromotions.length / itemsPerPage);
+  const totalPages = Math.max(totalPagesFixedPrice, totalPagesComboDeals);
+
+  // 🔥 NEW: Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 🔥 NEW: Reset to first page when tab changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
   
   // Get tab from URL query
   useEffect(() => {
@@ -214,7 +262,7 @@ const Promotions = ({ attributes }) => {
                   {tr('Special Price Offers', 'عروض الأسعار الخاصة')} ({normalizedProductsWithFixedPrices.length} {lang === 'ar' ? 'منتج' : 'products'})
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
-                  {normalizedProductsWithFixedPrices.map((product) => (
+                  {paginatedFixedPriceProducts.map((product) => (
                     <ProductCardModern
                       key={product._id}
                       product={product}
@@ -225,6 +273,54 @@ const Promotions = ({ attributes }) => {
                     />
                   ))}
                 </div>
+                
+                {/* 🔥 NEW: Pagination for Fixed Price Products */}
+                {totalPagesFixedPrice > 1 && (
+                  <div className="mt-8 flex justify-center">
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                      {/* Previous Page */}
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-3 py-2 rounded-md text-sm font-medium ${
+                          currentPage === 1
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                        }`}
+                      >
+                        {lang === 'ar' ? 'السابق' : 'Previous'}
+                      </button>
+                      
+                      {/* Page Numbers */}
+                      {Array.from({ length: totalPagesFixedPrice }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 py-2 rounded-md text-sm font-medium ${
+                            currentPage === page
+                              ? 'bg-green-600 text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      
+                      {/* Next Page */}
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPagesFixedPrice}
+                        className={`px-3 py-2 rounded-md text-sm font-medium ${
+                          currentPage === totalPagesFixedPrice
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                        }`}
+                      >
+                        {lang === 'ar' ? 'التالي' : 'Next'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -236,13 +332,61 @@ const Promotions = ({ attributes }) => {
                   {tr('Combo Deals', 'عروض كومبو')} ({comboPromotions.length} {lang === 'ar' ? 'متوفر' : 'available'})
                 </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                  {comboPromotions.map((promotion) => (
+                  {paginatedComboDeals.map((promotion) => (
                     <ComboOfferCard
                       key={promotion._id}
                       promotion={promotion}
                     />
                   ))}
                 </div>
+                
+                {/* 🔥 NEW: Pagination for Combo Deals */}
+                {totalPagesComboDeals > 1 && (
+                  <div className="mt-8 flex justify-center">
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                      {/* Previous Page */}
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-3 py-2 rounded-md text-sm font-medium ${
+                          currentPage === 1
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                        }`}
+                      >
+                        {lang === 'ar' ? 'السابق' : 'Previous'}
+                      </button>
+                      
+                      {/* Page Numbers */}
+                      {Array.from({ length: totalPagesComboDeals }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 py-2 rounded-md text-sm font-medium ${
+                            currentPage === page
+                              ? 'bg-green-600 text-white'
+                              : 'bg-white text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      
+                      {/* Next Page */}
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPagesComboDeals}
+                        className={`px-3 py-2 rounded-md text-sm font-medium ${
+                          currentPage === totalPagesComboDeals
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                        }`}
+                      >
+                        {lang === 'ar' ? 'التالي' : 'Next'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -254,6 +398,20 @@ const Promotions = ({ attributes }) => {
                 <p className="text-gray-500">
                   {tr('There are no active promotions at the moment. Check back soon for amazing deals!', 'لا توجد عروض نشطة في الوقت الحالي. عد قريبًا للحصول على صفقات مذهلة!')}
                 </p>
+              </div>
+            )}
+
+            {/* 🔥 NEW: Summary and Total Count */}
+            {(normalizedProductsWithFixedPrices.length > 0 || comboPromotions.length > 0) && (
+              <div className="mt-8 text-center text-gray-600">
+                <p className="text-sm">
+                  {tr('Showing', 'عرض')} {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, Math.max(normalizedProductsWithFixedPrices.length, comboPromotions.length))} {tr('of', 'من')} {Math.max(normalizedProductsWithFixedPrices.length, comboPromotions.length)} {tr('promotions', 'عروض')}
+                </p>
+                {totalPages > 1 && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    {tr('Page', 'صفحة')} {currentPage} {tr('of', 'من')} {totalPages}
+                  </p>
+                )}
               </div>
             )}
           </>
