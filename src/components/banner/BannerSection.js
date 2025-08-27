@@ -92,9 +92,9 @@ const BannerSection = () => {
   const hasContent = hasTitle || hasDescription || hasButton;
 
   return (
-    <div className="bg-white py-8 md:py-16">
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="relative rounded-xl p-6 md:p-12 flex items-center justify-center overflow-hidden min-h-[280px] md:min-h-[320px]">
+    <div className="bg-white py-4 sm:py-8 md:py-16">
+      <div className="max-w-screen-2xl mx-auto px-2 sm:px-4 lg:px-10">
+        <div className="relative rounded-xl p-3 sm:p-6 md:p-12 flex items-center justify-center overflow-hidden min-h-[200px] sm:min-h-[280px] md:min-h-[320px]">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image 
@@ -115,12 +115,12 @@ const BannerSection = () => {
           {hasContent && (
             <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full`}>
               {hasTitle && (
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
+                <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 md:mb-6 drop-shadow-lg leading-tight">
                   {displayTitle}
                 </h2>
               )}
               {hasDescription && (
-                <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
+                <p className="text-white/90 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
                   {displayDescription}
                 </p>
               )}
@@ -129,7 +129,7 @@ const BannerSection = () => {
                   href={displayButtonLink}
                   target={openInNewTab ? "_blank" : "_self"}
                   rel={openInNewTab ? "noopener noreferrer" : ""}
-                  className="inline-block px-8 py-3 md:px-10 md:py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
+                  className="inline-block px-6 py-2.5 sm:px-8 sm:py-3 md:px-10 md:py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base"
                 >
                   {displayButtonText}
                 </Link>

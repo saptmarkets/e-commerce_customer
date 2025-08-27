@@ -2564,38 +2564,38 @@ p:not(:last-of-type) {
 /* English text - smaller to prevent overflow */
 [lang="en"] .hero-title,
 html[lang="en"] .hero-title {
-  font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  font-size: clamp(1.25rem, 3.5vw, 2rem) !important;
   line-height: 1.2 !important;
 }
 
 [lang="en"] .hero-description,
 html[lang="en"] .hero-description {
-  font-size: clamp(0.875rem, 2.5vw, 1rem) !important;
+  font-size: clamp(0.75rem, 2vw, 1rem) !important;
   line-height: 1.4 !important;
 }
 
 [lang="en"] .hero-button,
 html[lang="en"] .hero-button {
-  font-size: 1.125rem !important;
+  font-size: 1rem !important;
   margin-top: 0.5rem !important;
 }
 
 /* Arabic text - adjusted to prevent overflow */
 [lang="ar"] .hero-title,
 html[lang="ar"] .hero-title {
-  font-size: clamp(1.5rem, 4.5vw, 2rem) !important;
+  font-size: clamp(1.25rem, 3.5vw, 2rem) !important;
   line-height: 1.2 !important;
 }
 
 [lang="ar"] .hero-description,
 html[lang="ar"] .hero-description {
-  font-size: clamp(0.875rem, 2.5vw, 1.125rem) !important;
+  font-size: clamp(0.75rem, 2vw, 1.125rem) !important;
   line-height: 1.4 !important;
 }
 
 [lang="ar"] .hero-button,
 html[lang="ar"] .hero-button {
-  font-size: 1.25rem !important;
+  font-size: 1rem !important;
   margin-top: 0.5rem !important;
 }
 
