@@ -152,26 +152,28 @@ const CartItem = ({ item, currency }) => {
           {/* Quantity selector and delete button in a row */}
           <div className="flex items-center justify-between sm:justify-end gap-2">
             {/* Quantity selector with better mobile styling */}
-            <div className={`h-9 w-24 sm:w-28 flex items-center justify-between p-1.5 border-2 border-gray-200 bg-white text-gray-600 rounded-lg shadow-sm ${item.isCombo ? 'bg-purple-50 border-purple-300' : 'hover:border-gray-300'}`}>
+            <div className={`h-9 w-24 sm:w-28 flex items-center justify-center border-2 border-gray-200 bg-white text-gray-600 rounded-lg shadow-sm overflow-hidden ${item.isCombo ? 'bg-purple-50 border-purple-300' : 'hover:border-gray-300'}`}>
               <button
                 onClick={handleDecrease}
                 disabled={item.isCombo}
-                className={`p-1 rounded-md transition-colors ${item.isCombo ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
+                className={`h-full w-8 flex items-center justify-center transition-colors ${item.isCombo ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
               >
-                <span className="text-dark text-base">
+                <span className="text-dark text-sm">
                   <FiMinus />
                 </span>
               </button>
-              <p className={`text-sm font-semibold px-2 min-w-[2rem] text-center ${item.isCombo ? 'text-purple-600' : 'text-dark'}`}>
-                {item.quantity}
-                {item.isCombo && <span className="text-xs text-purple-500 ml-1">(fixed)</span>}
-              </p>
+              <div className={`flex-1 h-full flex items-center justify-center px-1 ${item.isCombo ? 'text-purple-600' : 'text-dark'}`}>
+                <p className="text-sm font-semibold text-center">
+                  {item.quantity}
+                  {item.isCombo && <span className="text-xs text-purple-500 ml-1">(fixed)</span>}
+                </p>
+              </div>
               <button 
                 onClick={() => handleIncreaseQuantity(item)}
                 disabled={item.isCombo}
-                className={`p-1 rounded-md transition-colors ${item.isCombo ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
+                className={`h-full w-8 flex items-center justify-center transition-colors ${item.isCombo ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
               >
-                <span className="text-dark text-base">
+                <span className="text-dark text-sm">
                   <FiPlus />
                 </span>
               </button>
