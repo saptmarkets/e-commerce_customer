@@ -60,8 +60,8 @@ const PromotionsHeroBanner = () => {
       if (stringValue) return stringValue;
     }
     
-    // If it's already a string, return as is
-    return field;
+    // Final guard: never return objects to React children
+    return fallback;
   };
 
   // Fetch banners from API
