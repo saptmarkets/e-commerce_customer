@@ -93,7 +93,7 @@ const BannerSection = () => {
 
   return (
     <div className="bg-white py-4 sm:py-8 md:py-16">
-      <div className="max-w-screen-2xl mx-auto px-2 sm:px-4 lg:px-10">
+      <div className="max-w-screen-xl mx-auto responsive-padding">
         <div className="relative rounded-xl p-3 sm:p-6 md:p-12 flex items-center justify-center overflow-hidden min-h-[200px] sm:min-h-[280px] md:min-h-[320px]">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
@@ -113,7 +113,7 @@ const BannerSection = () => {
           
           {/* Content - Only display if there's meaningful content */}
           {hasContent && (
-            <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full`}>
+            <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full responsive-padding`}>
               {hasTitle && (
                 <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 md:mb-6 drop-shadow-lg leading-tight">
                   {displayTitle}

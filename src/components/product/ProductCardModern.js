@@ -802,7 +802,7 @@ const ProductCardModern = ({
                           {isSelected && <IoCheckmarkCircle size={12} />}
                         </div>
                         {unit.packQty > 1 && (
-                          <div className="text-[10px] opacity-75 leading-tight">
+                          <div className="text-[8px] sm:text-[10px] opacity-75 leading-tight">
                             {unit.packQty} {t('pcs')}
                           </div>
                         )}
@@ -825,7 +825,7 @@ const ProductCardModern = ({
               {/* Left – pack info */}
               {packInfo && (
               <div className="flex-1 p-2 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-[10px] sm:text-xs text-blue-800">
+                <div className="text-[8px] sm:text-[10px] md:text-xs text-blue-800">
                   {/* Pack details in a cleaner grid layout - mobile optimized */}
                   <div className="space-y-0.5 sm:space-y-1">
                     <div className="flex justify-between items-center">
