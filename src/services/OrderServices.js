@@ -21,11 +21,11 @@ const OrderServices = {
   },
 
   updateOrder: async (id, body) => {
-    return requests.put(`/order/${id}`, body);
+    return requests.put(`/customer-order/${id}`, body);
   },
 
   deleteOrder: async (id) => {
-    return requests.delete(`/order/${id}`);
+    return requests.delete(`/customer-order/${id}`);
   },
 
   // Cancel customer's own order

@@ -16,6 +16,11 @@ const EditOrderButton = ({ order }) => {
   // Feature flag check (default enabled if env not set)
   const isEditEnabled = ((process.env.NEXT_PUBLIC_REVERT_TO_CHECKOUT_ENABLED ?? 'true') === 'true');
 
+  // Early return if order is not available
+  if (!order || !order._id) {
+    return null;
+  }
+
   // Check if order can be edited
   const canEdit = order?.status === 'Received' && 
                   !order?.lockedAt && 
@@ -23,7 +28,7 @@ const EditOrderButton = ({ order }) => {
                   isEditEnabled;
 
   const handleEditOrder = async () => {
-    if (!canEdit) return;
+    if (!canEdit || !order?._id) return;
 
     setIsLoading(true);
     try {
