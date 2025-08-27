@@ -137,7 +137,9 @@ const CartItem = ({ item, currency }) => {
             {tr('Min quantity','الحد الأدنى للكمية')}: {item.minQty} {getLocalizedUnitName(item.unit, lang)}
           </span>
         )}
-        <div className="flex items-center justify-between">
+                {/* Mobile-optimized layout for quantity and price */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
+          {/* Price and combo info */}
           <div className="font-bold text-sm md:text-base text-heading leading-5">
             <span>{formatPrice(calculateTotalPrice())}</span>
             {item.isCombo && (
@@ -146,36 +148,43 @@ const CartItem = ({ item, currency }) => {
               </div>
             )}
           </div>
-          <div className={`h-8 w-22 md:w-24 lg:w-24 flex flex-wrap items-center justify-evenly p-1 border border-gray-100 bg-white text-gray-600 rounded-md ${item.isCombo ? 'bg-purple-50 border-purple-200' : ''}`}>
+          
+          {/* Quantity selector and delete button in a row */}
+          <div className="flex items-center justify-between sm:justify-end gap-2">
+            {/* Quantity selector with better mobile styling */}
+            <div className={`h-9 w-24 sm:w-28 flex items-center justify-between p-1.5 border-2 border-gray-200 bg-white text-gray-600 rounded-lg shadow-sm ${item.isCombo ? 'bg-purple-50 border-purple-300' : 'hover:border-gray-300'}`}>
+              <button
+                onClick={handleDecrease}
+                disabled={item.isCombo}
+                className={`p-1 rounded-md transition-colors ${item.isCombo ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
+              >
+                <span className="text-dark text-base">
+                  <FiMinus />
+                </span>
+              </button>
+              <p className={`text-sm font-semibold px-2 min-w-[2rem] text-center ${item.isCombo ? 'text-purple-600' : 'text-dark'}`}>
+                {item.quantity}
+                {item.isCombo && <span className="text-xs text-purple-500 ml-1">(fixed)</span>}
+              </p>
+              <button 
+                onClick={() => handleIncreaseQuantity(item)}
+                disabled={item.isCombo}
+                className={`p-1 rounded-md transition-colors ${item.isCombo ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
+              >
+                <span className="text-dark text-base">
+                  <FiPlus />
+                </span>
+              </button>
+            </div>
+            
+            {/* Delete button */}
             <button
-              onClick={handleDecrease}
-              disabled={item.isCombo}
-              className={item.isCombo ? 'opacity-50 cursor-not-allowed' : ''}
+              onClick={() => removeItem(item.id)}
+              className="p-2 hover:bg-red-50 hover:text-red-600 text-red-400 rounded-lg transition-colors"
             >
-              <span className="text-dark text-base">
-                <FiMinus />
-              </span>
-            </button>
-            <p className={`text-sm font-semibold px-1 ${item.isCombo ? 'text-purple-600' : 'text-dark'}`}>
-              {item.quantity}
-              {item.isCombo && <span className="text-xs text-purple-500 ml-1">(fixed)</span>}
-            </p>
-            <button 
-              onClick={() => handleIncreaseQuantity(item)}
-              disabled={item.isCombo}
-              className={item.isCombo ? 'opacity-50 cursor-not-allowed' : ''}
-            >
-              <span className="text-dark text-base">
-                <FiPlus />
-              </span>
+              <FiTrash2 size={16} />
             </button>
           </div>
-          <button
-            onClick={() => removeItem(item.id)}
-            className="hover:text-red-600 text-red-400 text-lg cursor-pointer"
-          >
-            <FiTrash2 />
-          </button>
         </div>
       </div>
     </div>
