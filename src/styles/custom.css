@@ -2635,3 +2635,22 @@ html[lang="ar"] .hero-button {
   margin-top: auto !important;
   padding-top: 1rem !important;
 }
+
+/* Mobile banner optimization for 1200x300 images */
+@media (max-width: 640px) {
+  .banner-section-container {
+    aspect-ratio: 4/1 !important;
+    min-height: auto !important;
+  }
+  
+  .banner-section-container img {
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .banner-section-container img {
+    object-fit: cover !important;
+  }
+}

@@ -94,16 +94,19 @@ const BannerSection = () => {
   return (
     <div className="bg-white py-4 sm:py-8 md:py-16">
       <div className="w-full max-w-screen-2xl mx-auto px-2 sm:px-4 lg:px-8 xl:px-10">
-        <div className="relative rounded-xl p-3 sm:p-6 md:p-12 flex items-center justify-center overflow-hidden min-h-[200px] sm:min-h-[280px] md:min-h-[320px]">
+        <div className="relative rounded-xl p-3 sm:p-6 md:p-12 flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[280px] md:min-h-[320px] banner-section-container">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image 
               src={displayBannerImage}
               alt={lang === 'ar' ? 'خلفية الإعلان' : 'Banner Background'}
               fill
-              className="object-cover w-full h-full"
+              className="object-contain sm:object-cover w-full h-full"
               priority
               sizes="100vw"
+              style={{
+                objectPosition: 'center center'
+              }}
             />
           </div>
           
