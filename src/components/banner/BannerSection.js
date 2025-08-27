@@ -84,6 +84,12 @@ const BannerSection = () => {
   const displayBannerImage = banner.imageUrl; // Should be a Cloudinary URL
   const openInNewTab = banner.openInNewTab || false;
 
+  // Check if we have meaningful content to display
+  const hasTitle = displayTitle && displayTitle.trim() !== '';
+  const hasDescription = displayDescription && displayDescription.trim() !== '';
+  const hasButton = displayButtonLink && displayButtonText && displayButtonText.trim() !== '';
+  const hasContent = hasTitle || hasDescription || hasButton;
+
   return (
     <div className="bg-white py-8 md:py-16">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10">
@@ -98,27 +104,37 @@ const BannerSection = () => {
               priority
             />
           </div>
-          {/* Responsive Overlay */}
-          <div className={`absolute inset-0 bg-black bg-opacity-40 md:bg-gradient-to-${lang === 'ar' ? 'l' : 'r'} md:from-black/60 md:via-black/30 md:to-transparent z-[1]`}></div>
-          {/* Content - Centered on mobile, direction-aware on desktop */}
-          <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
-              {displayTitle}
-            </h2>
-            <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
-              {displayDescription}
-            </p>
-            {displayButtonLink && displayButtonText && (
-              <Link 
-                href={displayButtonLink}
-                target={openInNewTab ? "_blank" : "_self"}
-                rel={openInNewTab ? "noopener noreferrer" : ""}
-                className="inline-block px-8 py-3 md:px-10 md:py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
-              >
-                {displayButtonText}
-              </Link>
-            )}
-          </div>
+          
+          {/* Responsive Overlay - Only show if there's content to overlay */}
+          {hasContent && (
+            <div className={`absolute inset-0 bg-black bg-opacity-40 md:bg-gradient-to-${lang === 'ar' ? 'l' : 'r'} md:from-black/60 md:via-black/30 md:to-transparent z-[1]`}></div>
+          )}
+          
+          {/* Content - Only display if there's meaningful content */}
+          {hasContent && (
+            <div className={`relative z-10 text-center md:text-${lang === 'ar' ? 'right' : 'left'} max-w-2xl mx-auto md:mx-0 md:w-full`}>
+              {hasTitle && (
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg leading-tight">
+                  {displayTitle}
+                </h2>
+              )}
+              {hasDescription && (
+                <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
+                  {displayDescription}
+                </p>
+              )}
+              {hasButton && (
+                <Link 
+                  href={displayButtonLink}
+                  target={openInNewTab ? "_blank" : "_self"}
+                  rel={openInNewTab ? "noopener noreferrer" : ""}
+                  className="inline-block px-8 py-3 md:px-10 md:py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
+                >
+                  {displayButtonText}
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
