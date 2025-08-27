@@ -1,25 +1,9 @@
 import requests from "./httpServices";
-import Cookies from "js-cookie";
 
 const OrderServices = {
   addOrder: async (body) => {
-    // Get the token from cookies
-    const userInfoStr = Cookies.get("userInfo");
-    if (!userInfoStr) {
-      throw new Error("You must be logged in to place an order");
-    }
-    
-    const userInfo = JSON.parse(userInfoStr);
-    if (!userInfo.token) {
-      throw new Error("Invalid session. Please log in again");
-    }
-    
-    // Add token to headers for authorization
-    const headers = {
-      Authorization: `Bearer ${userInfo.token}`
-    };
-    
-    return requests.post("/customer-order/add", body, { headers });
+    // Token is automatically handled by httpServices interceptor
+    return requests.post("/customer-order/add", body);
   },
 
   getOrderCustomer: async ({ page = 1, limit = 8 }) => {
@@ -57,25 +41,10 @@ const OrderServices = {
 
   // Cash on Delivery
   addCashOrder: async (body) => {
-    // Get the token from cookies
-    const userInfoStr = Cookies.get("userInfo");
-    if (!userInfoStr) {
-      throw new Error("You must be logged in to place an order");
-    }
-    
-    const userInfo = JSON.parse(userInfoStr);
-    if (!userInfo.token) {
-      throw new Error("Invalid session. Please log in again");
-    }
-    
-    // Add token to headers for authorization
-    const headers = {
-      Authorization: `Bearer ${userInfo.token}`
-    };
-    
+    // Token is automatically handled by httpServices interceptor
     // Ensure payment method is COD for backend validation
     const payload = { ...body, paymentMethod: 'COD' };
-    return requests.post("/customer-order/add", payload, { headers });
+    return requests.post("/customer-order/add", payload);
   },
 
   // New method for reverting order to checkout
