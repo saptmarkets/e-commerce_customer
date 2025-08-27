@@ -153,13 +153,13 @@ html[lang="ar"] .slogan-arabic {
 .testimonial-dots {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 8px;
+  margin-top: 20px;
 }
 
 .testimonial-dot {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background-color: #d1d5db;
   border: none;
@@ -260,24 +260,35 @@ html[lang="ar"] .slogan-arabic {
 /* Responsive adjustments for testimonials */
 @media (max-width: 640px) {
   .testimonial-dot {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
+  }
+  
+  .testimonial-dots {
+    gap: 6px;
+    margin-top: 16px;
   }
   
   .testimonial-nav-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 }
 
 @media (max-width: 480px) {
   .testimonial-dots {
-    gap: 8px;
+    gap: 4px;
+    margin-top: 12px;
   }
   
   .testimonial-dot {
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
+  }
+  
+  .testimonial-nav-btn {
+    width: 28px;
+    height: 28px;
   }
 }
 
