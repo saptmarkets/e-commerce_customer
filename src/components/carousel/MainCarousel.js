@@ -136,7 +136,8 @@ const MainCarousel = ({ animationType = 'fade' }) => {
       rightImageAnimation: banner.rightImageAnimation || 'slideUp',
       centerImageAnimation: banner.centerImageAnimation || 'slideRight',
       textAlignment: banner.textAlignment || { en: 'left', ar: 'right' },
-      openInNewTab: banner.openInNewTab
+      openInNewTab: banner.openInNewTab,
+      showTitle: banner.showTitle !== undefined ? banner.showTitle : true
     };
   });
 
@@ -196,7 +197,7 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className="absolute inset-0 bg-black bg-opacity-30">
           <div className="flex flex-col justify-center h-full max-w-screen-xl mx-auto responsive-padding">
             <div className={`max-w-2xl ${getTextAlignment()} hero-content`}>
-              {item.title && item.title.trim() && (
+              {item.showTitle && item.title && item.title.trim() && (
                 <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
                   {item.title}
                 </h1>
@@ -291,7 +292,7 @@ const MainCarousel = ({ animationType = 'fade' }) => {
         <div className={currentAnimation.overlay}>
           <div className="flex flex-col justify-center h-full responsive-padding">
             <div className={`${currentAnimation.content} hero-content max-w-2xl`}>
-              {item.title && item.title.trim() && (
+              {item.showTitle && item.title && item.title.trim() && (
                 <h1 className={`hero-title font-black text-white mb-4 sm:mb-5 drop-shadow-md font-noor`}>
                   {item.title}
                 </h1>

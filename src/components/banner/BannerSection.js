@@ -84,8 +84,9 @@ const BannerSection = () => {
   const displayBannerImage = banner.imageUrl; // Should be a Cloudinary URL
   const openInNewTab = banner.openInNewTab || false;
 
-  // Check if we have meaningful content to display
-  const hasTitle = displayTitle && displayTitle.trim() !== '';
+  // Check if we have meaningful content to display AND if showTitle is enabled
+  const showTitle = banner.showTitle !== undefined ? banner.showTitle : true; // Default to true for backward compatibility
+  const hasTitle = showTitle && displayTitle && displayTitle.trim() !== '';
   const hasDescription = displayDescription && displayDescription.trim() !== '';
   const hasButton = displayButtonLink && displayButtonText && displayButtonText.trim() !== '';
   const hasContent = hasTitle || hasDescription || hasButton;
