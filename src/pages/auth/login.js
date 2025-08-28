@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useMemo } from "react";
 import { FiLock, FiMail } from "react-icons/fi";
 import useTranslation from "next-translate/useTranslation";
 
@@ -18,11 +18,12 @@ const Login = () => {
   const { t } = useTranslation('common');
   const { handleSubmit, submitHandler, register, errors, loading } = useLoginSubmit();
   const { state } = useContext(UserContext);
+  
+  // Memoize userInfo to prevent unnecessary re-renders
+  const userInfo = React.useMemo(() => getUserSession(), []);
 
   // Check if user is already logged in and redirect accordingly
   useEffect(() => {
-    const userInfo = getUserSession();
-    
     if (userInfo && userInfo.token) {
       // User is already logged in
       const { redirectUrl } = router.query;
@@ -36,7 +37,7 @@ const Login = () => {
         router.replace("/");
       }
     }
-  }, [router, state.userInfo]);
+  }, [router, userInfo]); // Use memoized userInfo to prevent infinite loops
 
   // Handle error from URL
   useEffect(() => {

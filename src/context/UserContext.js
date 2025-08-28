@@ -116,17 +116,22 @@ export const UserProvider = ({ children }) => {
     if (!isHydrated) return;
 
     const checkCookie = () => {
-      const userInfo = Cookies.get("userInfo");
-      if (!userInfo && state.userInfo) {
-        // Cookie expired, logout user
-        dispatch({ type: "USER_LOGOUT" });
+      try {
+        const userInfo = Cookies.get("userInfo");
+        if (!userInfo && state.userInfo) {
+          // Cookie expired, logout user
+          console.log('Cookie expired, logging out user');
+          dispatch({ type: "USER_LOGOUT" });
+        }
+      } catch (error) {
+        console.error('Error checking cookie expiry:', error);
       }
     };
 
-    // Check every 5 minutes instead of every minute to reduce server load
-    const interval = setInterval(checkCookie, 300000);
+    // Check every 10 minutes instead of 5 to reduce unnecessary checks
+    const interval = setInterval(checkCookie, 600000);
     return () => clearInterval(interval);
-  }, [state.userInfo, isHydrated]);
+  }, [isHydrated]); // Remove state.userInfo dependency to prevent unnecessary re-runs
 
   const value = { state, dispatch, isHydrated };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
