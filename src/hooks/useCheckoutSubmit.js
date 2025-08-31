@@ -286,10 +286,17 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
   //handle cash payment (COD only)
   const handleCashPayment = async (orderInfo) => {
     try {
+      console.log('🔍 DEBUG: Starting order creation...');
+      console.log('🔍 DEBUG: Order info:', JSON.stringify(orderInfo, null, 2));
+      console.log('🔍 DEBUG: API URL:', process.env.NEXT_PUBLIC_API_BASE_URL || "https://e-commerce-backend-l0s0.onrender.com/api");
+      
       const orderResponse = await OrderServices.addCashOrder(orderInfo);
+      console.log('🔍 DEBUG: Order created successfully:', orderResponse);
       await handleOrderSuccess(orderResponse, orderInfo);
     } catch (err) {
       console.error("Cash payment error:", err.message);
+      console.error("Cash payment error details:", err);
+      console.error("Cash payment error response:", err.response);
       throw new Error(err.message);
     }
   };
@@ -349,30 +356,59 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     }
     setIsCouponAvailable(true);
     try {
-      const coupons = await CouponServices.getShowingCoupons();
-      const result = coupons.filter((coupon) => coupon.couponCode === couponRef.current.value);
+      // Get customer phone from user context or form
+      const customerPhone = userInfo?.phone || userInfo?.contact || '';
+      
+      if (!customerPhone) {
+        notifyError("Please provide your phone number to validate coupon!");
+        setIsCouponAvailable(false);
+        return;
+      }
+
+      // Validate coupon in Odoo
+      const validationResult = await CouponServices.validateOdooCoupon(
+        couponRef.current.value,
+        customerPhone
+      );
+
       setIsCouponAvailable(false);
-      if (result.length < 1) {
-        notifyError("Please Input a Valid Coupon!");
+
+      if (!validationResult.success || !validationResult.data?.valid) {
+        const errorMessage = validationResult.data?.error || "Invalid coupon code";
+        notifyError(errorMessage);
         return;
       }
-      if (dayjs().isAfter(dayjs(result[0]?.endTime))) {
-        notifyError("This coupon is not valid!");
+
+      const couponData = validationResult.data;
+      
+      // Check minimum amount requirement
+      if (total < couponData.discountAmount) {
+        notifyError(`Coupon value (${couponData.discountAmount}) cannot exceed order total (${total})`);
         return;
       }
-      if (total < result[0]?.minimumAmount) {
-        notifyError(`Minimum ${result[0].minimumAmount} USD required for Apply this coupon!`);
-        return;
-      } else {
-        notifySuccess(`Your Coupon ${result[0].couponCode} is Applied on ${result[0].productType}!`);
-        setIsCouponApplied(true);
-        setMinimumAmount(result[0]?.minimumAmount);
-        setDiscountPercentage(result[0].discountType);
-        dispatch({ type: "SAVE_COUPON", payload: result[0] });
-        Cookies.set("couponInfo", JSON.stringify(result[0]));
-      }
+
+      // Apply the coupon
+      notifySuccess(`Coupon ${couponData.couponCode} is valid! Discount: ${couponData.discountAmount}`);
+      setIsCouponApplied(true);
+      setMinimumAmount(couponData.discountAmount);
+      setDiscountPercentage(couponData.discountAmount);
+      
+      // Store coupon info for later application during order creation
+      const couponInfo = {
+        couponCode: couponData.couponCode,
+        couponId: couponData.couponId,
+        discountAmount: couponData.discountAmount,
+        isOdooCoupon: true, // Flag to identify Odoo coupons
+        validationData: couponData
+      };
+      
+      dispatch({ type: "SAVE_COUPON", payload: couponInfo });
+      Cookies.set("couponInfo", JSON.stringify(couponInfo));
+      
     } catch (error) {
-      return notifyError(error.message);
+      setIsCouponAvailable(false);
+      console.error("Coupon validation error:", error);
+      notifyError(error.response?.data?.message || "Coupon validation failed");
     }
   };
 

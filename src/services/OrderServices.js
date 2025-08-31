@@ -3,7 +3,10 @@ import requests from "./httpServices";
 const OrderServices = {
   addOrder: async (body) => {
     // Token is automatically handled by httpServices interceptor
-    return requests.post("/customer-order/add", body);
+    console.log('🔍 DEBUG: OrderServices.addOrder called with:', JSON.stringify(body, null, 2));
+    const response = await requests.post("/customer-order/add", body);
+    console.log('🔍 DEBUG: OrderServices.addOrder response:', response);
+    return response;
   },
 
   getOrderCustomer: async ({ page = 1, limit = 8 }) => {
@@ -43,8 +46,12 @@ const OrderServices = {
   addCashOrder: async (body) => {
     // Token is automatically handled by httpServices interceptor
     // Ensure payment method is COD for backend validation
+    console.log('🔍 DEBUG: OrderServices.addCashOrder called with:', JSON.stringify(body, null, 2));
     const payload = { ...body, paymentMethod: 'COD' };
-    return requests.post("/customer-order/add", payload);
+    console.log('🔍 DEBUG: OrderServices.addCashOrder payload:', JSON.stringify(payload, null, 2));
+    const response = await requests.post("/customer-order/add", payload);
+    console.log('🔍 DEBUG: OrderServices.addCashOrder response:', response);
+    return response;
   },
 
   // New method for reverting order to checkout
