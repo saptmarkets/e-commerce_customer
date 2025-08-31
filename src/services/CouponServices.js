@@ -18,10 +18,20 @@ const CouponServices = {
    * @returns {Object} Validation result
    */
   validateOdooCoupon: async (couponCode, customerPhone) => {
-    return requests.post("/odoo-integration/validate-coupon", {
-      couponCode,
-      customerPhone
-    });
+    console.log('🔍 DEBUG: CouponServices.validateOdooCoupon called with:', { couponCode, customerPhone });
+    
+    try {
+      const result = await requests.post("/odoo-integration/validate-coupon", {
+        couponCode,
+        customerPhone
+      });
+      
+      console.log('🔍 DEBUG: CouponServices.validateOdooCoupon result:', result);
+      return result;
+    } catch (error) {
+      console.error('🔍 DEBUG: CouponServices.validateOdooCoupon error:', error);
+      throw error;
+    }
   },
 
   /**

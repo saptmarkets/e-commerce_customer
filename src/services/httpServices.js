@@ -1,7 +1,13 @@
 import axios from "axios";
 
 // Get API base URL from environment or use default
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://e-commerce-backend-l0s0.onrender.com/api";
+// Use localhost for development, production URL for production
+const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENVIRONMENT === 'development';
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 
+  (isDevelopment ? "http://localhost:5000/api" : "https://e-commerce-backend-l0s0.onrender.com/api");
+
+console.log('🔍 DEBUG: Environment:', process.env.NODE_ENV);
+console.log('🔍 DEBUG: API Base URL:', apiBaseUrl);
 
 // Create axios instance with default config
 const httpServices = axios.create({
