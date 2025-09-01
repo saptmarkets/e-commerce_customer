@@ -102,7 +102,7 @@ const Checkout = () => {
   const [gpsLocationData, setGpsLocationData] = useState(null);
   const [manualLocationCoords, setManualLocationCoords] = useState(null);
   
-  // Loyalty points state
+  // Legacy loyalty points state (deprecated - using Odoo integration now)
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [pointsToRedeem, setPointsToRedeem] = useState(0);
   const [loyaltyDiscount, setLoyaltyDiscount] = useState(0);
@@ -153,10 +153,21 @@ const Checkout = () => {
     hasShippingAddress,
     isCouponAvailable,
     handleDefaultShippingAddress,
-    // Add loyalty functions
+    // Legacy loyalty functions (deprecated)
     handleLoyaltyPointsRedemption,
     loyaltyDiscountAmount,
     setLoyaltyDiscountAmount,
+    // Odoo Loyalty Points functions
+    odooLoyaltyInfo,
+    loyaltyCustomerInput,
+    setLoyaltyCustomerInput,
+    isLoyaltyChecking,
+    isLoyaltyApplied,
+    handleOdooLoyaltyPoints,
+    useMaximumLoyaltyPoints,
+    useSpecificLoyaltyPoints,
+    clearOdooLoyaltyPoints,
+    pointsToRedeem,
   } = useCheckoutSubmit(storeSetting, loyaltySummary);
 
   // Now restore checkout data (requires setValue and state setters to exist)
@@ -1372,7 +1383,7 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    {/* Loyalty Points Redemption */}
+                    {/* Odoo Loyalty Points Integration */}
                     {userInfo?.id && (
                       <div className="flex items-center mt-4 py-4 lg:py-4 text-sm w-full font-semibold text-heading border-t">
                         <div className="w-full">
@@ -1381,29 +1392,82 @@ const Checkout = () => {
                               <FiStar className="text-purple-600 mr-2" />
                               <span className="text-gray-700 font-semibold">{tr('Loyalty Points', 'نقاط الولاء')}</span>
                             </div>
-                            <div className="text-purple-600 font-bold">
-                              {loyaltyPoints} {tr('available points', 'النقاط المتاحة')}
-                            </div>
+                            {odooLoyaltyInfo ? (
+                              <div className="text-purple-600 font-bold">
+                                {odooLoyaltyInfo.currentPoints} {tr('available points', 'النقاط المتاحة')}
+                              </div>
+                            ) : (
+                              <div className="text-gray-500 text-sm">
+                                {tr('Enter your loyalty number/name', 'أدخل رقم الولاء / الاسم')}
+                              </div>
+                            )}
                           </div>
                           
-                          <div className="flex flex-col sm:flex-row items-start justify-end">
-                            <input
-                              type="number"
-                              min="0"
-                              max={Math.min(maxRedeemablePoints, loyaltyPoints)}
-                              value={pointsToRedeem}
-                              onChange={handlePointsChange}
-                              placeholder={tr('Points to redeem', 'النقاط المراد استبدالها')}
-                              className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-white border-gray-200 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75"
-                            />
-                            <button
-                              type="button"
-                              onClick={applyMaxPoints}
-                              className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 mt-3 sm:mt-0 sm:ml-3 md:mt-0 md:ml-3 lg:mt-0 lg:ml-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto"
-                            >
-                              {tr('Apply Max Points', 'تطبيق أقصى نقاط')}
-                            </button>
-                          </div>
+                          {!isLoyaltyApplied ? (
+                            /* Loyalty Points Validation Form */
+                            <form onSubmit={handleOdooLoyaltyPoints} className="flex flex-col sm:flex-row items-start justify-end">
+                              <input
+                                type="text"
+                                value={loyaltyCustomerInput}
+                                onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
+                                placeholder={tr('Enter loyalty number or name', 'أدخل رقم الولاء أو الاسم')}
+                                className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-white border-gray-200 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75"
+                                disabled={isLoyaltyChecking}
+                              />
+                              <button
+                                type="submit"
+                                disabled={isLoyaltyChecking || !loyaltyCustomerInput.trim()}
+                                className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 mt-3 sm:mt-0 sm:ml-3 md:mt-0 md:ml-3 lg:mt-0 lg:ml-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {isLoyaltyChecking ? (
+                                  <span className="flex items-center">
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    {tr('Checking...', 'جاري التحقق...')}
+                                  </span>
+                                ) : (
+                                  tr('Check Points', 'تحقق من النقاط')
+                                )}
+                              </button>
+                            </form>
+                          ) : (
+                            /* Loyalty Points Usage Options */
+                            <div className="space-y-3">
+                              <div className="flex flex-col sm:flex-row items-start justify-end gap-3">
+                                <button
+                                  type="button"
+                                  onClick={useMaximumLoyaltyPoints}
+                                  className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto"
+                                >
+                                  {tr('Use Maximum Points', 'استخدم أقصى نقاط')}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={clearOdooLoyaltyPoints}
+                                  className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-red-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-red-500 bg-red-50 text-red-600 h-12 text-sm lg:text-base w-full sm:w-auto"
+                                >
+                                  {tr('Clear', 'مسح')}
+                                </button>
+                              </div>
+                              
+                              {/* Quick Points Selection */}
+                              <div className="flex flex-wrap gap-2">
+                                {[50, 100, 200, 500].map((points) => (
+                                  <button
+                                    key={points}
+                                    type="button"
+                                    onClick={() => useSpecificLoyaltyPoints(points)}
+                                    disabled={points > odooLoyaltyInfo.currentPoints}
+                                    className="px-3 py-2 text-sm border border-purple-200 rounded-md hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                  >
+                                    {points} {tr('points', 'نقاط')}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                           
                           {pointsToRedeem > 0 && (
                             <div className="mt-3 p-3 bg-purple-50 rounded-lg">
@@ -1415,27 +1479,19 @@ const Checkout = () => {
                                 <span className="text-purple-700 font-bold">-{formatPrice(loyaltyDiscountAmount)}</span>
                               </div>
                               <div className="text-xs text-purple-600 mt-1">
-                                {tr('Remaining', 'المتبقي')}: {loyaltyPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
+                                {odooLoyaltyInfo && (
+                                  <span>
+                                    {tr('Remaining', 'المتبقي')}: {odooLoyaltyInfo.currentPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
+                                  </span>
+                                )}
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setPointsToRedeem(0);
-                                  if (handleLoyaltyPointsRedemption) {
-                                    handleLoyaltyPointsRedemption(0);
-                                  }
-                                }}
-                                className="mt-2 text-xs text-red-600 hover:text-red-800 underline"
-                              >
-                                {tr('Clear points', 'مسح النقاط')}
-                              </button>
                             </div>
                           )}
                           
-                          {maxRedeemablePoints < loyaltyPoints && (
+                          {odooLoyaltyInfo && (
                             <div className="mt-2 text-xs text-gray-500">
                               <FiInfo className="inline mr-1" />
-                              {tr('Max redeemable', 'أقصى قابل للاستبدال')}: {maxRedeemablePoints} {tr('loyalty points', 'نقاط الولاء')}
+                              {tr('Customer', 'العميل')}: {odooLoyaltyInfo.customerName} ({odooLoyaltyInfo.customerPhone})
                             </div>
                           )}
                         </div>
@@ -1731,7 +1787,7 @@ const Checkout = () => {
                   </form>
                 </div>
 
-                {/* Loyalty Points Redemption */}
+                {/* Odoo Loyalty Points Integration */}
                 {userInfo?.id && (
                   <div className="flex items-center mt-4 py-4 lg:py-4 text-sm w-full font-semibold text-heading border-t">
                     <div className="w-full">
@@ -1740,29 +1796,82 @@ const Checkout = () => {
                           <FiStar className="text-purple-600 mr-2" />
                           <span className="text-gray-700 font-semibold">{tr('Loyalty Points', 'نقاط الولاء')}</span>
                         </div>
-                        <div className="text-purple-600 font-bold">
-                          {loyaltyPoints} {tr('available points', 'النقاط المتاحة')}
-                        </div>
+                        {odooLoyaltyInfo ? (
+                          <div className="text-purple-600 font-bold">
+                            {odooLoyaltyInfo.currentPoints} {tr('available points', 'النقاط المتاحة')}
+                          </div>
+                        ) : (
+                          <div className="text-gray-500 text-sm">
+                            {tr('Enter your loyalty number/name', 'أدخل رقم الولاء / الاسم')}
+                          </div>
+                        )}
                       </div>
                       
-                      <div className="flex flex-col sm:flex-row items-start justify-end">
-                        <input
-                          type="number"
-                          min="0"
-                          max={Math.min(maxRedeemablePoints, loyaltyPoints)}
-                          value={pointsToRedeem}
-                          onChange={handlePointsChange}
-                          placeholder={tr('Points to redeem', 'النقاط المراد استبدالها')}
-                          className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-white border-gray-200 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75"
-                        />
-                        <button
-                          type="button"
-                          onClick={applyMaxPoints}
-                          className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 mt-3 sm:mt-0 sm:ml-3 md:mt-0 md:ml-3 lg:mt-0 lg:ml-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto"
-                        >
-                          {tr('Apply Max Points', 'تطبيق أقصى نقاط')}
-                        </button>
-                      </div>
+                      {!isLoyaltyApplied ? (
+                        /* Loyalty Points Validation Form */
+                        <form onSubmit={handleOdooLoyaltyPoints} className="flex flex-col sm:flex-row items-start justify-end">
+                          <input
+                            type="text"
+                            value={loyaltyCustomerInput}
+                            onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
+                            placeholder={tr('Enter loyalty number or name', 'أدخل رقم الولاء أو الاسم')}
+                            className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-white border-gray-200 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75"
+                            disabled={isLoyaltyChecking}
+                          />
+                          <button
+                            type="submit"
+                            disabled={isLoyaltyChecking || !loyaltyCustomerInput.trim()}
+                            className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 mt-3 sm:mt-0 sm:ml-3 md:mt-0 md:ml-3 lg:mt-0 lg:ml-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isLoyaltyChecking ? (
+                              <span className="flex items-center">
+                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                {tr('Checking...', 'جاري التحقق...')}
+                              </span>
+                            ) : (
+                              tr('Check Points', 'تحقق من النقاط')
+                            )}
+                          </button>
+                        </form>
+                      ) : (
+                        /* Loyalty Points Usage Options */
+                        <div className="space-y-3">
+                          <div className="flex flex-col sm:flex-row items-start justify-end gap-3">
+                            <button
+                              type="button"
+                              onClick={useMaximumLoyaltyPoints}
+                              className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto"
+                            >
+                              {tr('Use Maximum Points', 'استخدم أقصى نقاط')}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={clearOdooLoyaltyPoints}
+                              className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-red-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-red-500 bg-red-50 text-red-600 h-12 text-sm lg:text-base w-full sm:w-auto"
+                            >
+                              {tr('Clear', 'مسح')}
+                            </button>
+                          </div>
+                          
+                          {/* Quick Points Selection */}
+                          <div className="flex flex-wrap gap-2">
+                            {[50, 100, 200, 500].map((points) => (
+                              <button
+                                key={points}
+                                type="button"
+                                onClick={() => useSpecificLoyaltyPoints(points)}
+                                disabled={points > odooLoyaltyInfo.currentPoints}
+                                className="px-3 py-2 text-sm border border-purple-200 rounded-md hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {points} {tr('points', 'نقاط')}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       
                       {pointsToRedeem > 0 && (
                         <div className="mt-3 p-3 bg-purple-50 rounded-lg">
@@ -1774,27 +1883,19 @@ const Checkout = () => {
                             <span className="text-purple-700 font-bold">-{formatPrice(loyaltyDiscountAmount)}</span>
                           </div>
                           <div className="text-xs text-purple-600 mt-1">
-                            {tr('Remaining', 'المتبقي')}: {loyaltyPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
+                            {odooLoyaltyInfo && (
+                              <span>
+                                {tr('Remaining', 'المتبقي')}: {odooLoyaltyInfo.currentPoints - pointsToRedeem} {tr('loyalty points', 'نقاط الولاء')}
+                              </span>
+                            )}
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPointsToRedeem(0);
-                              if (handleLoyaltyPointsRedemption) {
-                                handleLoyaltyPointsRedemption(0);
-                              }
-                            }}
-                            className="mt-2 text-xs text-red-600 hover:text-red-800 underline"
-                          >
-                            {tr('Clear points', 'مسح النقاط')}
-                          </button>
                         </div>
                       )}
                       
-                      {maxRedeemablePoints < loyaltyPoints && (
+                      {odooLoyaltyInfo && (
                         <div className="mt-2 text-xs text-gray-500">
                           <FiInfo className="inline mr-1" />
-                          {tr('Max redeemable', 'أقصى قابل للاستبدال')}: {maxRedeemablePoints} {tr('loyalty points', 'نقاط الولاء')}
+                          {tr('Customer', 'العميل')}: {odooLoyaltyInfo.customerName} ({odooLoyaltyInfo.customerPhone})
                         </div>
                       )}
                     </div>

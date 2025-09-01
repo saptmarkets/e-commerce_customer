@@ -38,6 +38,12 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
   // Loyalty points state
   const [loyaltyDiscountAmount, setLoyaltyDiscountAmount] = useState(0);
   const [pointsToRedeem, setPointsToRedeem] = useState(0);
+  
+  // Odoo Loyalty Points state
+  const [odooLoyaltyInfo, setOdooLoyaltyInfo] = useState(null);
+  const [loyaltyCustomerInput, setLoyaltyCustomerInput] = useState('');
+  const [isLoyaltyChecking, setIsLoyaltyChecking] = useState(false);
+  const [isLoyaltyApplied, setIsLoyaltyApplied] = useState(false);
 
   const router = useRouter();
   const couponRef = useRef("");
@@ -150,6 +156,107 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     setPointsToRedeem(0);
   };
 
+  // ========================================
+  // ODOO LOYALTY POINTS INTEGRATION
+  // ========================================
+
+  // Handle Odoo loyalty points validation
+  const handleOdooLoyaltyPoints = async (e) => {
+    e.preventDefault();
+    if (!loyaltyCustomerInput.trim()) {
+      notifyError("Please enter your loyalty program number/name!");
+      return;
+    }
+    
+    setIsLoyaltyChecking(true);
+    try {
+      console.log('🔍 DEBUG: Validating Odoo loyalty points for:', loyaltyCustomerInput);
+      
+      const validationResult = await LoyaltyServices.validateOdooLoyaltyPoints(loyaltyCustomerInput);
+      
+      console.log('🔍 DEBUG: Odoo loyalty validation result:', validationResult);
+      
+      if (!validationResult.success || !validationResult.data?.success) {
+        const errorMessage = validationResult.data?.error || "Loyalty points validation failed";
+        console.log('🔍 DEBUG: Loyalty validation failed:', errorMessage);
+        notifyError(errorMessage);
+        return;
+      }
+
+      const loyaltyData = validationResult.data;
+      console.log('🔍 DEBUG: Loyalty data:', loyaltyData);
+      
+      // Store loyalty info
+      setOdooLoyaltyInfo(loyaltyData);
+      setIsLoyaltyApplied(true);
+      
+      notifySuccess(`Loyalty points found! Available: ${loyaltyData.currentPoints} points`);
+      
+    } catch (error) {
+      setIsLoyaltyChecking(false);
+      console.error("🔍 DEBUG: Odoo loyalty validation error:", error);
+      console.error("🔍 DEBUG: Error response:", error.response);
+      notifyError(error.response?.data?.message || "Loyalty points validation failed");
+    } finally {
+      setIsLoyaltyChecking(false);
+    }
+  };
+
+  // Use maximum loyalty points
+  const useMaximumLoyaltyPoints = () => {
+    if (!odooLoyaltyInfo) {
+      notifyError("Please validate your loyalty points first!");
+      return;
+    }
+
+    const maxPoints = odooLoyaltyInfo.currentPoints;
+    const maxDiscount = maxPoints * 0.01; // 1 point = 0.01 SAR
+    const orderTotal = cartTotal + shippingCost - (discountAmount || 0);
+    
+    // Don't exceed order total
+    const actualDiscount = Math.min(maxDiscount, orderTotal);
+    const actualPoints = Math.round(actualDiscount / 0.01);
+    
+    setLoyaltyDiscountAmount(actualDiscount);
+    setPointsToRedeem(actualPoints);
+    
+    notifySuccess(`Applied ${actualPoints} loyalty points (${actualDiscount.toFixed(2)} SAR discount)`);
+  };
+
+  // Use specific amount of loyalty points
+  const useSpecificLoyaltyPoints = (pointsToUse) => {
+    if (!odooLoyaltyInfo) {
+      notifyError("Please validate your loyalty points first!");
+      return;
+    }
+
+    if (pointsToUse > odooLoyaltyInfo.currentPoints) {
+      notifyError(`You only have ${odooLoyaltyInfo.currentPoints} points available!`);
+      return;
+    }
+
+    const discount = pointsToUse * 0.01; // 1 point = 0.01 SAR
+    const orderTotal = cartTotal + shippingCost - (discountAmount || 0);
+    
+    // Don't exceed order total
+    const actualDiscount = Math.min(discount, orderTotal);
+    const actualPoints = Math.round(actualDiscount / 0.01);
+    
+    setLoyaltyDiscountAmount(actualDiscount);
+    setPointsToRedeem(actualPoints);
+    
+    notifySuccess(`Applied ${actualPoints} loyalty points (${actualDiscount.toFixed(2)} SAR discount)`);
+  };
+
+  // Clear Odoo loyalty points
+  const clearOdooLoyaltyPoints = () => {
+    setOdooLoyaltyInfo(null);
+    setLoyaltyCustomerInput('');
+    setIsLoyaltyApplied(false);
+    setLoyaltyDiscountAmount(0);
+    setPointsToRedeem(0);
+  };
+
   // Clear coupon
   const clearCoupon = () => {
     setCouponInfo({});
@@ -244,7 +351,17 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
         loyaltyPointsUsed: pointsToRedeem,
         total: Math.max(0, (cartTotal + shippingCost - (discountAmount || 0) - (loyaltyDiscountAmount || 0))),
         // Include coupon info for Odoo integration
-        couponInfo: couponInfo && couponInfo.isOdooCoupon ? couponInfo : null
+        couponInfo: couponInfo && couponInfo.isOdooCoupon ? couponInfo : null,
+        // Include loyalty points info for Odoo integration
+        loyaltyInfo: odooLoyaltyInfo && pointsToRedeem > 0 ? {
+          customerPhone: odooLoyaltyInfo.customerPhone,
+          customerName: odooLoyaltyInfo.customerName,
+          loyaltyCardId: odooLoyaltyInfo.loyaltyCardId,
+          loyaltyCardCode: odooLoyaltyInfo.loyaltyCardCode,
+          pointsToConsume: pointsToRedeem,
+          discountAmount: loyaltyDiscountAmount,
+          isOdooLoyalty: true
+        } : null
       };
 
       // Debug logging for coupon info
@@ -481,6 +598,17 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     handleDefaultShippingAddress,
     clearLoyaltyPoints,
     clearCoupon,
+    // Odoo Loyalty Points
+    odooLoyaltyInfo,
+    loyaltyCustomerInput,
+    setLoyaltyCustomerInput,
+    isLoyaltyChecking,
+    isLoyaltyApplied,
+    handleOdooLoyaltyPoints,
+    useMaximumLoyaltyPoints,
+    useSpecificLoyaltyPoints,
+    clearOdooLoyaltyPoints,
+    pointsToRedeem,
   };
 };
 
