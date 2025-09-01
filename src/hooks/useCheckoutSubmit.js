@@ -243,7 +243,13 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
         loyaltyDiscount: loyaltyDiscountAmount,
         loyaltyPointsUsed: pointsToRedeem,
         total: Math.max(0, (cartTotal + shippingCost - (discountAmount || 0) - (loyaltyDiscountAmount || 0))),
+        // Include coupon info for Odoo integration
+        couponInfo: couponInfo && couponInfo.isOdooCoupon ? couponInfo : null
       };
+
+      // Debug logging for coupon info
+      console.log('🔍 DEBUG: Coupon info being sent with order:', couponInfo);
+      console.log('🔍 DEBUG: Order info with coupon:', orderInfo);
 
       // Save/update shipping address
       await CustomerServices.addShippingAddress({

@@ -35,6 +35,29 @@ const CouponServices = {
   },
 
   /**
+   * Consume a coupon directly (for order confirmation)
+   * @param {string} couponCode - The coupon code to consume
+   * @param {number} amountToConsume - Amount to consume from the coupon
+   * @returns {Object} Consumption result
+   */
+  consumeOdooCoupon: async (couponCode, amountToConsume) => {
+    console.log('🔍 DEBUG: CouponServices.consumeOdooCoupon called with:', { couponCode, amountToConsume });
+    
+    try {
+      const result = await requests.post("/odoo-integration/consume-coupon", {
+        couponCode,
+        amountToConsume
+      });
+      
+      console.log('🔍 DEBUG: CouponServices.consumeOdooCoupon result:', result);
+      return result;
+    } catch (error) {
+      console.error('🔍 DEBUG: CouponServices.consumeOdooCoupon error:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Apply a coupon to an order in Odoo
    * @param {string} couponCode - The coupon code to apply
    * @param {Object} customerData - Customer information

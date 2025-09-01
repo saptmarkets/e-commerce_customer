@@ -4,7 +4,7 @@ import axios from "axios";
 // Use localhost for development, production URL for production
 const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENVIRONMENT === 'development';
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 
-  (isDevelopment ? "http://localhost:5000/api" : "https://e-commerce-backend-l0s0.onrender.com/api");
+  (isDevelopment ? "http://localhost:5055/api" : "https://e-commerce-backend-l0s0.onrender.com/api");
 
 console.log('🔍 DEBUG: Environment:', process.env.NODE_ENV);
 console.log('🔍 DEBUG: API Base URL:', apiBaseUrl);
