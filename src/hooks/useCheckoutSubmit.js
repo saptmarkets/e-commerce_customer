@@ -95,18 +95,20 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     let totalValue = 0;
     const subTotal = parseFloat(cartSubtotal + Number(shippingCost)).toFixed(2);
     
-    // Calculate coupon discount
-    const discountProductTotal = items?.reduce(
-      (preValue, currentValue) => preValue + (currentValue.itemTotal || 0),
-      0
-    );
-
-    const discountAmount =
-      discountPercentage?.type === "fixed"
+    // Calculate coupon discount - Check for Odoo coupon first
+    let couponDiscountAmount = 0;
+    if (couponInfo && couponInfo.isOdooCoupon && couponInfo.discountAmount) {
+      // Use Odoo coupon discount amount directly
+      couponDiscountAmount = parseFloat(couponInfo.discountAmount);
+      console.log('🔍 DEBUG: Applying Odoo coupon discount:', couponDiscountAmount);
+    } else if (discountPercentage) {
+      // Use regular percentage discount
+      couponDiscountAmount = discountPercentage?.type === "fixed"
         ? discountPercentage?.value
-        : discountProductTotal * (discountPercentage?.value / 100);
+        : cartSubtotal * (discountPercentage?.value / 100);
+    }
 
-    const discountAmountTotal = discountAmount ? discountAmount : 0;
+    const discountAmountTotal = couponDiscountAmount || 0;
 
     // Include loyalty points discount in total calculation
     totalValue = Number(subTotal) - discountAmountTotal - loyaltyDiscountAmount;
@@ -117,9 +119,11 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
       cartSubtotal,
       shippingCost,
       subTotal,
+      couponDiscountAmount,
       discountAmountTotal,
       loyaltyDiscountAmount,
       totalValue,
+      couponInfo,
       items: items?.length,
       itemsDetails: items?.map(item => ({
         id: item.id,
@@ -131,7 +135,7 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
 
     setDiscountAmount(discountAmountTotal);
     setTotal(Math.max(0, totalValue));
-  }, [cartTotal, shippingCost, discountPercentage, loyaltyDiscountAmount, items]);
+  }, [cartTotal, shippingCost, discountPercentage, loyaltyDiscountAmount, items, couponInfo]);
 
   const handleLoyaltyPointsRedemption = (discount) => {
     // Calculate points from discount (1 point = 0.01 SAR)
@@ -144,6 +148,16 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
   const clearLoyaltyPoints = () => {
     setLoyaltyDiscountAmount(0);
     setPointsToRedeem(0);
+  };
+
+  // Clear coupon
+  const clearCoupon = () => {
+    setCouponInfo({});
+    setDiscountPercentage(0);
+    setIsCouponApplied(false);
+    setMinimumAmount(0);
+    Cookies.remove("couponInfo");
+    dispatch({ type: "SAVE_COUPON", payload: {} });
   };
 
   const submitHandler = async (data) => {
@@ -402,7 +416,12 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
       notifySuccess(`Coupon ${couponData.couponCode} is valid! Discount: ${couponData.discountAmount}`);
       setIsCouponApplied(true);
       setMinimumAmount(couponData.discountAmount);
-      setDiscountPercentage(couponData.discountAmount);
+      
+      // Set the discount percentage to use the Odoo coupon amount
+      setDiscountPercentage({
+        type: "fixed",
+        value: couponData.discountAmount
+      });
       
       // Store coupon info for later application during order creation
       const couponInfo = {
@@ -413,6 +432,7 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
         validationData: couponData
       };
       
+      setCouponInfo(couponInfo); // Update local state immediately
       dispatch({ type: "SAVE_COUPON", payload: couponInfo });
       Cookies.set("couponInfo", JSON.stringify(couponInfo));
       
@@ -454,6 +474,7 @@ const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
     isCouponAvailable,
     handleDefaultShippingAddress,
     clearLoyaltyPoints,
+    clearCoupon,
   };
 };
 
