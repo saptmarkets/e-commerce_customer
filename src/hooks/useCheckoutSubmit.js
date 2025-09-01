@@ -13,12 +13,13 @@ import { UserContext } from "@context/UserContext";
 import OrderServices from "@services/OrderServices";
 import useUtilsFunction from "./useUtilsFunction";
 import CouponServices from "@services/CouponServices";
+import LoyaltyServices from "@services/LoyaltyServices";
 import { notifyError, notifySuccess } from "@utils/toast";
 import CustomerServices from "@services/CustomerServices";
 import NotificationServices from "@services/NotificationServices";
 import useTranslation from "next-translate/useTranslation";
 
-const useCheckoutSubmit = (storeSetting, loyaltySummary) => {
+const useCheckoutSubmit = (storeSetting) => {
   const { t } = useTranslation("common");
   const { dispatch } = useContext(UserContext);
 
