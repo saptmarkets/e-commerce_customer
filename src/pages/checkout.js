@@ -102,11 +102,10 @@ const Checkout = () => {
   const [gpsLocationData, setGpsLocationData] = useState(null);
   const [manualLocationCoords, setManualLocationCoords] = useState(null);
   
-  // Legacy loyalty points state (deprecated - using Odoo integration now)
-  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
-  const [pointsToRedeem, setPointsToRedeem] = useState(0);
-  const [loyaltyDiscount, setLoyaltyDiscount] = useState(0);
-  const [maxRedeemablePoints, setMaxRedeemablePoints] = useState(0);
+  // DEPRECATED: Legacy loyalty points state - now using Odoo integration
+  // const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+  // const [loyaltyDiscount, setLoyaltyDiscount] = useState(0);
+  // const [maxRedeemablePoints, setMaxRedeemablePoints] = useState(0);
   
   // Location selection state
   const [selectedLocationOption, setSelectedLocationOption] = useState('manual');
@@ -118,16 +117,16 @@ const Checkout = () => {
     staleTime: 4 * 60 * 1000, // Api request after 4 minutes
   });
 
-  // Fetch loyalty points
-  const { data: loyaltySummary } = useQuery({
-    queryKey: ["loyaltySummary"],
-    queryFn: async () => {
-      if (!userInfo?.id) return null;
-      return await LoyaltyServices.getLoyaltySummary();
-    },
-    enabled: !!userInfo?.id,
-    staleTime: 2 * 60 * 1000,
-  });
+  // DEPRECATED: Legacy loyalty points query - now using Odoo integration
+  // const { data: loyaltySummary } = useQuery({
+  //   queryKey: ["loyaltySummary"],
+  //   queryFn: async () => {
+  //     if (!userInfo?.id) return null;
+  //     return await LoyaltyServices.getLoyaltySummary();
+  //   },
+  //   enabled: !!userInfo?.id,
+  //   staleTime: 2 * 60 * 1000,
+  // });
 
   const {
     error,
@@ -168,23 +167,23 @@ const Checkout = () => {
     useSpecificLoyaltyPoints,
     clearOdooLoyaltyPoints,
     pointsToRedeem,
-  } = useCheckoutSubmit(storeSetting, loyaltySummary);
+  } = useCheckoutSubmit(storeSetting);
 
   // Now restore checkout data (requires setValue and state setters to exist)
   useCheckoutRestore(setValue, setUserLocation, setManualLocationData, setGpsLocationData);
 
-  // Set loyalty points when data is available
-  useEffect(() => {
-    if (loyaltySummary?.customer?.loyaltyPoints?.current) {
-      setLoyaltyPoints(loyaltySummary.customer.loyaltyPoints.current);
-      // Calculate max redeemable points (up to 50% of order total)
-      const maxPoints = Math.min(
-        loyaltySummary.customer.loyaltyPoints.current,
-        Math.floor((cartTotal + shippingCost) * 0.5 / 0.01) // 50% of total, considering 1 point = 0.01 SAR
-      );
-      setMaxRedeemablePoints(maxPoints);
-    }
-  }, [loyaltySummary, cartTotal, shippingCost]);
+  // DEPRECATED: Legacy loyalty points logic - now using Odoo integration
+  // useEffect(() => {
+  //   if (loyaltySummary?.customer?.loyaltyPoints?.current) {
+  //     setLoyaltyPoints(loyaltySummary.customer.loyaltyPoints.current);
+  //     // Calculate max redeemable points (up to 50% of order total)
+  //     const maxPoints = Math.min(
+  //       loyaltySummary.customer.loyaltyPoints.current,
+  //       Math.floor((cartTotal + shippingCost) * 0.5 / 0.01) // 50% of total, considering 1 point = 0.01 SAR
+  //     );
+  //     setMaxRedeemablePoints(maxPoints);
+  //   }
+  // }, [loyaltySummary, cartTotal, shippingCost]);
 
   // Clear location data and calculation status when switching between location methods
   useEffect(() => {
@@ -209,31 +208,31 @@ const Checkout = () => {
 
  
 
-  // Handle loyalty points input change
-  const handlePointsChange = (e) => {
-    const points = parseInt(e.target.value) || 0;
-    const maxPoints = Math.min(maxRedeemablePoints, loyaltyPoints);
-    
-    if (points <= maxPoints) {
-      setPointsToRedeem(points);
-      const discount = points * 0.01; // 1 point = 0.01 SAR
-      // Call the hook function to update the discount amount
-      if (handleLoyaltyPointsRedemption) {
-        handleLoyaltyPointsRedemption(discount);
-      }
-    }
-  };
+  // DEPRECATED: Legacy loyalty points functions - now using Odoo integration
+  // const handlePointsChange = (e) => {
+  //   const points = parseInt(e.target.value) || 0;
+  //   const maxPoints = Math.min(maxRedeemablePoints, loyaltyPoints);
+  //   
+  //   if (points <= maxPoints) {
+  //     setPointsToRedeem(points);
+  //     const discount = points * 0.01; // 1 point = 0.01 SAR
+  //     // Call the hook function to update the discount amount
+  //     if (handleLoyaltyPointsRedemption) {
+  //       handleLoyaltyPointsRedemption(discount);
+  //     }
+  //   }
+  // };
 
-  // Apply maximum points
-  const applyMaxPoints = () => {
-    const maxPoints = Math.min(maxRedeemablePoints, loyaltyPoints);
-    setPointsToRedeem(maxPoints);
-    const discount = maxPoints * 0.01;
-    // Call the hook function to update the discount amount
-    if (handleLoyaltyPointsRedemption) {
-      handleLoyaltyPointsRedemption(discount);
-    }
-  };
+  // DEPRECATED: Apply maximum points
+  // const applyMaxPoints = () => {
+  //   const maxPoints = Math.min(maxRedeemablePoints, loyaltyPoints);
+  //   setPointsToRedeem(maxPoints);
+  //   const discount = maxPoints * 0.01;
+  //   // Call the hook function to update the discount amount
+  //   if (handleLoyaltyPointsRedemption) {
+  //     handleLoyaltyPointsRedemption(discount);
+  //   }
+  // };
 
   // Custom handler for default shipping address that also handles location data
   const handleDefaultShippingAddressWithLocation = (value) => {
