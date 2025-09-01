@@ -349,7 +349,8 @@ const useCheckoutSubmit = (storeSetting) => {
         shippingCost: shippingCost,
         discount: discountAmount,
         loyaltyDiscount: loyaltyDiscountAmount,
-        loyaltyPointsUsed: pointsToRedeem,
+        // Only send loyaltyPointsUsed for legacy loyalty system (not Odoo)
+        loyaltyPointsUsed: odooLoyaltyInfo && pointsToRedeem > 0 ? 0 : pointsToRedeem,
         total: Math.max(0, (cartTotal + shippingCost - (discountAmount || 0) - (loyaltyDiscountAmount || 0))),
         // Include coupon info for Odoo integration
         couponInfo: couponInfo && couponInfo.isOdooCoupon ? couponInfo : null,
