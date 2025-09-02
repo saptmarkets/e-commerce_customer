@@ -146,7 +146,7 @@ const useCheckoutSubmit = (storeSetting) => {
 
   const handleLoyaltyPointsRedemption = (discount) => {
     // Calculate points from discount (1 point = 0.01 SAR)
-    const points = Math.round(discount / 0.01);
+    const points = Math.floor(discount / 0.01); // Use Math.floor to prevent exceeding available points
     setLoyaltyDiscountAmount(discount || 0);
     setPointsToRedeem(points);
   };
@@ -216,7 +216,7 @@ const useCheckoutSubmit = (storeSetting) => {
     
     // Don't exceed order total
     const actualDiscount = Math.min(maxDiscount, orderTotal);
-    const actualPoints = Math.round(actualDiscount / 0.01);
+    const actualPoints = Math.floor(actualDiscount / 0.01); // Use Math.floor to prevent exceeding available points
     
     setLoyaltyDiscountAmount(actualDiscount);
     setPointsToRedeem(actualPoints);
@@ -241,7 +241,7 @@ const useCheckoutSubmit = (storeSetting) => {
     
     // Don't exceed order total
     const actualDiscount = Math.min(discount, orderTotal);
-    const actualPoints = Math.round(actualDiscount / 0.01);
+    const actualPoints = Math.floor(actualDiscount / 0.01); // Use Math.floor to prevent exceeding available points
     
     setLoyaltyDiscountAmount(actualDiscount);
     setPointsToRedeem(actualPoints);
