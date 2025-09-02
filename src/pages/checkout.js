@@ -15,7 +15,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Layout from "@layout/Layout";
 import Label from "@components/form/Label";
-import Error from "@components/form/Error";
+import ErrorComponent from "@components/form/Error";
 import CartItem from "@components/cart/CartItem";
 import InputArea from "@components/form/InputArea";
 import useGetSetting from "@hooks/useGetSetting";
@@ -715,7 +715,7 @@ const Checkout = () => {
                           placeholder={tr('John', 'محمد')}
                           required={true}
                         />
-                        <Error errorName={errors.firstName} />
+                        <ErrorComponent errorName={errors.firstName} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-3">
@@ -729,7 +729,7 @@ const Checkout = () => {
                           placeholder={tr('Doe', 'أحمد')}
                           required={false}
                         />
-                        <Error errorName={errors.lastName} />
+                        <ErrorComponent errorName={errors.lastName} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-3">
@@ -744,7 +744,7 @@ const Checkout = () => {
                           defaultValue={userInfo?.phone || ""}
                           required={true}
                         />
-                        <Error errorName={errors.contact} />
+                        <ErrorComponent errorName={errors.contact} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-3">
@@ -760,7 +760,7 @@ const Checkout = () => {
                           placeholder={tr('youremail@gmail.com', 'البريد الإلكتروني')}
                           required={false}
                         />
-                        <Error errorName={errors.email} />
+                        <ErrorComponent errorName={errors.email} />
                       </div>
                     </div>
                   </div>
@@ -1249,7 +1249,7 @@ const Checkout = () => {
                           placeholder={tr('House No, Street Name, Area (e.g., Building 123, King Fahd Road, Al Malaz)', 'رقم المنزل، اسم الشارع، المنطقة (مثال: مبنى 123، طريق الملك فهد، الملز)')}
                           required={true}
                         />
-                        <Error errorName={errors.address} />
+                        <ErrorComponent errorName={errors.address} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-6 lg:col-span-2">
@@ -1263,7 +1263,7 @@ const Checkout = () => {
                           placeholder={tr('Riyadh', 'الرياض')}
                           required={true}
                         />
-                        <Error errorName={errors.city} />
+                        <ErrorComponent errorName={errors.city} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -1278,7 +1278,7 @@ const Checkout = () => {
                           defaultValue="Saudi Arabia"
                           required={false}
                         />
-                        <Error errorName={errors.country} />
+                        <ErrorComponent errorName={errors.country} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -1292,7 +1292,7 @@ const Checkout = () => {
                           placeholder={tr('12345', '12345')}
                           required={false}
                         />
-                        <Error errorName={errors.zipCode} />
+                        <ErrorComponent errorName={errors.zipCode} />
                       </div>
                     </div>
 
@@ -1602,7 +1602,7 @@ const Checkout = () => {
                           Icon={IoWalletSharp}
                           defaultChecked={true}
                         />
-                        <Error errorMessage={errors.paymentMethod} />
+                        <ErrorComponent errorMessage={errors.paymentMethod} />
                       </div>
                     </div>
                   </div>
@@ -1677,7 +1677,7 @@ const Checkout = () => {
                             Icon={IoWalletSharp}
                             defaultChecked={true}
                           />
-                          <Error errorMessage={errors.paymentMethod} />
+                          <ErrorComponent errorMessage={errors.paymentMethod} />
                         </div>
                       </div>
                     </div>
