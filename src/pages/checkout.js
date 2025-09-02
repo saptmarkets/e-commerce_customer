@@ -1383,7 +1383,7 @@ const Checkout = () => {
                     </div>
 
                     {/* Odoo Loyalty Points Integration */}
-                    {userInfo?.id && (
+                    {userInfo?.id ? (
                       <div className="flex items-center mt-4 py-4 lg:py-4 text-sm w-full font-semibold text-heading border-t">
                         <div className="w-full">
                           <div className="flex items-center justify-between mb-3">
@@ -1405,14 +1405,21 @@ const Checkout = () => {
                           {!isLoyaltyApplied ? (
                             /* Loyalty Points Validation Form */
                             <form onSubmit={handleOdooLoyaltyPoints} className="flex flex-col sm:flex-row items-start justify-end">
-                              <input
-                                type="text"
-                                value={loyaltyCustomerInput}
-                                onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
-                                placeholder={tr('Enter loyalty number or name', 'أدخل رقم الولاء أو الاسم')}
-                                className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-white border-gray-200 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75"
-                                disabled={isLoyaltyChecking}
-                              />
+                              <div className="w-full">
+                                <input
+                                  type="text"
+                                  value={loyaltyCustomerInput}
+                                  onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
+                                  placeholder={tr('Enter loyalty number or name', 'أدخل رقم الولاء أو الاسم')}
+                                  className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75 cursor-not-allowed"
+                                  disabled={true}
+                                  title={tr('This field is automatically filled with your contact number for security', 'هذا الحقل مليء تلقائياً برقم الاتصال الخاص بك للأمان')}
+                                />
+                                <div className="text-xs text-gray-500 mt-1 flex items-center">
+                                  <FiInfo className="inline mr-1" />
+                                  {tr('Auto-filled with your contact number for security', 'مليء تلقائياً برقم الاتصال الخاص بك للأمان')}
+                                </div>
+                              </div>
                               <button
                                 type="submit"
                                 disabled={isLoyaltyChecking || !loyaltyCustomerInput.trim()}
@@ -1493,6 +1500,27 @@ const Checkout = () => {
                               {tr('Customer', 'العميل')}: {odooLoyaltyInfo.customerName} ({odooLoyaltyInfo.customerPhone})
                             </div>
                           )}
+                        </div>
+                      </div>
+                    ) : (
+                      /* Show message when user is not logged in */
+                      <div className="flex items-center mt-4 py-4 lg:py-4 text-sm w-full font-semibold text-heading border-t">
+                        <div className="w-full">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center">
+                              <FiStar className="text-gray-400 mr-2" />
+                              <span className="text-gray-500 font-semibold">{tr('Loyalty Points', 'نقاط الولاء')}</span>
+                            </div>
+                            <div className="text-gray-400 text-sm">
+                              {tr('Login required', 'تسجيل الدخول مطلوب')}
+                            </div>
+                          </div>
+                          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <div className="text-sm text-gray-600 flex items-center">
+                              <FiInfo className="inline mr-2 text-gray-500" />
+                              {tr('Please log in to use your loyalty points. Your contact number will be automatically used for security.', 'يرجى تسجيل الدخول لاستخدام نقاط الولاء الخاصة بك. سيتم استخدام رقم الاتصال الخاص بك تلقائياً للأمان.')}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -1787,7 +1815,7 @@ const Checkout = () => {
                 </div>
 
                 {/* Odoo Loyalty Points Integration */}
-                {userInfo?.id && (
+                {userInfo?.id ? (
                   <div className="flex items-center mt-4 py-4 lg:py-4 text-sm w-full font-semibold text-heading border-t">
                     <div className="w-full">
                       <div className="flex items-center justify-between mb-3">
@@ -1809,14 +1837,21 @@ const Checkout = () => {
                       {!isLoyaltyApplied ? (
                         /* Loyalty Points Validation Form */
                         <form onSubmit={handleOdooLoyaltyPoints} className="flex flex-col sm:flex-row items-start justify-end">
-                          <input
-                            type="text"
-                            value={loyaltyCustomerInput}
-                            onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
-                            placeholder={tr('Enter loyalty number or name', 'أدخل رقم الولاء أو الاسم')}
-                            className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-white border-gray-200 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75"
-                            disabled={isLoyaltyChecking}
-                          />
+                          <div className="w-full">
+                            <input
+                              type="text"
+                              value={loyaltyCustomerInput}
+                              onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
+                              placeholder={tr('Enter loyalty number or name', 'أدخل رقم الولاء أو الاسم')}
+                              className="form-input py-2 px-3 md:px-4 w-full appearance-none transition ease-in-out border text-input text-sm rounded-md h-12 duration-200 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none focus:border-purple-500 placeholder-gray-500 placeholder-opacity-75 cursor-not-allowed"
+                              disabled={true}
+                              title={tr('This field is automatically filled with your contact number for security', 'هذا الحقل مليء تلقائياً برقم الاتصال الخاص بك للأمان')}
+                            />
+                            <div className="text-xs text-gray-500 mt-1 flex items-center">
+                              <FiInfo className="inline mr-1" />
+                              {tr('Auto-filled with your contact number for security', 'مليء تلقائياً برقم الاتصال الخاص بك للأمان')}
+                            </div>
+                          </div>
                           <button
                             type="submit"
                             disabled={isLoyaltyChecking || !loyaltyCustomerInput.trim()}
@@ -1897,6 +1932,27 @@ const Checkout = () => {
                           {tr('Customer', 'العميل')}: {odooLoyaltyInfo.customerName} ({odooLoyaltyInfo.customerPhone})
                         </div>
                       )}
+                    </div>
+                  </div>
+                ) : (
+                  /* Show message when user is not logged in */
+                  <div className="flex items-center mt-4 py-4 lg:py-4 text-sm w-full font-semibold text-heading border-t">
+                    <div className="w-full">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center">
+                          <FiStar className="text-gray-400 mr-2" />
+                          <span className="text-gray-500 font-semibold">{tr('Loyalty Points', 'نقاط الولاء')}</span>
+                        </div>
+                        <div className="text-gray-400 text-sm">
+                          {tr('Login required', 'تسجيل الدخول مطلوب')}
+                        </div>
+                      </div>
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="text-sm text-gray-600 flex items-center">
+                          <FiInfo className="inline mr-2 text-gray-500" />
+                          {tr('Please log in to use your loyalty points. Your contact number will be automatically used for security.', 'يرجى تسجيل الدخول لاستخدام نقاط الولاء الخاصة بك. سيتم استخدام رقم الاتصال الخاص بك تلقائياً للأمان.')}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

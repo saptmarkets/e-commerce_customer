@@ -46,6 +46,15 @@ const useCheckoutSubmit = (storeSetting) => {
   const [isLoyaltyChecking, setIsLoyaltyChecking] = useState(false);
   const [isLoyaltyApplied, setIsLoyaltyApplied] = useState(false);
 
+  // Auto-populate loyalty input with user's contact number for security
+  useEffect(() => {
+    if (userInfo?.contact || userInfo?.phone) {
+      const userContact = userInfo.contact || userInfo.phone;
+      setLoyaltyCustomerInput(userContact);
+      console.log('🔍 Auto-populated loyalty input with user contact:', userContact);
+    }
+  }, [userInfo]);
+
   const router = useRouter();
   const couponRef = useRef("");
   // const [Razorpay] = useRazorpay(); // Disabled: COD only
@@ -252,10 +261,12 @@ const useCheckoutSubmit = (storeSetting) => {
   // Clear Odoo loyalty points
   const clearOdooLoyaltyPoints = () => {
     setOdooLoyaltyInfo(null);
-    setLoyaltyCustomerInput('');
+    // Don't clear the input field - it should always show user's contact number
+    // setLoyaltyCustomerInput(''); // REMOVED: Keep user's contact number for security
     setIsLoyaltyApplied(false);
     setLoyaltyDiscountAmount(0);
     setPointsToRedeem(0);
+    console.log('🔍 Cleared loyalty points but kept user contact number:', loyaltyCustomerInput);
   };
 
   // Clear coupon
