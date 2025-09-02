@@ -46,6 +46,14 @@ const useCheckoutSubmit = (storeSetting) => {
   const [isLoyaltyChecking, setIsLoyaltyChecking] = useState(false);
   const [isLoyaltyApplied, setIsLoyaltyApplied] = useState(false);
 
+  const router = useRouter();
+  const couponRef = useRef("");
+  // const [Razorpay] = useRazorpay(); // Disabled: COD only
+  const { isEmpty, emptyCart, items, cartTotal } = useCart();
+
+  // Get user info safely
+  const userInfo = getUserSession() || {};
+
   // Auto-populate loyalty input with user's contact number for security
   useEffect(() => {
     if (userInfo?.contact || userInfo?.phone) {
@@ -54,14 +62,6 @@ const useCheckoutSubmit = (storeSetting) => {
       console.log('🔍 Auto-populated loyalty input with user contact:', userContact);
     }
   }, [userInfo]);
-
-  const router = useRouter();
-  const couponRef = useRef("");
-  // const [Razorpay] = useRazorpay(); // Disabled: COD only
-  const { isEmpty, emptyCart, items, cartTotal } = useCart();
-
-  // Get user info safely
-  const userInfo = getUserSession() || {};
   const { showDateFormat, currency, globalSetting } = useUtilsFunction();
 
   const { data, isLoading } = useQuery({
