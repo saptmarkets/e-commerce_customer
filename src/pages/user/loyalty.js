@@ -109,6 +109,8 @@ const LoyaltyDashboard = () => {
     switch (type) {
       case 'earned':
         return <FiTrendingUp className="text-green-600" />;
+      case 'used':
+        return <FiTrendingDown className="text-red-600" />;
       case 'bonus':
         return <FiGift className="text-purple-600" />;
       case 'redeemed':
@@ -125,6 +127,7 @@ const LoyaltyDashboard = () => {
       case 'earned':
       case 'bonus':
         return 'text-green-600';
+      case 'used':
       case 'redeemed':
       case 'expired':
         return 'text-red-600';
@@ -371,7 +374,10 @@ const LoyaltyDashboard = () => {
                         </div>
                         <div>
                           <p className="font-medium text-gray-800 text-sm">
-                            Earned {Math.round(transaction.points)} points from {transaction.order_reference}
+                            {transaction.type === 'earned' 
+                              ? `Earned ${Math.round(transaction.points)} points from ${transaction.order_reference}`
+                              : `Used ${Math.round(transaction.points)} points - ${transaction.description?.split(' - ')[1] || 'Discount'}`
+                            }
                           </p>
                           {transaction.balance !== undefined && (
                             <p className="text-xs text-gray-500 mt-0.5">
@@ -384,8 +390,8 @@ const LoyaltyDashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-medium text-green-600">
-                          +{Math.round(transaction.points)} pts
+                        <div className={`text-sm font-medium ${transaction.type === 'earned' ? 'text-green-600' : 'text-red-600'}`}>
+                          {transaction.type === 'earned' ? '+' : '-'}{Math.round(transaction.points)} pts
                         </div>
                         <div className="text-xs text-gray-500">
                           Balance: {Math.round(transaction.balance)}
@@ -422,7 +428,10 @@ const LoyaltyDashboard = () => {
                         </div>
                         <div>
                           <p className="font-medium text-gray-800 text-sm">
-                            Earned {Math.round(transaction.points)} points from {transaction.order_reference}
+                            {transaction.type === 'earned' 
+                              ? `Earned ${Math.round(transaction.points)} points from ${transaction.order_reference}`
+                              : `Used ${Math.round(transaction.points)} points - ${transaction.description?.split(' - ')[1] || 'Discount'}`
+                            }
                           </p>
                           <p className="text-xs text-gray-500 mt-0.5">
                             {showDateFormat(transaction.date)}
@@ -435,8 +444,8 @@ const LoyaltyDashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-medium text-green-600">
-                          +{Math.round(transaction.points)} pts
+                        <div className={`text-sm font-medium ${transaction.type === 'earned' ? 'text-green-600' : 'text-red-600'}`}>
+                          {transaction.type === 'earned' ? '+' : '-'}{Math.round(transaction.points)} pts
                         </div>
                         <div className="text-xs text-gray-500">
                           Balance: {Math.round(transaction.balance)}
