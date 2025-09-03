@@ -115,7 +115,7 @@ const useCheckoutSubmit = (storeSetting) => {
     if (couponInfo && couponInfo.isOdooCoupon && couponInfo.discountAmount) {
       // Use Odoo coupon discount amount directly
       couponDiscountAmount = parseFloat(couponInfo.discountAmount);
-      console.log('🔍 DEBUG: Applying Odoo coupon discount:', couponDiscountAmount);
+      // console.log('🔍 DEBUG: Applying Odoo coupon discount:', couponDiscountAmount);
     } else if (discountPercentage) {
       // Use regular percentage discount
       couponDiscountAmount = discountPercentage?.type === "fixed"
@@ -129,24 +129,24 @@ const useCheckoutSubmit = (storeSetting) => {
     totalValue = Number(subTotal) - discountAmountTotal - loyaltyDiscountAmount;
 
     // Debug logging
-    console.log('Total calculation debug:', {
-      cartTotal,
-      cartSubtotal,
-      shippingCost,
-      subTotal,
-      couponDiscountAmount,
-      discountAmountTotal,
-      loyaltyDiscountAmount,
-      totalValue,
-      couponInfo,
-      items: items?.length,
-      itemsDetails: items?.map(item => ({
-        id: item.id,
-        price: item.price,
-        quantity: item.quantity,
-        itemTotal: item.price * item.quantity
-      }))
-    });
+    // console.log('Total calculation debug:', {
+    //   cartTotal,
+    //   cartSubtotal,
+    //   shippingCost,
+    //   subTotal,
+    //   couponDiscountAmount,
+    //   discountAmountTotal,
+    //   loyaltyDiscountAmount,
+    //   totalValue,
+    //   couponInfo,
+    //   items: items?.length,
+    //   itemsDetails: items?.map(item => ({
+    //     id: item.id,
+    //     price: item.price,
+    //     quantity: item.quantity,
+    //     itemTotal: item.price * item.quantity
+    //   }))
+    // });
 
     setDiscountAmount(discountAmountTotal);
     setTotal(Math.max(0, totalValue));
@@ -179,21 +179,21 @@ const useCheckoutSubmit = (storeSetting) => {
     
     setIsLoyaltyChecking(true);
     try {
-      console.log('🔍 DEBUG: Validating Odoo loyalty points for:', loyaltyCustomerInput);
+      // console.log('🔍 DEBUG: Validating Odoo loyalty points for:', loyaltyCustomerInput);
       
       const validationResult = await LoyaltyServices.validateOdooLoyaltyPoints(loyaltyCustomerInput);
       
-      console.log('🔍 DEBUG: Odoo loyalty validation result:', validationResult);
+      // console.log('🔍 DEBUG: Odoo loyalty validation result:', validationResult);
       
       if (!validationResult.success || !validationResult.data?.success) {
         const errorMessage = validationResult.data?.error || "Loyalty points validation failed";
-        console.log('🔍 DEBUG: Loyalty validation failed:', errorMessage);
+        // console.log('🔍 DEBUG: Loyalty validation failed:', errorMessage);
         notifyError(errorMessage);
         return;
       }
 
       const loyaltyData = validationResult.data;
-      console.log('🔍 DEBUG: Loyalty data:', loyaltyData);
+      // console.log('🔍 DEBUG: Loyalty data:', loyaltyData);
       
       // Store loyalty info
       setOdooLoyaltyInfo(loyaltyData);
@@ -203,8 +203,8 @@ const useCheckoutSubmit = (storeSetting) => {
       
     } catch (error) {
       setIsLoyaltyChecking(false);
-      console.error("🔍 DEBUG: Odoo loyalty validation error:", error);
-      console.error("🔍 DEBUG: Error response:", error.response);
+      // console.error("🔍 DEBUG: Odoo loyalty validation error:", error);
+      // console.error("🔍 DEBUG: Error response:", error.response);
       notifyError(error.response?.data?.message || "Loyalty points validation failed");
     } finally {
       setIsLoyaltyChecking(false);
@@ -265,7 +265,7 @@ const useCheckoutSubmit = (storeSetting) => {
     setIsLoyaltyApplied(false);
     setLoyaltyDiscountAmount(0);
     setPointsToRedeem(0);
-    console.log('🔍 Cleared loyalty points but kept user contact number:', loyaltyCustomerInput);
+    // console.log('🔍 Cleared loyalty points but kept user contact number:', loyaltyCustomerInput);
   };
 
   // Clear coupon
@@ -377,8 +377,8 @@ const useCheckoutSubmit = (storeSetting) => {
       };
 
       // Debug logging for coupon info
-      console.log('🔍 DEBUG: Coupon info being sent with order:', couponInfo);
-      console.log('🔍 DEBUG: Order info with coupon:', orderInfo);
+      // console.log('🔍 DEBUG: Coupon info being sent with order:', couponInfo);
+      // console.log('🔍 DEBUG: Order info with coupon:', orderInfo);
 
       // Save/update shipping address
       await CustomerServices.addShippingAddress({
@@ -435,12 +435,12 @@ const useCheckoutSubmit = (storeSetting) => {
   //handle cash payment (COD only)
   const handleCashPayment = async (orderInfo) => {
     try {
-      console.log('🔍 DEBUG: Starting order creation...');
-      console.log('🔍 DEBUG: Order info:', JSON.stringify(orderInfo, null, 2));
-      console.log('🔍 DEBUG: API URL:', process.env.NEXT_PUBLIC_API_BASE_URL || "https://e-commerce-backend-l0s0.onrender.com/api");
+      // console.log('🔍 DEBUG: Starting order creation...');
+      // console.log('🔍 DEBUG: Order info:', JSON.stringify(orderInfo, null, 2));
+      // console.log('🔍 DEBUG: API URL:', process.env.NEXT_PUBLIC_API_BASE_URL || "https://e-commerce-backend-l0s0.onrender.com/api");
       
       const orderResponse = await OrderServices.addCashOrder(orderInfo);
-      console.log('🔍 DEBUG: Order created successfully:', orderResponse);
+      // console.log('🔍 DEBUG: Order created successfully:', orderResponse);
       await handleOrderSuccess(orderResponse, orderInfo);
     } catch (err) {
       console.error("Cash payment error:", err.message);
@@ -509,9 +509,9 @@ const useCheckoutSubmit = (storeSetting) => {
       const customerPhone = userInfo?.phone || userInfo?.contact || '';
       
       // DEBUG: Log the phone number being used
-      console.log('🔍 DEBUG: Customer phone:', customerPhone);
-      console.log('🔍 DEBUG: UserInfo object:', userInfo);
-      console.log('🔍 DEBUG: Coupon code:', couponRef.current.value);
+      // console.log('🔍 DEBUG: Customer phone:', customerPhone);
+      // console.log('🔍 DEBUG: UserInfo object:', userInfo);
+      // console.log('🔍 DEBUG: Coupon code:', couponRef.current.value);
       
       if (!customerPhone) {
         notifyError("Please provide your phone number to validate coupon!");
@@ -520,26 +520,26 @@ const useCheckoutSubmit = (storeSetting) => {
       }
 
       // Validate coupon in Odoo
-      console.log('🔍 DEBUG: Calling CouponServices.validateOdooCoupon...');
+      // console.log('🔍 DEBUG: Calling CouponServices.validateOdooCoupon...');
       const validationResult = await CouponServices.validateOdooCoupon(
         couponRef.current.value,
         customerPhone
       );
 
       // DEBUG: Log the validation result
-      console.log('🔍 DEBUG: Validation result:', validationResult);
+      // console.log('🔍 DEBUG: Validation result:', validationResult);
 
       setIsCouponAvailable(false);
 
       if (!validationResult.success || !validationResult.data?.valid) {
         const errorMessage = validationResult.data?.error || "Invalid coupon code";
-        console.log('🔍 DEBUG: Validation failed:', errorMessage);
+        // console.log('🔍 DEBUG: Validation failed:', errorMessage);
         notifyError(errorMessage);
         return;
       }
 
       const couponData = validationResult.data;
-      console.log('🔍 DEBUG: Coupon data:', couponData);
+      // console.log('🔍 DEBUG: Coupon data:', couponData);
       
       // Check minimum amount requirement
       if (total < couponData.discountAmount) {
@@ -573,8 +573,8 @@ const useCheckoutSubmit = (storeSetting) => {
       
     } catch (error) {
       setIsCouponAvailable(false);
-      console.error("🔍 DEBUG: Coupon validation error:", error);
-      console.error("🔍 DEBUG: Error response:", error.response);
+      // console.error("🔍 DEBUG: Coupon validation error:", error);
+      // console.error("🔍 DEBUG: Error response:", error.response);
       notifyError(error.response?.data?.message || "Coupon validation failed");
     }
   };

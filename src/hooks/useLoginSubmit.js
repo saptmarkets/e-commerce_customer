@@ -69,7 +69,7 @@ const useLoginSubmit = () => {
           setTimeout(() => {
             // Handle redirect immediately without delay
             const redirectUrl = router.query.redirectUrl;
-            console.log("Redirect URL from query:", redirectUrl);
+            // console.log("Redirect URL from query:", redirectUrl);
             
             if (redirectUrl && redirectUrl !== "undefined") {
               // Remove leading slash if present to avoid double slashes
@@ -85,7 +85,7 @@ const useLoginSubmit = () => {
                 window.location.href = `/${cleanRedirectUrl}`;
               }
             } else {
-              console.log("No redirect URL, going to home");
+              // console.log("No redirect URL, going to home");
               router.push("/");
             }
           }, 150); // Increased delay to ensure context update

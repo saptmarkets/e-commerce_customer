@@ -16,16 +16,16 @@ const BannerSection = () => {
   });
 
   // Debug logging
-  console.log('🔍 BannerSection - home-middle banners:', banners);
-  console.log('🔍 BannerSection - isLoading:', isLoading);
-  console.log('🔍 BannerSection - error:', error);
+  // console.log('🔍 BannerSection - home-middle banners:', banners);
+  // console.log('🔍 BannerSection - isLoading:', isLoading);
+  // console.log('🔍 BannerSection - error:', error);
 
   // Only use API data, do not render if no banner is returned
   const banner = banners?.banners?.[0];
-  console.log('🔍 BannerSection - selected banner:', banner);
+  // console.log('🔍 BannerSection - selected banner:', banner);
   
   if (!banner || !banner.imageUrl) {
-    console.log('🔍 BannerSection - No banner to display, returning null');
+    // console.log('🔍 BannerSection - No banner to display, returning null');
     return null;
   }
 

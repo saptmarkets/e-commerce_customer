@@ -28,9 +28,9 @@ const DynamicHomepage = () => {
   const { showingTranslateValue } = useUtilsFunction();
 
   // Debug logging for sections
-  console.log('🔍 DynamicHomepage - sections:', sections);
-  console.log('🔍 DynamicHomepage - sectionsLoading:', sectionsLoading);
-  console.log('🔍 DynamicHomepage - banner_section active:', isSectionActive('banner_section'));
+  // console.log('🔍 DynamicHomepage - sections:', sections);
+  // console.log('🔍 DynamicHomepage - sectionsLoading:', sectionsLoading);
+  // console.log('🔍 DynamicHomepage - banner_section active:', isSectionActive('banner_section'));
 
   // Fetch data for product sections
   const {
