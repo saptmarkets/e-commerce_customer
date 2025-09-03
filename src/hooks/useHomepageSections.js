@@ -11,12 +11,9 @@ const useHomepageSections = () => {
     queryKey: ["homepage-sections"],
     queryFn: async () => {
       try {
-        console.log('🔍 useHomepageSections - Fetching active sections...');
         const result = await HomepageSectionServices.getActiveSections();
-        console.log('🔍 useHomepageSections - API response:', result);
         return result;
       } catch (error) {
-        console.error('🔍 useHomepageSections - Error fetching sections:', error);
         // If API endpoint doesn't exist, return empty array instead of throwing
         if (error?.response?.status === 404) {
           console.warn('Homepage sections API endpoint not found, returning empty sections');
@@ -43,9 +40,6 @@ const useHomepageSections = () => {
       index === self.findIndex(s => s.sectionId === section.sectionId)
     ) : [];
   
-  console.log('🔍 useHomepageSections - Processed sections:', sections);
-  console.log('🔍 useHomepageSections - banner_section found:', sections?.find(s => s.sectionId === 'banner_section'));
-
   // Helper function to get section by ID
   const getSection = (sectionId) => {
     return sections?.find(section => section.sectionId === sectionId);

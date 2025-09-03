@@ -56,11 +56,10 @@ const useCheckoutSubmit = (storeSetting) => {
 
   // Auto-populate loyalty input with user's contact number for security
   useEffect(() => {
-    if (userInfo?.contact || userInfo?.phone) {
-      const userContact = userInfo.contact || userInfo.phone;
-      setLoyaltyCustomerInput(userContact);
-      console.log('🔍 Auto-populated loyalty input with user contact:', userContact);
-    }
+          if (userInfo?.contact || userInfo?.phone) {
+        const userContact = userInfo.contact || userInfo.phone;
+        setLoyaltyCustomerInput(userContact);
+      }
   }, [userInfo]);
   const { showDateFormat, currency, globalSetting } = useUtilsFunction();
 

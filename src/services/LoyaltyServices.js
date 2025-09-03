@@ -11,17 +11,12 @@ const LoyaltyServices = {
    * @returns {Object} Validation result
    */
   validateOdooLoyaltyPoints: async (customerPhone) => {
-    console.log('🔍 DEBUG: LoyaltyServices.validateOdooLoyaltyPoints called with:', { customerPhone });
-    
     try {
       const result = await requests.post("/odoo-integration/validate-loyalty-points", {
         customerPhone
       });
-      
-      console.log('🔍 DEBUG: LoyaltyServices.validateOdooLoyaltyPoints result:', result);
       return result;
     } catch (error) {
-      console.error('🔍 DEBUG: LoyaltyServices.validateOdooLoyaltyPoints error:', error);
       throw error;
     }
   },
@@ -33,18 +28,13 @@ const LoyaltyServices = {
    * @returns {Object} Consumption result
    */
   consumeOdooLoyaltyPoints: async (customerPhone, pointsToConsume) => {
-    console.log('🔍 DEBUG: LoyaltyServices.consumeOdooLoyaltyPoints called with:', { customerPhone, pointsToConsume });
-    
     try {
       const result = await requests.post("/odoo-integration/consume-loyalty-points", {
         customerPhone,
         pointsToConsume
       });
-      
-      console.log('🔍 DEBUG: LoyaltyServices.consumeOdooLoyaltyPoints result:', result);
       return result;
     } catch (error) {
-      console.error('🔍 DEBUG: LoyaltyServices.consumeOdooLoyaltyPoints error:', error);
       throw error;
     }
   },
@@ -55,15 +45,10 @@ const LoyaltyServices = {
    * @returns {Object} Balance information
    */
   checkOdooLoyaltyPointsBalance: async (customerPhone) => {
-    console.log('🔍 DEBUG: LoyaltyServices.checkOdooLoyaltyPointsBalance called with:', { customerPhone });
-    
     try {
       const result = await requests.get(`/odoo-integration/loyalty-points-balance/${encodeURIComponent(customerPhone)}`);
-      
-      console.log('🔍 DEBUG: LoyaltyServices.checkOdooLoyaltyPointsBalance result:', result);
       return result;
     } catch (error) {
-      console.error('🔍 DEBUG: LoyaltyServices.checkOdooLoyaltyPointsBalance error:', error);
       throw error;
     }
   },
@@ -74,15 +59,10 @@ const LoyaltyServices = {
    * @returns {Object} Dashboard data
    */
   getOdooLoyaltyDashboard: async (customerPhone) => {
-    console.log('🔍 DEBUG: LoyaltyServices.getOdooLoyaltyDashboard called with:', { customerPhone });
-    
     try {
       const result = await requests.get(`/odoo-integration/loyalty-dashboard/${encodeURIComponent(customerPhone)}`);
-      
-      console.log('🔍 DEBUG: LoyaltyServices.getOdooLoyaltyDashboard result:', result);
       return result;
     } catch (error) {
-      console.error('🔍 DEBUG: LoyaltyServices.getOdooLoyaltyDashboard error:', error);
       throw error;
     }
   },

@@ -18,18 +18,13 @@ const CouponServices = {
    * @returns {Object} Validation result
    */
   validateOdooCoupon: async (couponCode, customerPhone) => {
-    console.log('🔍 DEBUG: CouponServices.validateOdooCoupon called with:', { couponCode, customerPhone });
-    
     try {
       const result = await requests.post("/odoo-integration/validate-coupon", {
         couponCode,
         customerPhone
       });
-      
-      console.log('🔍 DEBUG: CouponServices.validateOdooCoupon result:', result);
       return result;
     } catch (error) {
-      console.error('🔍 DEBUG: CouponServices.validateOdooCoupon error:', error);
       throw error;
     }
   },
@@ -41,18 +36,13 @@ const CouponServices = {
    * @returns {Object} Consumption result
    */
   consumeOdooCoupon: async (couponCode, amountToConsume) => {
-    console.log('🔍 DEBUG: CouponServices.consumeOdooCoupon called with:', { couponCode, amountToConsume });
-    
     try {
       const result = await requests.post("/odoo-integration/consume-coupon", {
         couponCode,
         amountToConsume
       });
-      
-      console.log('🔍 DEBUG: CouponServices.consumeOdooCoupon result:', result);
       return result;
     } catch (error) {
-      console.error('🔍 DEBUG: CouponServices.consumeOdooCoupon error:', error);
       throw error;
     }
   },
