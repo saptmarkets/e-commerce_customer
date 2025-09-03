@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { 
   FiGift, 
   FiTrendingUp, 
+  FiTrendingDown,
   FiClock, 
   FiStar,
   FiArrowUp,
