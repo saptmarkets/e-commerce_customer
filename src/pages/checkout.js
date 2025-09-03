@@ -1392,9 +1392,9 @@ const Checkout = () => {
                               <span className="text-gray-700 font-semibold">{tr('Loyalty Points', 'نقاط الولاء')}</span>
                             </div>
                             {odooLoyaltyInfo ? (
-                              <div className="text-purple-600 font-bold">
+                            <div className="text-purple-600 font-bold">
                                 {odooLoyaltyInfo.currentPoints} {tr('available points', 'النقاط المتاحة')}
-                              </div>
+                            </div>
                             ) : (
                               <div className="text-gray-500 text-sm">
                                 {tr('Enter your loyalty number/name', 'أدخل رقم الولاء / الاسم')}
@@ -1406,7 +1406,7 @@ const Checkout = () => {
                             /* Loyalty Points Validation Form */
                             <form onSubmit={handleOdooLoyaltyPoints} className="flex flex-col sm:flex-row items-start justify-end">
                               <div className="w-full">
-                                <input
+                            <input
                                   type="text"
                                   value={loyaltyCustomerInput}
                                   onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
@@ -1442,8 +1442,8 @@ const Checkout = () => {
                             /* Loyalty Points Usage Options */
                             <div className="space-y-3">
                               <div className="flex flex-col sm:flex-row items-start justify-end gap-3">
-                                <button
-                                  type="button"
+                            <button
+                              type="button"
                                   onClick={useMaximumLoyaltyPoints}
                                   className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto"
                                 >
@@ -1455,8 +1455,8 @@ const Checkout = () => {
                                   className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-red-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-red-500 bg-red-50 text-red-600 h-12 text-sm lg:text-base w-full sm:w-auto"
                                 >
                                   {tr('Clear', 'مسح')}
-                                </button>
-                              </div>
+                            </button>
+                          </div>
                               
                               {/* Quick Points Selection */}
                               <div className="flex flex-wrap gap-2">
@@ -1824,9 +1824,9 @@ const Checkout = () => {
                           <span className="text-gray-700 font-semibold">{tr('Loyalty Points', 'نقاط الولاء')}</span>
                         </div>
                         {odooLoyaltyInfo ? (
-                          <div className="text-purple-600 font-bold">
+                        <div className="text-purple-600 font-bold">
                             {odooLoyaltyInfo.currentPoints} {tr('available points', 'النقاط المتاحة')}
-                          </div>
+                        </div>
                         ) : (
                           <div className="text-gray-500 text-sm">
                             {tr('Enter your loyalty number/name', 'أدخل رقم الولاء / الاسم')}
@@ -1838,7 +1838,7 @@ const Checkout = () => {
                         /* Loyalty Points Validation Form */
                         <form onSubmit={handleOdooLoyaltyPoints} className="flex flex-col sm:flex-row items-start justify-end">
                           <div className="w-full">
-                            <input
+                        <input
                               type="text"
                               value={loyaltyCustomerInput}
                               onChange={(e) => setLoyaltyCustomerInput(e.target.value)}
@@ -1874,8 +1874,8 @@ const Checkout = () => {
                         /* Loyalty Points Usage Options */
                         <div className="space-y-3">
                           <div className="flex flex-col sm:flex-row items-start justify-end gap-3">
-                            <button
-                              type="button"
+                        <button
+                          type="button"
                               onClick={useMaximumLoyaltyPoints}
                               className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-purple-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-purple-500 bg-purple-50 text-purple-600 h-12 text-sm lg:text-base w-full sm:w-auto"
                             >
@@ -1887,8 +1887,8 @@ const Checkout = () => {
                               className="md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border border-red-200 rounded-md placeholder-white focus-visible:outline-none focus:outline-none px-5 md:px-6 lg:px-8 py-3 md:py-3.5 lg:py-3 hover:text-white hover:bg-red-500 bg-red-50 text-red-600 h-12 text-sm lg:text-base w-full sm:w-auto"
                             >
                               {tr('Clear', 'مسح')}
-                            </button>
-                          </div>
+                        </button>
+                      </div>
                           
                           {/* Quick Points Selection */}
                           <div className="flex flex-wrap gap-2">

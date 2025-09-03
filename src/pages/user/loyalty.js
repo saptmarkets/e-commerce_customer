@@ -50,7 +50,7 @@ const LoyaltyDashboard = () => {
       }
       const customerPhone = userInfo.contact || userInfo.phone;
       const result = await LoyaltyServices.getOdooLoyaltyDashboard(customerPhone);
-      return result.data;
+      return result; // Return the result directly, not result.data
     },
     enabled: !!(userInfo?.contact || userInfo?.phone),
     staleTime: 5 * 60 * 1000, // 5 minutes
