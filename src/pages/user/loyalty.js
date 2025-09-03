@@ -36,20 +36,20 @@ const LoyaltyDashboard = () => {
   // Get user info for Odoo loyalty points
   const userInfo = getUserSession();
 
-  // Odoo Loyalty Points Query
+  // Odoo Loyalty Dashboard Query
   const {
-    data: odooLoyaltyInfo,
+    data: loyaltyDashboard,
     error: odooError,
     isLoading: odooLoading,
     refetch: refetchOdooLoyalty
   } = useQuery({
-    queryKey: ["odoo-loyalty-info", userInfo?.contact || userInfo?.phone],
+    queryKey: ["odoo-loyalty-dashboard", userInfo?.contact || userInfo?.phone],
     queryFn: async () => {
       if (!userInfo?.contact && !userInfo?.phone) {
         throw new Error('No contact information available');
       }
       const customerPhone = userInfo.contact || userInfo.phone;
-      const result = await LoyaltyServices.validateOdooLoyaltyPoints(customerPhone);
+      const result = await LoyaltyServices.getOdooLoyaltyDashboard(customerPhone);
       return result.data;
     },
     enabled: !!(userInfo?.contact || userInfo?.phone),
@@ -224,15 +224,15 @@ const LoyaltyDashboard = () => {
             </button>
             
             {/* Loyalty Points Display */}
-            {odooLoyaltyInfo && (
+            {loyaltyDashboard && (
               <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl">
                 <div className="text-center">
                   <div className="text-3xl font-bold">
-                    {odooLoyaltyInfo.currentPoints || 0}
+                    {loyaltyDashboard.points_summary?.current_points || 0}
                   </div>
                   <div className="text-sm opacity-90">{t('availablePoints')}</div>
                   <div className="text-xs opacity-75 mt-1">
-                    Customer: {odooLoyaltyInfo.customerName}
+                    Customer: {loyaltyDashboard.customer?.name}
                   </div>
                 </div>
               </div>
@@ -265,16 +265,16 @@ const LoyaltyDashboard = () => {
         </div>
 
         {/* Overview Tab */}
-        {selectedTab === 'overview' && odooLoyaltyInfo && (
+        {selectedTab === 'overview' && loyaltyDashboard && (
           <div className="space-y-6">
-            {/* Stats Cards */}
+            {/* Points Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">{t('currentPoints')}</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {odooLoyaltyInfo.currentPoints || 0}
+                    <p className="text-2xl font-bold text-purple-600">
+                      {loyaltyDashboard.points_summary?.current_points || 0}
                     </p>
                   </div>
                   <div className="p-3 bg-purple-100 rounded-full">
@@ -286,23 +286,9 @@ const LoyaltyDashboard = () => {
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{t('customerName')}</p>
-                    <p className="text-lg font-bold text-gray-900">
-                      {odooLoyaltyInfo.customerName || 'N/A'}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-blue-100 rounded-full">
-                    <FiInfo className="text-blue-600" size={24} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{t('customerPhone')}</p>
-                    <p className="text-lg font-bold text-gray-900">
-                      {odooLoyaltyInfo.customerPhone || 'N/A'}
+                    <p className="text-sm font-medium text-gray-600">{t('totalEarned')}</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {Math.round(loyaltyDashboard.points_summary?.total_earned || 0)}
                     </p>
                   </div>
                   <div className="p-3 bg-green-100 rounded-full">
@@ -314,76 +300,162 @@ const LoyaltyDashboard = () => {
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{t('loyaltyCardId')}</p>
-                    <p className="text-lg font-bold text-gray-900">
-                      {odooLoyaltyInfo.loyaltyCardId || 'N/A'}
+                    <p className="text-sm font-medium text-gray-600">{t('pointsUsed')}</p>
+                    <p className="text-2xl font-bold text-red-600">
+                      {Math.round(loyaltyDashboard.points_summary?.points_used || 0)}
                     </p>
                   </div>
+                  <div className="p-3 bg-red-100 rounded-full">
+                    <FiTrendingDown className="text-red-600" size={24} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">{t('expiringSoon')}</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      {loyaltyDashboard.points_summary?.expiring_soon || 0}
+                    </p>
+                    <p className="text-xs text-gray-500">Next 30 Days</p>
+                  </div>
                   <div className="p-3 bg-orange-100 rounded-full">
-                    <FiGift className="text-orange-600" size={24} />
+                    <FiClock className="text-orange-600" size={24} />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Odoo Integration Info */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <FiInfo className="mr-2 text-blue-600" />
-                Odoo Loyalty System Integration
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-sm text-gray-600 mb-2">
-                    Your loyalty points are now managed through our integrated Odoo system, providing real-time updates and enhanced security.
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Last Updated:</span>
-                      <span className="font-medium">{new Date().toLocaleString()}</span>
+            {/* Purchase Statistics */}
+            {loyaltyDashboard.purchase_statistics && (
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                  <IoTrophyOutline className="mr-2 text-purple-600" />
+                  {t('purchaseStatistics')}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {loyaltyDashboard.purchase_statistics.total_orders}
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">System:</span>
-                      <span className="font-medium text-green-600">Odoo Integration</span>
+                    <div className="text-sm text-gray-600">{t('totalOrders')}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {getNumberTwo(loyaltyDashboard.purchase_statistics.total_spent)} <span className="icon-saudi_riyal">&#xE900;</span>
                     </div>
+                    <div className="text-sm text-gray-600">{t('totalSpent')}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {getNumberTwo(loyaltyDashboard.purchase_statistics.average_order)} <span className="icon-saudi_riyal">&#xE900;</span>
+                    </div>
+                    <div className="text-sm text-gray-600">{t('averageOrder')}</div>
                   </div>
                 </div>
-                <div className="text-right">
+              </div>
+            )}
+
+            {/* Recent Transactions */}
+            {loyaltyDashboard.transaction_history && loyaltyDashboard.transaction_history.length > 0 && (
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('recentActivity')}</h3>
+                <div className="space-y-3">
+                  {loyaltyDashboard.transaction_history.slice(0, 5).map((transaction, index) => (
+                    <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+                      <div className="flex items-center space-x-3">
+                        <div className={`text-xl ${getTransactionColor(transaction.type)}`}>
+                          {getTransactionIcon(transaction.type)}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800 text-sm">
+                            Earned {Math.round(transaction.points)} points from {transaction.order_reference}
+                          </p>
+                          {transaction.balance !== undefined && (
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              Balance: {Math.round(transaction.balance)} {t('points')}
+                            </p>
+                          )}
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {showDateFormat(transaction.date)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-medium text-green-600">
+                          +{Math.round(transaction.points)} pts
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          Balance: {Math.round(transaction.balance)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 text-center">
                   <button
-                    onClick={handleRefreshLoyalty}
-                    disabled={isRefreshing}
-                    className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+                    onClick={() => setSelectedTab('history')}
+                    className="text-purple-600 hover:text-purple-700 text-sm font-medium"
                   >
-                    <FiRefreshCw className={`mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                    {isRefreshing ? 'Updating...' : 'Update Points'}
+                    View All Transactions →
                   </button>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
         {/* Transaction History Tab */}
-        {selectedTab === 'history' && (
+        {selectedTab === 'history' && loyaltyDashboard && (
           <div className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-              <FiInfo className="text-blue-600 mx-auto mb-4" size={48} />
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                Transaction History
-              </h3>
-              <p className="text-blue-700 mb-4">
-                Transaction history is managed through the Odoo system. Please contact customer support for detailed transaction information.
-              </p>
-              <div className="text-sm text-blue-600">
-                <p>Your current loyalty points: <strong>{odooLoyaltyInfo?.currentPoints || 0}</strong></p>
-                <p>Customer: <strong>{odooLoyaltyInfo?.customerName || 'N/A'}</strong></p>
-              </div>
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('transactionHistory')}</h3>
+              {loyaltyDashboard.transaction_history && loyaltyDashboard.transaction_history.length > 0 ? (
+                <div className="space-y-3">
+                  {loyaltyDashboard.transaction_history.map((transaction, index) => (
+                    <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+                      <div className="flex items-center space-x-3">
+                        <div className={`text-xl ${getTransactionColor(transaction.type)}`}>
+                          {getTransactionIcon(transaction.type)}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800 text-sm">
+                            Earned {Math.round(transaction.points)} points from {transaction.order_reference}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {showDateFormat(transaction.date)}
+                          </p>
+                          {transaction.order_id && (
+                            <Link href={`/order/${transaction.order_id}`} className="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                              Order #{transaction.order_id}
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-medium text-green-600">
+                          +{Math.round(transaction.points)} pts
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          Balance: {Math.round(transaction.balance)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <FiInfo className="text-gray-400 mx-auto mb-4" size={48} />
+                  <p className="text-gray-500">No transaction history available</p>
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* How It Works Tab */}
-        {selectedTab === 'how-it-works' && (
+        {selectedTab === 'how-it-works' && loyaltyDashboard && (
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-8 rounded-xl">
               <h3 className="text-2xl font-bold mb-4">Odoo Loyalty System</h3>
@@ -404,19 +476,19 @@ const LoyaltyDashboard = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Current Points:</span>
-                    <span className="font-semibold text-purple-600">{odooLoyaltyInfo?.currentPoints || 0}</span>
+                    <span className="font-semibold text-purple-600">{loyaltyDashboard.points_summary?.current_points || 0}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Customer Name:</span>
-                    <span className="font-semibold">{odooLoyaltyInfo?.customerName || 'N/A'}</span>
+                    <span className="font-semibold">{loyaltyDashboard.customer?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Phone Number:</span>
-                    <span className="font-semibold">{odooLoyaltyInfo?.customerPhone || 'N/A'}</span>
+                    <span className="font-semibold">{loyaltyDashboard.customer?.phone || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Loyalty Card ID:</span>
-                    <span className="font-semibold">{odooLoyaltyInfo?.loyaltyCardId || 'N/A'}</span>
+                    <span className="font-semibold">{loyaltyDashboard.loyalty_card?.id || 'N/A'}</span>
                   </div>
                 </div>
               </div>

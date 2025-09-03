@@ -68,6 +68,25 @@ const LoyaltyServices = {
     }
   },
 
+  /**
+   * Get comprehensive loyalty dashboard data from Odoo
+   * @param {string} customerPhone - Customer phone number
+   * @returns {Object} Dashboard data
+   */
+  getOdooLoyaltyDashboard: async (customerPhone) => {
+    console.log('🔍 DEBUG: LoyaltyServices.getOdooLoyaltyDashboard called with:', { customerPhone });
+    
+    try {
+      const result = await requests.get(`/odoo-integration/loyalty-dashboard/${encodeURIComponent(customerPhone)}`);
+      
+      console.log('🔍 DEBUG: LoyaltyServices.getOdooLoyaltyDashboard result:', result);
+      return result;
+    } catch (error) {
+      console.error('🔍 DEBUG: LoyaltyServices.getOdooLoyaltyDashboard error:', error);
+      throw error;
+    }
+  },
+
   // ========================================
   // LEGACY LOCAL DB ENDPOINTS (DEPRECATED)
   // ========================================
